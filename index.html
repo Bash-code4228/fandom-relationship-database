@@ -4,64 +4,8 @@
     <title>FandomVerse - Ship/Pairings Tracker</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="data:,">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* Basic Styles */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: linear-gradient(135deg, #D32F2F 0%, #1A237E 100%); color: #333; min-height: 100vh; padding: 20px; }
-        .container { max-width: 1400px; margin: 0 auto; background: #F5F5F5; border-radius: 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); overflow: hidden; padding: 30px; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 2px solid #E0E0E0; padding-bottom: 20px; }
-        .logo { display: flex; align-items: center; gap: 15px; }
-        .logo i { font-size: 45px; color: #D32F2F; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); }
-        .logo h1 { font-size: 32px; color: #1A237E; letter-spacing: -1px; }
-        .logo p { color: #666; font-size: 14px; }
-        
-        /* Stats */
-        .stats-grid { display: flex; gap: 20px; }
-        .stat-card { background: white; padding: 15px 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; border: 1px solid #EEE; transition: transform 0.3s; }
-        .stat-value { font-size: 28px; font-weight: 800; color: #1A237E; }
-        .stat-label { font-size: 12px; color: #888; text-transform: uppercase; font-weight: 600; margin-top: 5px; }
-
-        /* Controls */
-        .controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; gap: 20px; }
-        .search-box { flex: 1; position: relative; }
-        .search-box i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #AAA; }
-        .search-box input { width: 100%; padding: 12px 15px 12px 45px; border-radius: 12px; border: 1px solid #DDD; font-size: 16px; outline: none; transition: 0.3s; }
-        .actions { display: flex; gap: 12px; }
-        .btn { padding: 12px 24px; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 8px; font-size: 14px; }
-        .btn-primary { background: #1A237E; color: white; }
-        .btn-secondary { background: white; border: 1px solid #DDD; color: #333; }
-        .btn-danger { background: #D32F2F; color: white; }
-
-        /* Grid & Cards */
-        .ship-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px; }
-        .ship-card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #EEE; position: relative; transition: 0.3s; display: flex; flex-direction: column; }
-        .ship-card:hover { transform: translateY(-10px); }
-        .status-badge { position: absolute; top: 15px; right: 15px; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
-        .status-OTP { background: #E3F2FD; color: #1565C0; }
-        .status-Liked { background: #E8F5E9; color: #2E7D32; }
-        .status-Neutral { background: #F5F5F5; color: #616161; }
-        .status-Disliked { background: #FFF3E0; color: #EF6C00; }
-        .status-NOTP { background: #FFEBEE; color: #C62828; }
-        .card-content { padding: 25px; flex-grow: 1; }
-        .fandom-tag { font-size: 12px; color: #1A237E; font-weight: 700; margin-bottom: 10px; display: block; text-transform: uppercase; }
-        .pairing-names { font-size: 22px; font-weight: 800; margin-bottom: 15px; color: #333; }
-        .meta-info { display: flex; gap: 15px; font-size: 13px; color: #666; margin-bottom: 15px; }
-        .meta-info i { color: #D32F2F; width: 15px; }
-        .notes { font-size: 14px; color: #777; font-style: italic; border-left: 3px solid #DDD; padding-left: 10px; margin-top: 10px; }
-        .card-actions { display: flex; justify-content: flex-end; padding: 15px 25px; background: #FAFAFA; border-top: 1px solid #EEE; gap: 10px; }
-        .action-icon { width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; background: white; border: 1px solid #DDD; color: #666; }
-        .action-icon:hover { background: #1A237E; color: white; }
-
-        /* Modal */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .modal-content { background: white; width: 600px; border-radius: 20px; padding: 35px; position: relative; max-height: 90vh; overflow-y: auto; }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #DDD; }
-        .modal-footer { display: flex; justify-content: flex-end; gap: 15px; margin-top: 30px; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
@@ -86,31 +30,33 @@
             </div>
             <div class="actions">
                 <button class="btn btn-primary" onclick="openAddModal()"><i class="fas fa-plus"></i> Add New</button>
+                <button class="btn btn-secondary" onclick="openExportModal()"><i class="fas fa-file-export"></i> Export</button>
+                <button class="btn btn-secondary" onclick="openImportModal()"><i class="fas fa-file-import"></i> Import</button>
             </div>
         </div>
 
         <div class="ship-grid" id="ship-grid"></div>
+
+        <div style="text-align: center; padding: 20px; color: #666; font-size: 14px; border-top: 1px solid #ddd; margin-top: 30px;">
+            <p>&copy; 2026 Bash - Fandom Relationship Database. All Rights Reserved.</p>
+            <p style="font-size: 12px; margin-top: 5px; color: #999;">Organizing the chaos of shipping, one pairing at a time. ✨</p>
+        </div>
     </div>
 
     <div id="add-modal" class="modal">
         <div class="modal-content">
             <h3 id="modal-title">Add New Pairing</h3>
-            <input type="hidden" id="edit-index" value="">
-            <div class="form-grid" style="margin-top:20px;">
+            <input type="hidden" id="edit-index">
+            <div class="form-grid">
                 <div class="form-group"><label>Character 1</label><input type="text" id="char1"></div>
                 <div class="form-group"><label>Character 2</label><input type="text" id="char2"></div>
                 <div class="form-group"><label>Fandom</label><input type="text" id="fandom"></div>
                 <div class="form-group">
-                    <label>Relationship Type</label>
-                    <select id="type"><option>M/M</option><option>F/F</option><option>F/M</option><option>Multi</option><option>Other</option></select>
-                </div>
-                <div class="form-group">
                     <label>Status</label>
                     <select id="status"><option>OTP</option><option>Liked</option><option>Neutral</option><option>Disliked</option><option>NOTP</option></select>
                 </div>
-                <div class="form-group"><label>Fanfics Read</label><input type="number" id="fanfics" value="0"></div>
             </div>
-            <div class="form-group" style="margin-top:15px;"><label>Notes</label><textarea id="notes" rows="3"></textarea></div>
+            <div class="form-group"><label>Notes</label><textarea id="notes" rows="3"></textarea></div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="closeAddModal()">Cancel</button>
                 <button class="btn btn-primary" onclick="savePairing()">Save Changes</button>
@@ -118,125 +64,18 @@
         </div>
     </div>
 
-    <script>
-        let pairings = JSON.parse(localStorage.getItem('fandom_pairings')) || [];
+    <div id="export-modal" class="modal">
+        <div class="modal-content"><h3>Export Data</h3><p>Download your pairings as JSON.</p>
+            <div class="modal-footer"><button class="btn btn-secondary" onclick="closeExportModal()">Cancel</button><button class="btn btn-primary" onclick="exportData()">Download</button></div>
+        </div>
+    </div>
 
-        function saveToStorage() {
-            localStorage.setItem('fandom_pairings', JSON.stringify(pairings));
-            renderShips();
-            updateStats();
-        }
+    <div id="import-modal" class="modal">
+        <div class="modal-content"><h3>Import Data</h3><input type="file" id="import-file" accept=".json">
+            <div class="modal-footer"><button class="btn btn-secondary" onclick="closeImportModal()">Cancel</button><button class="btn btn-primary" onclick="importData()">Upload</button></div>
+        </div>
+    </div>
 
-        function renderShips(data = pairings) {
-            const grid = document.getElementById('ship-grid');
-            grid.innerHTML = '';
-            data.forEach((ship, index) => {
-                const card = document.createElement('div');
-                card.className = 'ship-card';
-                card.innerHTML = `
-                    <span class="status-badge status-${ship.status}">${ship.status}</span>
-                    <div class="card-content">
-                        <span class="fandom-tag">${ship.fandom}</span>
-                        <div class="pairing-names">${ship.char1} & ${ship.char2}</div>
-                        <div class="meta-info">
-                            <span><i class="fas fa-venus-mars"></i> ${ship.type}</span>
-                            <span><i class="fas fa-book"></i> ${ship.fanfics} fics</span>
-                        </div>
-                        <p class="notes">${ship.notes || 'No notes.'}</p>
-                    </div>
-                    <div class="card-actions">
-                        <div class="action-icon" onclick="openEditModal(${index})"><i class="fas fa-edit"></i></div>
-                        <div class="action-icon" onclick="deletePairing(${index})"><i class="fas fa-trash"></i></div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function updateStats() {
-            document.getElementById('total-pairings').innerText = pairings.length;
-            document.getElementById('total-fandoms').innerText = [...new Set(pairings.map(s => s.fandom))].length;
-        }
-
-        function openAddModal() {
-            document.getElementById('modal-title').innerText = "Add New Pairing";
-            document.getElementById('edit-index').value = "";
-            resetForm();
-            document.getElementById('add-modal').style.display = 'flex';
-        }
-
-        function openEditModal(index) {
-            const ship = pairings[index];
-            document.getElementById('modal-title').innerText = "Edit Pairing";
-            document.getElementById('edit-index').value = index;
-            
-            document.getElementById('char1').value = ship.char1;
-            document.getElementById('char2').value = ship.char2;
-            document.getElementById('fandom').value = ship.fandom;
-            document.getElementById('type').value = ship.type;
-            document.getElementById('status').value = ship.status;
-            document.getElementById('fanfics').value = ship.fanfics;
-            document.getElementById('notes').value = ship.notes;
-
-            document.getElementById('add-modal').style.display = 'flex';
-        }
-
-        function savePairing() {
-            const index = document.getElementById('edit-index').value;
-            const ship = {
-                char1: document.getElementById('char1').value,
-                char2: document.getElementById('char2').value,
-                fandom: document.getElementById('fandom').value,
-                type: document.getElementById('type').value,
-                status: document.getElementById('status').value,
-                fanfics: document.getElementById('fanfics').value,
-                notes: document.getElementById('notes').value
-            };
-
-            if (index === "") {
-                pairings.push(ship);
-            } else {
-                pairings[index] = ship;
-            }
-
-            saveToStorage();
-            closeAddModal();
-        }
-
-        function deletePairing(index) {
-            if(confirm("Delete this pairing?")) {
-                pairings.splice(index, 1);
-                saveToStorage();
-            }
-        }
-
-        function applyFilters() {
-            const term = document.getElementById('search-input').value.toLowerCase();
-            const filtered = pairings.filter(s => 
-                s.char1.toLowerCase().includes(term) || 
-                s.char2.toLowerCase().includes(term) || 
-                s.fandom.toLowerCase().includes(term)
-            );
-            renderShips(filtered);
-        }
-
-        function closeAddModal() { document.getElementById('add-modal').style.display = 'none'; }
-        function resetForm() {
-            document.getElementById('char1').value = "";
-            document.getElementById('char2').value = "";
-            document.getElementById('fandom').value = "";
-            document.getElementById('notes').value = "";
-            document.getElementById('fanfics').value = "0";
-        }
-
-        // Initialize
-        updateStats();
-        renderShips();
-    </script>
-
-    <footer style="text-align: center; padding: 20px; color: #666; font-size: 14px; border-top: 1px solid #ddd; margin-top: 30px;">
-        <p>&copy; 2026 Bash - Fandom Relationship Database. All Rights Reserved.</p>
-        <p style="font-size: 12px; margin-top: 5px; color: #999;">Organizing the chaos of shipping, one pairing at a time. ✨</p>
-    </footer>
+    <script src="script.js"></script>
 </body>
 </html>
