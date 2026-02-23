@@ -731,24 +731,6 @@ Just to be transparent, I did not build this on my own, I definitely asked AI fo
             </button>
         </div>
         
-        <div class="filter-tags">
-            <div class="filter-tag active" onclick="filterByStatus('all')" id="filter-all">
-                <i class="fas fa-layer-group"></i> All Ships
-            </div>
-            <div class="filter-tag" onclick="filterByStatus('favorite')">
-                <i class="fas fa-bolt"></i> Favorites
-            </div>
-            <div class="filter-tag" onclick="filterByStatus('canon')">
-                <i class="fas fa-check-circle"></i> Canon
-            </div>
-            <div class="filter-tag" onclick="filterByStatus('romantic')">
-                <i class="fas fa-heart"></i> Romantic
-            </div>
-            <div class="filter-tag" onclick="filterByStatus('active')">
-                <i class="fas fa-bolt"></i> Active
-            </div>
-        </div>
-        
         <div class="pairings-grid" id="pairings-grid">
             </div>
         
@@ -1004,8 +986,7 @@ Just to be transparent, I did not build this on my own, I definitely asked AI fo
         document.addEventListener('DOMContentLoaded', async () => {
             await loadFromStorage();
             // renderPairings and updateStats are now handled inside loadFromStorage
-            updateFilterButtons();
-            
+
             // Initialize upload method toggle
             setUploadMethod('file');
             
@@ -1409,20 +1390,6 @@ Just to be transparent, I did not build this on my own, I definitely asked AI fo
             }
         }
         
-        function filterByStatus(filter) {
-            currentFilter = filter;
-            updateFilterButtons();
-            applyFilters();
-        }
-        
-        function updateFilterButtons() {
-            document.querySelectorAll('.filter-tag').forEach(tag => tag.classList.remove('active'));
-            const filterMap = {'all': 'All', 'favorite': 'Favorites', 'canon': 'Canon', 'romantic': 'Romantic', 'active': 'Active'};
-            const activeButton = Array.from(document.querySelectorAll('.filter-tag'))
-                .find(tag => tag.textContent.includes(filterMap[currentFilter]));
-            if (activeButton) activeButton.classList.add('active');
-        }
-        
         function updateStats() {
             document.getElementById('total-count').textContent = pairings.length;
             document.getElementById('favorite-count').textContent = pairings.filter(p => p.favorite).length;
@@ -1566,6 +1533,7 @@ Just to be transparent, I did not build this on my own, I definitely asked AI fo
 </body>
 
 </html>
+
 
 
 
