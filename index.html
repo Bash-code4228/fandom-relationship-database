@@ -279,7 +279,7 @@
         /* Card Header (for cards without images) */
         .card-header {
             position: relative;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: linear-gradient(135deg, #1A237E 0%, #283593 100%); /* Deep Blue */
             color: white;
             padding: 20px;
             min-height: 120px;
@@ -347,24 +347,24 @@
             gap: 8px;
         }
         
-        .canon { background: #d4edda; color: #155724; }
-        .fanon { background: #cce5ff; color: #004085; }
-        .crack { background: #fff3cd; color: #856404; }
-        .one-sided { background: #ffc107; color: #212529; }
+        .canon { background: #E8F5E9; color: #2E7D32; border: 1px solid #2E7D32; }
+        .fanon { background: #E3F2FD; color: #1565C0; border: 1px solid #1565C0; }
+        .crack { background: #FFF3E0; color: #E65100; border: 1px solid #E65100; }
+        .one-sided { background: #F5F5F5; color: #616161; border: 1px solid #9E9E9E; }
         
-        .romantic { background: #f8d7da; color: #721c24; }
-        .platonic { background: #d1ecf1; color: #0c5460; }
-        .romantic-platonic { background: #e7d4f1; color: #4a235a; }
-        .complicated { background: #d6d8db; color: #383d41; }
-        .enemies { background: #f5c6cb; color: #721c24; }
-        .friends { background: #bee5eb; color: #0c5460; }
+        .romantic { background: #FFEBEE; color: #C62828; }
+        .platonic { background: #F5F5F5; color: #424242; border: 1px solid #BDBDBD; }
+        .romantic-platonic { background: #E1F5FE; color: #01579B; }
+        .complicated { background: #EEEEEE; color: #212121; }
+        .enemies { background: #1A237E; color: white; } /* Deep Blue to balance Fire */
+        .friends { background: #E8F5E9; color: #2E7D32; }
         
-        .active { background: #28a745; color: white; }
-        .inactive { background: #6c757d; color: white; }
-        .former { background: #ffc107; color: #212529; }
-        .guilty-pleasure { background: #e83e8c; color: white; }
-        
-        .favorite-tag { background: #ffd700; color: #856404; }
+        .active { background: #FFF8E1; color: #FF8F00; border: 1px solid #FFD700; }
+        .inactive { background: #ECEFF1; color: #455A64; }
+        .former { background: #CFD8DC; color: #37474F; }
+        .guilty-pleasure { background: #FCE4EC; color: #880E4F; }
+    
+        .favorite-tag { background: #FFD700; color: #000; font-weight: bold; border: 1px solid #FFAB00; }
         
         /* Card Actions - FIXED POSITIONING */
         .card-actions {
@@ -754,7 +754,7 @@ Just to be transparent, I did not build this on my own, I definitely asked AI fo
         
         <div class="modal" id="add-modal">
             <div class="modal-content">
-                <div class="card-header" style="border-radius: 20px 20px 0 0;">
+                <div class="card-header" style="border-radius: 20px 20px 0 0; background: linear-gradient(135deg, #1A237E 0%, #283593 100%);">
                     <h2 class="modal-title" style="color: white;">Add New Ship</h2>
                     <button class="action-btn" onclick="closeAddModal()" style="position: absolute; right: 20px; top: 20px;">
                         <i class="fas fa-times"></i>
@@ -1562,4 +1562,5 @@ Just to be transparent, I did not build this on my own, I definitely asked AI fo
 </body>
 
 </html>
+
 
