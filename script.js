@@ -149,23 +149,19 @@ function clearImagePreview() {
 // NEW Load from GitHub/WordPress JSON file
 async function loadFromStorage() {
     try {
-        // REPLACE THIS URL with your actual pairings.json URL on GitHub or WordPress
         const response = await fetch('https://Bash-code4228.github.io/fandom-relationship-database/pairings.json');
         if (response.ok) {
             pairings = await response.json();
         } else {
-            // Fallback to local storage if file fetch fails
             const saved = localStorage.getItem('fandomShips');
             if (saved) pairings = JSON.parse(saved);
         }
     } catch (e) {
         console.error('Error loading data from server:', e);
-        // Final fallback to local storage
         const saved = localStorage.getItem('fandomShips');
         if (saved) pairings = JSON.parse(saved);
     }
     
-    // Initialize sample data only if both server and local are empty
     if (pairings.length === 0) {
         addSampleData();
     } else {
@@ -190,25 +186,13 @@ function addSampleData() {
             universe: "In-universe",
             status: "Fanon",
             relationship: "Romantic/Platonic",
-            trope: "Childhood friends to lovers",
+            media: "Film Series",
+            dynamic: "Opposing Energies",
+            trope: "Friends to Lovers",
             notes: "The loyalty and history between them gets me every time",
             favorite: true,
             image: null,
             addedDate: "2024-01-15"
-        },
-        {
-            id: 2,
-            name: "Snirius",
-            characters: "Severus Snape x Sirius Black",
-            fandom: "Harry Potter",
-            universe: "In-universe",
-            status: "Fanon",
-            relationship: "Enemies",
-            trope: "Enemies to lovers",
-            notes: "The intellectual rivalry and potential for redemption",
-            favorite: true,
-            image: null,
-            addedDate: "2024-01-10"
         }
     ];
     
@@ -239,40 +223,34 @@ function renderPairings(pairingsToRender = getFilteredPairings()) {
     });
 }
 
-// Create ship card element
+// Create ship card element - UPDATED to display new fields
 function createShipCard(ship) {
     const card = document.createElement('div');
     card.className = 'pairing-card';
     
-    // Determine tag classes
     const statusClass = ship.status.toLowerCase().replace(' ', '-').replace('(', '').replace(')', '');
     const relClass = ship.relationship.toLowerCase().replace('/', '-').replace(' ', '-');
     
     let cardHTML = '';
     
     if (ship.favorite) {
-        cardHTML += `
-        <div class="favorite-star">
-            <i class="fas fa-star"></i>
-        </div>`;
+        cardHTML += `<div class="favorite-star"><i class="fas fa-star"></i></div>`;
     }
     
     if (ship.image) {
         cardHTML += `
         <div class="image-container">
             <div class="card-actions">
-                <button class="action-btn favorite-btn" onclick="toggleFavorite(${ship.id})" 
-                        title="${ship.favorite ? 'Remove from favorites' : 'Add to favorites'}">
+                <button class="action-btn favorite-btn" onclick="toggleFavorite(${ship.id})">
                     <i class="fas fa-star${ship.favorite ? '' : '-o'}"></i>
                 </button>
-                <button class="action-btn edit-btn" onclick="openEditModal(${ship.id})" title="Edit">
+                <button class="action-btn edit-btn" onclick="openEditModal(${ship.id})">
                     <i class="fas fa-edit"></i>
                 </button>
-                <button class="action-btn delete-btn" onclick="openDeleteModal(${ship.id}, '${escapeString(ship.name)}')" title="Delete">
+                <button class="action-btn delete-btn" onclick="openDeleteModal(${ship.id}, '${escapeString(ship.name)}')">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
-            
             <img src="${ship.image}" alt="${ship.name}" class="ship-image" 
                  onerror="handleImageError(this, '${escapeString(ship.name)}', '${escapeString(ship.characters)}')">
             <div class="image-overlay">
@@ -285,14 +263,13 @@ function createShipCard(ship) {
         cardHTML += `
         <div class="card-header">
             <div class="card-actions">
-                <button class="action-btn favorite-btn" onclick="toggleFavorite(${ship.id})" 
-                        title="${ship.favorite ? 'Remove from favorites' : 'Add to favorites'}">
+                <button class="action-btn favorite-btn" onclick="toggleFavorite(${ship.id})">
                     <i class="fas fa-star${ship.favorite ? '' : '-o'}"></i>
                 </button>
-                <button class="action-btn edit-btn" onclick="openEditModal(${ship.id})" title="Edit">
+                <button class="action-btn edit-btn" onclick="openEditModal(${ship.id})">
                     <i class="fas fa-edit"></i>
                 </button>
-                <button class="action-btn delete-btn" onclick="openDeleteModal(${ship.id}, '${escapeString(ship.name)}')" title="Delete">
+                <button class="action-btn delete-btn" onclick="openDeleteModal(${ship.id}, '${escapeString(ship.name)}')">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
@@ -303,43 +280,22 @@ function createShipCard(ship) {
     
     cardHTML += `
     <div class="card-body">
-        <div class="info-row">
-            <span class="info-label">Fandom:</span>
-            <span class="info-value">${ship.fandom}</span>
-        </div>
+        <div class="info-row"><span class="info-label">Fandom:</span><span class="info-value">${ship.fandom}</span></div>
         
-        ${ship.universe && ship.universe !== 'In-universe' ? `
-        <div class="info-row">
-            <span class="info-label">Universe:</span>
-            <span class="info-value">${ship.universe}</span>
-        </div>` : ''}
+        ${ship.media ? `<div class="info-row"><span class="info-label">Media:</span><span class="info-value">${ship.media}</span></div>` : ''}
+        ${ship.dynamic && ship.dynamic !== 'NA' ? `<div class="info-row"><span class="info-label">Dynamic:</span><span class="info-value">${ship.dynamic}</span></div>` : ''}
+        ${ship.universe && ship.universe !== 'In-universe' ? `<div class="info-row"><span class="info-label">Universe:</span><span class="info-value">${ship.universe}</span></div>` : ''}
+        ${ship.trope && ship.trope !== 'NA' ? `<div class="info-row"><span class="info-label">Trope:</span><span class="info-value">${ship.trope}</span></div>` : ''}
         
-        ${ship.trope ? `
-        <div class="info-row">
-            <span class="info-label">Trope:</span>
-            <span class="info-value">${ship.trope}</span>
-        </div>` : ''}
-        
-        ${ship.notes ? `
-        <div class="info-row">
-            <span class="info-label">Notes:</span>
-            <span class="info-value">${ship.notes}</span>
-        </div>` : ''}
+        ${ship.notes ? `<div class="info-row"><span class="info-label">Notes:</span><span class="info-value">${ship.notes}</span></div>` : ''}
         
         <div class="tags-container">
             <span class="tag ${statusClass}">
-                <i class="fas fa-${ship.status === 'Canon' ? 'check-circle' : ship.status === 'Fanon' ? 'users' : 'lightbulb'}"></i>
-                ${ship.status}
+                <i class="fas fa-${ship.status === 'Canon' ? 'check-circle' : 'users'}"></i> ${ship.status}
             </span>
             <span class="tag ${relClass}">
-                <i class="fas fa-${ship.relationship.includes('Romantic') ? 'heart' : ship.relationship.includes('Platonic') ? 'handshake' : 'code-branch'}"></i>
-                ${ship.relationship}
+                <i class="fas fa-heart"></i> ${ship.relationship}
             </span>
-        ${ship.favorite ? `
-            <span class="tag favorite-tag" style="background: #e1ff00; color: #000;">
-                <i class="fas fa-bolt"></i>
-                Active
-            </span>` : ''}
         </div>
     </div>`;
     
@@ -353,18 +309,9 @@ function handleImageError(img, name, characters) {
     imageContainer.style.display = 'none';
     const fallbackHeader = document.createElement('div');
     fallbackHeader.className = 'card-header';
-    fallbackHeader.style.display = 'block';
     fallbackHeader.innerHTML = `
         <div class="card-actions">
-            <button class="action-btn favorite-btn" onclick="toggleFavorite(${getShipIdFromCard(img)})">
-                <i class="fas fa-star-o"></i>
-            </button>
-            <button class="action-btn edit-btn" onclick="openEditModal(${getShipIdFromCard(img)})">
-                <i class="fas fa-edit"></i>
-            </button>
-            <button class="action-btn delete-btn" onclick="openDeleteModal(${getShipIdFromCard(img)}, '${escapeString(name)}')">
-                <i class="fas fa-trash"></i>
-            </button>
+            <button class="action-btn favorite-btn" onclick="toggleFavorite(${getShipIdFromCard(img)})"><i class="fas fa-star"></i></button>
         </div>
         <h3 class="pairing-name">${name}</h3>
         <p class="pairing-characters">${characters}</p>
@@ -389,12 +336,6 @@ function escapeString(str) {
 
 function getFilteredPairings() {
     let filtered = [...pairings];
-    switch(currentFilter) {
-        case 'favorite': filtered = filtered.filter(p => p.favorite); break;
-        case 'canon': filtered = filtered.filter(p => p.status === 'Canon'); break;
-        case 'romantic': filtered = filtered.filter(p => p.relationship.includes('Romantic')); break;
-        case 'active': filtered = filtered.filter(p => p.dynamic === 'Active'); break;
-    }
     if (currentSearch) {
         filtered = filtered.filter(p => 
             p.name.toLowerCase().includes(currentSearch) ||
@@ -405,7 +346,7 @@ function getFilteredPairings() {
     return filtered;
 }
 
-    function applyFilters() {
+function applyFilters() {
     renderPairings(getFilteredPairings());
 }
 
@@ -437,6 +378,7 @@ function showToast(message, type = 'info') {
 function openAddModal() { addModal.style.display = 'flex'; }
 function closeAddModal() { addModal.style.display = 'none'; resetForm(); }
 
+// UPDATED to load the new fields when editing
 function openEditModal(id) {
     const pairing = pairings.find(p => p.id === id);
     if (!pairing) return;
@@ -447,7 +389,12 @@ function openEditModal(id) {
     document.getElementById('input-universe').value = pairing.universe;
     document.getElementById('input-status').value = pairing.status;
     document.getElementById('input-relationship').value = pairing.relationship;
-    document.getElementById('input-trope').value = pairing.trope || '';
+    
+    // NEW FIELDS
+    document.getElementById('input-media').value = pairing.media || 'Literature/Books';
+    document.getElementById('input-dynamic').value = pairing.dynamic || 'NA';
+    document.getElementById('input-trope').value = pairing.trope || 'NA';
+    
     document.getElementById('input-notes').value = pairing.notes || '';
     document.getElementById('input-favorite').checked = pairing.favorite;
     if (pairing.image) {
@@ -465,22 +412,17 @@ function resetForm() {
 }
 
 function addNewPairing() {
-    const name = document.getElementById('input-name').value.trim();
-    const characters = document.getElementById('input-characters').value.trim();
-    const fandom = document.getElementById('input-fandom').value.trim();
-    
-    let imageData = null;
     if (uploadMethod === 'file' && selectedFile) {
         const reader = new FileReader();
         reader.onload = (e) => completeSubmission(e.target.result);
         reader.readAsDataURL(selectedFile);
         return;
-    } else if (uploadMethod === 'url') {
-        imageData = document.getElementById('input-image-url').value;
-    }
+    } 
+    const imageData = uploadMethod === 'url' ? document.getElementById('input-image-url').value : null;
     completeSubmission(imageData || (editingId ? pairings.find(p => p.id === editingId).image : null));
 }
 
+// UPDATED to save new fields
 function completeSubmission(imageData) {
     const pairingData = {
         id: editingId || Date.now(),
@@ -490,7 +432,12 @@ function completeSubmission(imageData) {
         universe: document.getElementById('input-universe').value,
         status: document.getElementById('input-status').value,
         relationship: document.getElementById('input-relationship').value,
+        
+        // NEW FIELDS
+        media: document.getElementById('input-media').value,
+        dynamic: document.getElementById('input-dynamic').value,
         trope: document.getElementById('input-trope').value,
+        
         notes: document.getElementById('input-notes').value,
         favorite: document.getElementById('input-favorite').checked,
         image: imageData,
@@ -552,4 +499,5 @@ window.onclick = (event) => {
         closeAddModal(); closeExportModal(); closeImportModal(); closeConfirmModal();
     }
 };
+
 
