@@ -985,6 +985,7 @@ Just to be transparent, I did not build this on my own, I definitely asked AI fo
         // Load initial data
         document.addEventListener('DOMContentLoaded', async () => {
             await loadFromStorage();
+            // renderPairings and updateStats are now handled inside loadFromStorage
             
             // Initialize upload method toggle
             setUploadMethod('file');
@@ -1375,7 +1376,7 @@ Just to be transparent, I did not build this on my own, I definitely asked AI fo
             return filtered;
         }
         
-        function applyFilters() {
+            function applyFilters() {
             renderPairings(getFilteredPairings());
         }
         
@@ -1519,19 +1520,20 @@ Just to be transparent, I did not build this on my own, I definitely asked AI fo
             reader.readAsText(file);
         }
         
-        window.onclick = (event) => {
+      window.onclick = (event) => {
             if (event.target.className === 'modal') {
                 closeAddModal(); closeExportModal(); closeImportModal(); closeConfirmModal();
             }
         };
     </script>
 
-     <div style="text-align: center; padding: 20px; color: #666; font-size: 14px; border-top: 1px solid #ddd; margin-top: 30px;">
-            <p>&copy; 2026 Bash - Fandom Relationship Database. All Rights Reserved.</p>
-            <p style="font-size: 12px; margin-top: 5px; opacity: 0.8;">Year of the Fire Horse Edition</p>
-        </div>
+    <div style="text-align: center; padding: 20px; color: #666; font-size: 14px; border-top: 1px solid #ddd; margin-top: 30px;">
+        <p>&copy; 2026 Bash - Fandom Relationship Database. All Rights Reserved.</p>
+        <p style="font-size: 12px; margin-top: 5px; opacity: 0.8;">Year of the Fire Horse Edition</p>
+    </div>
 </body>
 </html>
+
 
 
 
