@@ -476,6 +476,15 @@ body {
     cursor: pointer;
 }
 
+.file-input-wrapper input[type="number"] {
+    -moz-appearance: textfield;
+}
+.file-input-wrapper input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 /* Upload Options */
 .upload-options {
     display: flex;
@@ -536,6 +545,7 @@ body {
 }
 
 .toast-info { border-left: 5px solid #17a2b8; }
+
 
 
 
