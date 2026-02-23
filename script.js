@@ -9,40 +9,27 @@ async function loadFromStorage() {
     const localData = localStorage.getItem('fandom_pairings');
     if (localData) {
         pairings = JSON.parse(localData);
-        finishInit();
+        renderShips();
+        updateStats();
+        updateFilters();
     } else {
         try {
-            // Updated fetch URL to your GitHub link
             const response = await fetch('https://bash-code4228.github.io/Ship-Tracker/pairings.json');
             if (!response.ok) throw new Error();
             pairings = await response.json();
-            finishInit();
+            saveToStorage();
+            renderShips();
+            updateStats();
+            updateFilters();
         } catch (e) {
-            console.log("No data found, starting fresh.");
-            addSampleData();
+            console.log("No existing data found.");
+            // Optional: addSampleData() if you want the screen to not be empty
         }
     }
 }
 
-function finishInit() {
-    renderShips();
-    updateStats();
-    updateFilters();
-}
-
 function saveToStorage() {
     localStorage.setItem('fandom_pairings', JSON.stringify(pairings));
-}
-
-function addSampleData() {
-    pairings = [{
-        char1: "Aether", char2: "Furina", fandom: "Genshin Impact",
-        type: "F/M", status: "OTP", fanfics: 15, art: 5, rating: 5,
-        tags: "Healing, Comfort, Travel Companions",
-        notes: "Their dynamic during the Fontaine arc was beautiful."
-    }];
-    saveToStorage();
-    finishInit();
 }
 
 function renderShips(data = pairings) {
@@ -56,19 +43,19 @@ function renderShips(data = pairings) {
             <span class="status-badge status-${ship.status}">${ship.status}</span>
             <div class="card-content">
                 <span class="fandom-tag">${ship.fandom}</span>
-                <div class="pairing-names">${ship.char1} x ${ship.char2}</div>
+                <div class="pairing-names">${ship.char1} & ${ship.char2}</div>
                 <div class="meta-info">
                     <span><i class="fas fa-venus-mars"></i> ${ship.type}</span>
-                    <span><i class="fas fa-book"></i> ${ship.fanfics || 0} fics</span>
+                    <span><i class="fas fa-book"></i> ${ship.fanfics || 0} fanfics</span>
                 </div>
                 <div class="tags-list">
-                    ${(ship.tags || '').split(',').map(tag => `<span class="tag">${tag.trim()}</span>`).join('')}
+                    ${(ship.tags || '').split(',').map(tag => tag.trim() ? `<span class="tag">${tag.trim()}</span>` : '').join('')}
                 </div>
-                <p class="notes">${ship.notes || 'No notes added yet...'}</p>
-                <div class="rating-stars">${'★'.repeat(ship.rating || 0)}${'☆'.repeat(5-(ship.rating || 0))}</div>
+                <p class="notes">${ship.notes || 'No special notes.'}</p>
+                <div class="rating-stars">${'★'.repeat(ship.rating || 0)}${'☆'.repeat(5 - (ship.rating || 0))}</div>
             </div>
             <div class="card-actions">
-                <div class="action-icon" title="Edit"><i class="fas fa-edit"></i></div>
+                <div class="action-icon" onclick="editPairing(${index})" title="Edit"><i class="fas fa-edit"></i></div>
                 <div class="action-icon delete-icon" onclick="openConfirmModal(${index})" title="Delete"><i class="fas fa-trash-alt"></i></div>
             </div>
         `;
@@ -85,8 +72,9 @@ function updateStats() {
 function updateFilters() {
     const fandomSelect = document.getElementById('fandom-filter');
     const fandoms = [...new Set(pairings.map(s => s.fandom))].sort();
-    fandomSelect.innerHTML = '<option value="all">All Fandoms</option>' + 
-        fandoms.map(f => `<option value="${f}">${f}</option>`).join('');
+    let options = '<option value="all">All Fandoms</option>';
+    fandoms.forEach(f => { options += `<option value="${f}">${f}</option>`; });
+    fandomSelect.innerHTML = options;
 }
 
 function applyFilters() {
@@ -125,7 +113,9 @@ function savePairing() {
     };
     pairings.push(ship);
     saveToStorage();
-    finishInit();
+    renderShips();
+    updateStats();
+    updateFilters();
     closeAddModal();
 }
 
@@ -133,34 +123,39 @@ function openConfirmModal(index) { deleteIndex = index; document.getElementById(
 function closeConfirmModal() { document.getElementById('confirm-modal').style.display = 'none'; }
 function confirmDelete() { 
     pairings.splice(deleteIndex, 1); 
-    saveToStorage(); finishInit(); closeConfirmModal(); 
+    saveToStorage(); renderShips(); updateStats(); updateFilters(); closeConfirmModal(); 
 }
 
+function openExportModal() { document.getElementById('export-modal').style.display = 'flex'; }
+function closeExportModal() { document.getElementById('export-modal').style.display = 'none'; }
 function exportData() {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(pairings, null, 2));
-    const dlAnchorElem = document.createElement('a');
-    dlAnchorElem.setAttribute("href", dataStr);
-    dlAnchorElem.setAttribute("download", "pairings.json");
-    dlAnchorElem.click();
+    const dataStr = JSON.stringify(pairings, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', 'pairings.json');
+    linkElement.click();
+    closeExportModal();
 }
 
+function openImportModal() { document.getElementById('import-modal').style.display = 'flex'; }
+function closeImportModal() { document.getElementById('import-modal').style.display = 'none'; }
 function importData() {
     const file = document.getElementById('import-file').files[0];
     const reader = new FileReader();
     reader.onload = (e) => {
         pairings = JSON.parse(e.target.result);
-        saveToStorage(); finishInit(); document.getElementById('import-modal').style.display = 'none';
+        saveToStorage(); renderShips(); updateStats(); updateFilters(); closeImportModal();
     };
     reader.readAsText(file);
 }
-
-function openExportModal() { document.getElementById('export-modal').style.display = 'flex'; }
-function closeExportModal() { document.getElementById('export-modal').style.display = 'none'; }
-function openImportModal() { document.getElementById('import-modal').style.display = 'flex'; }
-function closeImportModal() { document.getElementById('import-modal').style.display = 'none'; }
 
 window.onclick = (event) => {
     if (event.target.className === 'modal') {
         closeAddModal(); closeExportModal(); closeImportModal(); closeConfirmModal();
     }
+};
+        closeAddModal(); closeExportModal(); closeImportModal(); closeConfirmModal();
+    }
+
 };
