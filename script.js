@@ -9,23 +9,26 @@ async function loadFromStorage() {
     const localData = localStorage.getItem('fandom_pairings');
     if (localData) {
         pairings = JSON.parse(localData);
-        renderShips();
-        updateStats();
-        updateFilters();
+        finishInit();
     } else {
         try {
+            // Updated to fetch from your GitHub repository URL
             const response = await fetch('https://bash-code4228.github.io/Ship-Tracker/pairings.json');
-            if (!response.ok) throw new Error();
-            pairings = await response.json();
-            saveToStorage();
-            renderShips();
-            updateStats();
-            updateFilters();
+            if (response.ok) {
+                pairings = await response.json();
+                saveToStorage();
+                finishInit();
+            }
         } catch (e) {
-            console.log("No existing data found.");
-            // Optional: addSampleData() if you want the screen to not be empty
+            console.log("Starting fresh database.");
         }
     }
+}
+
+function finishInit() {
+    renderShips();
+    updateStats();
+    updateFilters();
 }
 
 function saveToStorage() {
@@ -46,16 +49,16 @@ function renderShips(data = pairings) {
                 <div class="pairing-names">${ship.char1} & ${ship.char2}</div>
                 <div class="meta-info">
                     <span><i class="fas fa-venus-mars"></i> ${ship.type}</span>
-                    <span><i class="fas fa-book"></i> ${ship.fanfics || 0} fanfics</span>
+                    <span><i class="fas fa-book"></i> ${ship.fanfics || 0} fics</span>
                 </div>
                 <div class="tags-list">
                     ${(ship.tags || '').split(',').map(tag => tag.trim() ? `<span class="tag">${tag.trim()}</span>` : '').join('')}
                 </div>
-                <p class="notes">${ship.notes || 'No special notes.'}</p>
+                <p class="notes">${ship.notes || 'No special notes added.'}</p>
                 <div class="rating-stars">${'★'.repeat(ship.rating || 0)}${'☆'.repeat(5 - (ship.rating || 0))}</div>
             </div>
             <div class="card-actions">
-                <div class="action-icon" onclick="editPairing(${index})" title="Edit"><i class="fas fa-edit"></i></div>
+                <div class="action-icon" title="Edit"><i class="fas fa-edit"></i></div>
                 <div class="action-icon delete-icon" onclick="openConfirmModal(${index})" title="Delete"><i class="fas fa-trash-alt"></i></div>
             </div>
         `;
@@ -113,9 +116,7 @@ function savePairing() {
     };
     pairings.push(ship);
     saveToStorage();
-    renderShips();
-    updateStats();
-    updateFilters();
+    finishInit();
     closeAddModal();
 }
 
@@ -123,7 +124,7 @@ function openConfirmModal(index) { deleteIndex = index; document.getElementById(
 function closeConfirmModal() { document.getElementById('confirm-modal').style.display = 'none'; }
 function confirmDelete() { 
     pairings.splice(deleteIndex, 1); 
-    saveToStorage(); renderShips(); updateStats(); updateFilters(); closeConfirmModal(); 
+    saveToStorage(); finishInit(); closeConfirmModal(); 
 }
 
 function openExportModal() { document.getElementById('export-modal').style.display = 'flex'; }
@@ -145,7 +146,7 @@ function importData() {
     const reader = new FileReader();
     reader.onload = (e) => {
         pairings = JSON.parse(e.target.result);
-        saveToStorage(); renderShips(); updateStats(); updateFilters(); closeImportModal();
+        saveToStorage(); finishInit(); closeImportModal();
     };
     reader.readAsText(file);
 }
@@ -154,8 +155,4 @@ window.onclick = (event) => {
     if (event.target.className === 'modal') {
         closeAddModal(); closeExportModal(); closeImportModal(); closeConfirmModal();
     }
-};
-        closeAddModal(); closeExportModal(); closeImportModal(); closeConfirmModal();
-    }
-
 };
