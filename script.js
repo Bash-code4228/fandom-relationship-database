@@ -218,7 +218,7 @@ function renderPairings(pairingsToRender = getFilteredPairings()) {
     }
     
     pairingsToRender.forEach(ship => {
-        const card = (ship);
+        const card = createShipCard(ship);
         pairingsGrid.appendChild(card);
     });
 }
@@ -264,7 +264,7 @@ function createShipCard(ship) {
         <div class="card-header">
             <div class="card-actions">
                 <button class="action-btn favorite-btn" onclick="toggleFavorite(${ship.id})">
-                    <i class="fas fa-star${ship.favorite ? '' : '-o'}"></i>
+                    <i class="${ship.favorite ? 'fas' : 'far'} fa-star"></i>
                 </button>
                 <button class="action-btn edit-btn" onclick="openEditModal(${ship.id})">
                     <i class="fas fa-edit"></i>
@@ -306,21 +306,6 @@ function createShipCard(ship) {
 }
 
 // Handle image errors
-function handleImageError(img, name, characters) {
-    const imageContainer = img.parentElement;
-    imageContainer.style.display = 'none';
-    const fallbackHeader = document.createElement('div');
-    fallbackHeader.className = 'card-header';
-    fallbackHeader.innerHTML = `
-        <div class="card-actions">
-            <button class="action-btn favorite-btn" onclick="toggleFavorite(${getShipIdFromCard(img)})"><i class="fas fa-star"></i></button>
-        </div>
-        <h3 class="pairing-name">${name}</h3>
-        <p class="pairing-characters">${characters}</p>
-    `;
-    imageContainer.parentNode.insertBefore(fallbackHeader, imageContainer.nextSibling);
-}
-
 function handleImageError(img, name, characters) {
     if (img.getAttribute('data-error-handled')) return;
     img.setAttribute('data-error-handled', 'true');
@@ -512,6 +497,7 @@ window.onclick = (event) => {
         closeAddModal(); closeExportModal(); closeImportModal(); closeConfirmModal();
     }
 };
+
 
 
 
