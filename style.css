@@ -288,13 +288,6 @@ body {
 }
 
 /* Tags */
-.tags-container {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-    flex-wrap: wrap;
-}
-
 .tag {
     padding: 8px 16px;
     border-radius: 50px;
@@ -303,14 +296,22 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
+    /* Imperial Red - Primary Lucky Color */
+    background: #B71C1C; 
+    color: #FFFFFF;
+    border: 1px solid #921717;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
 }
 
-.canon { background: #E8F5E9; color: #2E7D32; border: 1px solid #2E7D32; }
-.fanon { background: #E3F2FD; color: #1565C0; border: 1px solid #1565C0; }
-.crack { background: #FFF3E0; color: #E65100; border: 1px solid #E65100; }
+.tag i {
+    color: #FFD700; /* Gold accents for the icons for extra luck */
+}
 
-.romantic { background: #FFEBEE; color: #C62828; }
-.platonic { background: #F5F5F5; color: #424242; border: 1px solid #BDBDBD; }
+.tag:hover {
+    transform: scale(1.05);
+    background: #D32F2F; /* Slightly brighter red on hover */
+}
 
 /* Card Actions */
 .card-actions {
@@ -344,8 +345,8 @@ body {
 }
 
 .action-btn:hover { transform: scale(1.1); }
-.edit-btn { color: #2196F3; }
-.delete-btn { color: #f44336; }
+.edit-btn { color: #1A237E; } 
+.delete-btn { color: #7f8c8d; } 
 .favorite-btn { color: #ffd700; }
 
 /* Modal */
@@ -535,5 +536,6 @@ body {
 }
 
 .toast-info { border-left: 5px solid #17a2b8; }
+
 
 
