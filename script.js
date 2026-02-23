@@ -190,7 +190,6 @@ function addSampleData() {
             universe: "In-universe",
             status: "Fanon",
             relationship: "Romantic/Platonic",
-            dynamic: "Active",
             trope: "Childhood friends to lovers",
             notes: "The loyalty and history between them gets me every time",
             favorite: true,
@@ -205,7 +204,6 @@ function addSampleData() {
             universe: "In-universe",
             status: "Fanon",
             relationship: "Enemies",
-            dynamic: "Active",
             trope: "Enemies to lovers",
             notes: "The intellectual rivalry and potential for redemption",
             favorite: true,
@@ -249,7 +247,6 @@ function createShipCard(ship) {
     // Determine tag classes
     const statusClass = ship.status.toLowerCase().replace(' ', '-').replace('(', '').replace(')', '');
     const relClass = ship.relationship.toLowerCase().replace('/', '-').replace(' ', '-');
-    const dynamicClass = ship.dynamic.toLowerCase().replace(' ', '-');
     
     let cardHTML = '';
     
@@ -337,10 +334,6 @@ function createShipCard(ship) {
             <span class="tag ${relClass}">
                 <i class="fas fa-${ship.relationship.includes('Romantic') ? 'heart' : ship.relationship.includes('Platonic') ? 'handshake' : 'code-branch'}"></i>
                 ${ship.relationship}
-            </span>
-            <span class="tag ${dynamicClass}">
-                <i class="fas fa-${ship.dynamic === 'Active' ? 'bolt' : ship.dynamic === 'Inactive' ? 'pause-circle' : 'ghost'}"></i>
-                ${ship.dynamic}
             </span>
         ${ship.favorite ? `
             <span class="tag favorite-tag" style="background: #e1ff00; color: #000;">
@@ -454,7 +447,6 @@ function openEditModal(id) {
     document.getElementById('input-universe').value = pairing.universe;
     document.getElementById('input-status').value = pairing.status;
     document.getElementById('input-relationship').value = pairing.relationship;
-    document.getElementById('input-dynamic').value = pairing.dynamic;
     document.getElementById('input-trope').value = pairing.trope || '';
     document.getElementById('input-notes').value = pairing.notes || '';
     document.getElementById('input-favorite').checked = pairing.favorite;
@@ -498,7 +490,6 @@ function completeSubmission(imageData) {
         universe: document.getElementById('input-universe').value,
         status: document.getElementById('input-status').value,
         relationship: document.getElementById('input-relationship').value,
-        dynamic: document.getElementById('input-dynamic').value,
         trope: document.getElementById('input-trope').value,
         notes: document.getElementById('input-notes').value,
         favorite: document.getElementById('input-favorite').checked,
@@ -561,3 +552,4 @@ window.onclick = (event) => {
         closeAddModal(); closeExportModal(); closeImportModal(); closeConfirmModal();
     }
 };
+
