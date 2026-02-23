@@ -218,7 +218,7 @@ function renderPairings(pairingsToRender = getFilteredPairings()) {
     }
     
     pairingsToRender.forEach(ship => {
-        const card = createShipCard(ship);
+        const card = (ship);
         pairingsGrid.appendChild(card);
     });
 }
@@ -287,6 +287,8 @@ function createShipCard(ship) {
         ${ship.universe && ship.universe !== 'In-universe' ? `<div class="info-row"><span class="info-label">Universe:</span><span class="info-value">${ship.universe}</span></div>` : ''}
         ${ship.trope && ship.trope !== 'NA' ? `<div class="info-row"><span class="info-label">Trope:</span><span class="info-value">${ship.trope}</span></div>` : ''}
         
+        ${ship.yearStarted ? `<div class="info-row"><span class="info-label">Started:</span><span class="info-value">${ship.yearStarted}</span>
+        </div>` : ''}
         ${ship.notes ? `<div class="info-row"><span class="info-label">Notes:</span><span class="info-value">${ship.notes}</span></div>` : ''}
         
         <div class="tags-container">
@@ -398,6 +400,7 @@ function openEditModal(id) {
     document.getElementById('input-universe').value = pairing.universe;
     document.getElementById('input-status').value = pairing.status;
     document.getElementById('input-relationship').value = pairing.relationship;
+    document.getElementById('input-year').value = pairing.yearStarted || '';
     
     // NEW FIELDS
     document.getElementById('input-media').value = pairing.media || 'Literature/Books';
@@ -441,6 +444,7 @@ function completeSubmission(imageData) {
         universe: document.getElementById('input-universe').value,
         status: document.getElementById('input-status').value,
         relationship: document.getElementById('input-relationship').value,
+        yearStarted: document.getElementById('input-year').value,
         
         // NEW FIELDS
         media: document.getElementById('input-media').value,
@@ -508,6 +512,7 @@ window.onclick = (event) => {
         closeAddModal(); closeExportModal(); closeImportModal(); closeConfirmModal();
     }
 };
+
 
 
 
