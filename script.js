@@ -21,7 +21,6 @@ const pairingForm = document.getElementById('pairing-form');
 // Load initial data
 document.addEventListener('DOMContentLoaded', async () => {
     await loadFromStorage();
-    // renderPairings and updateStats are now handled inside loadFromStorage
     
     // Initialize upload method toggle
     setUploadMethod('file');
@@ -80,9 +79,8 @@ function handleFileSelect(event) {
 // Preview image from file
 function previewImageFile(file) {
     const reader = new FileReader();
-    const previewContainer = document.getElementById('image-preview-container');
-    const loadingEl = document.getElementById('image-loading');
     const previewImg = document.getElementById('preview-img');
+    const loadingEl = document.getElementById('image-loading');
     
     loadingEl.style.display = 'block';
     previewImg.style.display = 'none';
@@ -108,14 +106,12 @@ function previewImageUrl(url) {
         return;
     }
     
-    const previewContainer = document.getElementById('image-preview-container');
-    const loadingEl = document.getElementById('image-loading');
     const previewImg = document.getElementById('preview-img');
+    const loadingEl = document.getElementById('image-loading');
     
     loadingEl.style.display = 'block';
     previewImg.style.display = 'none';
     
-    // Test if image loads
     const testImg = new Image();
     testImg.onload = function() {
         previewImg.src = url;
@@ -146,7 +142,7 @@ function clearImagePreview() {
     document.getElementById('input-image-url').value = '';
 }
 
-// NEW Load from GitHub/WordPress JSON file
+// Load from GitHub/WordPress JSON file
 async function loadFromStorage() {
     try {
         const response = await fetch('https://Bash-code4228.github.io/fandom-relationship-database/pairings.json');
@@ -208,8 +204,8 @@ function renderPairings(pairingsToRender = getFilteredPairings()) {
     
     if (pairingsToRender.length === 0) {
         pairingsGrid.innerHTML = `
-            <div class="empty-state">
-                <i class="fas fa-heart-broken"></i>
+            <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 50px;">
+                <i class="fas fa-heart-broken" style="font-size: 3rem; color: #ccc; margin-bottom: 20px;"></i>
                 <h3>No ships found</h3>
                 <p>Try a different search or add a new ship!</p>
             </div>
@@ -223,23 +219,20 @@ function renderPairings(pairingsToRender = getFilteredPairings()) {
     });
 }
 
-// Create ship card element - UPDATED to display new fields
+// Create ship card element
 function createShipCard(ship) {
     const card = document.createElement('div');
     card.className = 'pairing-card';
     
-    // Clean up class names for CSS styling
     const statusClass = ship.status.toLowerCase().replace(/\s+/g, '-').replace(/[()]/g, '');
     const relClass = ship.relationship.toLowerCase().replace('/', '-').replace(/\s+/g, '-');
     
     let cardHTML = '';
     
-    // If the ship is a favorite, we can show a star (optional UI flair)
     if (ship.favorite) {
         cardHTML += `<div class="favorite-star" style="position:absolute; top:10px; left:10px; color:gold; z-index:5;"><i class="fas fa-star"></i></div>`;
     }
 
-    // Header/Image Section
     if (ship.image) {
         cardHTML += `
         <div class="image-container">
@@ -254,7 +247,7 @@ function createShipCard(ship) {
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
-            <img src="${ship.image}" alt="${ship.name}" class="ship-image" onerror="this.style.display='none'">
+            <img src="${ship.image}" alt="${ship.name}" class="ship-image" onerror="handleImageError(this)">
             <div class="image-overlay">
                 <h3 class="pairing-name">${ship.name}</h3>
                 <p class="pairing-characters">${ship.characters}</p>
@@ -279,7 +272,6 @@ function createShipCard(ship) {
         </div>`;
     }
     
-    // Body Section
     cardHTML += `
     <div class="card-body">
         <div class="info-row"><span class="info-label">Fandom:</span><span class="info-value">${ship.fandom}</span></div>
@@ -287,9 +279,9 @@ function createShipCard(ship) {
         ${ship.dynamic && ship.dynamic !== 'NA' ? `<div class="info-row"><span class="info-label">Dynamic:</span><span class="info-value">${ship.dynamic}</span></div>` : ''}
         ${ship.notes ? `<div class="info-row"><span class="info-label">Notes:</span><span class="info-value">${ship.notes}</span></div>` : ''}
         
-        <div class="tags-container" style="display: flex; gap: 10px; margin-top: 10px;">
-            <span class="tag ${statusClass}">${ship.status}</span>
-            <span class="tag ${relClass}">${ship.relationship}</span>
+        <div class="tags-container" style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+            <span class="tag ${statusClass}"><i class="fas fa-info-circle"></i>${ship.status}</span>
+            <span class="tag ${relClass}"><i class="fas fa-heart"></i>${ship.relationship}</span>
         </div>
     </div>`;
     
@@ -298,24 +290,23 @@ function createShipCard(ship) {
 }
 
 // Handle image errors
-function handleImageError(img, name, characters) {
+function handleImageError(img) {
     if (img.getAttribute('data-error-handled')) return;
     img.setAttribute('data-error-handled', 'true');
     
-    const imageContainer = img.parentElement;
-    imageContainer.style.display = 'none';
-    // ... rest of your code ...
-}
-
-function getShipIdFromCard(imgElement) {
-    const card = imgElement.closest('.pairing-card');
-    if (!card) return null;
-    const favoriteBtn = card.querySelector('.favorite-btn');
-    if (favoriteBtn && favoriteBtn.onclick) {
-        const match = favoriteBtn.onclick.toString().match(/toggleFavorite\((\d+)\)/);
-        if (match) return parseInt(match[1]);
+    const container = img.closest('.image-container');
+    if (container) {
+        // Hide the image container and rely on the background style of a fallback if needed
+        container.style.display = 'none';
+        // Add a class to the card to show text-based header instead
+        const card = img.closest('.pairing-card');
+        const header = document.createElement('div');
+        header.className = 'card-header';
+        // Re-inject the title and characters since they were in the overlay
+        const name = img.alt;
+        header.innerHTML = `<h3 class="pairing-name">${name}</h3>`;
+        card.prepend(header);
     }
-    return null;
 }
 
 function escapeString(str) {
@@ -366,7 +357,6 @@ function showToast(message, type = 'info') {
 function openAddModal() { addModal.style.display = 'flex'; }
 function closeAddModal() { addModal.style.display = 'none'; resetForm(); }
 
-// UPDATED to load the new fields when editing
 function openEditModal(id) {
     const pairing = pairings.find(p => p.id === id);
     if (!pairing) return;
@@ -378,14 +368,12 @@ function openEditModal(id) {
     document.getElementById('input-status').value = pairing.status;
     document.getElementById('input-relationship').value = pairing.relationship;
     document.getElementById('input-year').value = pairing.yearStarted || '';
-    
-    // NEW FIELDS
     document.getElementById('input-media').value = pairing.media || 'Literature/Books';
     document.getElementById('input-dynamic').value = pairing.dynamic || 'NA';
     document.getElementById('input-trope').value = pairing.trope || 'NA';
-    
     document.getElementById('input-notes').value = pairing.notes || '';
     document.getElementById('input-favorite').checked = pairing.favorite;
+    
     if (pairing.image) {
         if (pairing.image.startsWith('data:')) { setUploadMethod('file'); } 
         else { setUploadMethod('url'); document.getElementById('input-image-url').value = pairing.image; }
@@ -411,7 +399,6 @@ function addNewPairing() {
     completeSubmission(imageData || (editingId ? pairings.find(p => p.id === editingId).image : null));
 }
 
-// UPDATED to save new fields
 function completeSubmission(imageData) {
     const pairingData = {
         id: editingId || Date.now(),
@@ -422,12 +409,9 @@ function completeSubmission(imageData) {
         status: document.getElementById('input-status').value,
         relationship: document.getElementById('input-relationship').value,
         yearStarted: document.getElementById('input-year').value,
-        
-        // NEW FIELDS
         media: document.getElementById('input-media').value,
         dynamic: document.getElementById('input-dynamic').value,
         trope: document.getElementById('input-trope').value,
-        
         notes: document.getElementById('input-notes').value,
         favorite: document.getElementById('input-favorite').checked,
         image: imageData,
@@ -459,14 +443,11 @@ function confirmDelete() {
     saveToStorage(); applyFilters(); updateStats(); closeConfirmModal();
 }
 
-function openExportModal() { exportModal.style.display = 'flex'; }
-    addModal.style.display = 'none'; 
+function openExportModal() { 
     const exportText = document.getElementById('export-text');
     if (exportText) {
         exportText.value = JSON.stringify(pairings, null, 2);
     }
-    
-    // Show the Export modal
     exportModal.style.display = 'flex';
 }
 
@@ -486,26 +467,22 @@ function exportData() {
 
 function importData() {
     const file = document.getElementById('import-file').files[0];
+    if (!file) return;
     const reader = new FileReader();
     reader.onload = (e) => {
-        pairings = JSON.parse(e.target.result);
-        saveToStorage(); applyFilters(); updateStats(); closeImportModal();
+        try {
+            pairings = JSON.parse(e.target.result);
+            saveToStorage(); applyFilters(); updateStats(); closeImportModal();
+            showToast('Data imported successfully!', 'success');
+        } catch (err) {
+            showToast('Invalid JSON file', 'error');
+        }
     };
     reader.readAsText(file);
 }
 
 window.onclick = (event) => {
-    if (event.target.className === 'modal') {
+    if (event.target.classList.contains('modal')) {
         closeAddModal(); closeExportModal(); closeImportModal(); closeConfirmModal();
     }
 };
-
-
-
-
-
-
-
-
-
-
