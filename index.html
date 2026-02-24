@@ -68,23 +68,35 @@ Just to be transparent, I did not build this on my own, I definitely asked AI fo
         <div class="pairings-grid" id="pairings-grid">
             </div>
         
-        <div class="modal" id="add-modal">
-            <div class="modal-content">
-                <div class="card-header" style="border-radius: 20px 20px 0 0; background: linear-gradient(135deg, #1A237E 0%, #283593 100%);">
-                    <h2 class="modal-title" style="color: white;">Add New Ship</h2>
-                    <button class="action-btn" onclick="closeAddModal()" style="position: absolute; right: 20px; top: 20px;">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <div style="padding: 30px;">
-                    <form id="pairing-form" onsubmit="event.preventDefault(); addNewPairing();">
-                        <div class="favorite-toggle">
-                            <input type="checkbox" id="input-favorite">
-                            <label for="input-favorite" class="star">
-                                <i class="fas fa-star"></i>
-                            </label>
-                            <span style="font-weight: 600; color: #666;">Mark as Favorite</span>
-                        </div>
+        <div id="add-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Add New Pairing</h2>
+                <button class="close-btn" onclick="closeAddModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="pairing-form">
+                </form>
+        </div>
+    </div>
+
+    <div id="export-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Export Data</h2>
+                <button class="close-btn" onclick="closeExportModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div style="padding: 20px;">
+                <textarea id="export-text" readonly style="width: 100%; height: 200px; padding: 10px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 20px; font-family: monospace;"></textarea>
+                <button class="btn btn-primary" onclick="exportData()" style="width: 100%;">
+                    <i class="fas fa-download"></i> Download pairings.json
+                </button>
+            </div>
+        </div>
+    </div>
                         
                         <div class="form-grid">
                             <div class="form-group">
@@ -330,6 +342,7 @@ Just to be transparent, I did not build this on my own, I definitely asked AI fo
     <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
