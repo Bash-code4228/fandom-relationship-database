@@ -228,12 +228,18 @@ function createShipCard(ship) {
     const card = document.createElement('div');
     card.className = 'pairing-card';
     
+    // Clean up class names for CSS styling
     const statusClass = ship.status.toLowerCase().replace(/\s+/g, '-').replace(/[()]/g, '');
     const relClass = ship.relationship.toLowerCase().replace('/', '-').replace(/\s+/g, '-');
     
     let cardHTML = '';
     
-    // Image or Header Section
+    // If the ship is a favorite, we can show a star (optional UI flair)
+    if (ship.favorite) {
+        cardHTML += `<div class="favorite-star" style="position:absolute; top:10px; left:10px; color:gold; z-index:5;"><i class="fas fa-star"></i></div>`;
+    }
+
+    // Header/Image Section
     if (ship.image) {
         cardHTML += `
         <div class="image-container">
@@ -248,8 +254,7 @@ function createShipCard(ship) {
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
-            <img src="${ship.image}" alt="${ship.name}" class="ship-image" 
-                 onerror="this.parentElement.style.display='none'">
+            <img src="${ship.image}" alt="${ship.name}" class="ship-image" onerror="this.style.display='none'">
             <div class="image-overlay">
                 <h3 class="pairing-name">${ship.name}</h3>
                 <p class="pairing-characters">${ship.characters}</p>
@@ -280,10 +285,9 @@ function createShipCard(ship) {
         <div class="info-row"><span class="info-label">Fandom:</span><span class="info-value">${ship.fandom}</span></div>
         ${ship.media ? `<div class="info-row"><span class="info-label">Media:</span><span class="info-value">${ship.media}</span></div>` : ''}
         ${ship.dynamic && ship.dynamic !== 'NA' ? `<div class="info-row"><span class="info-label">Dynamic:</span><span class="info-value">${ship.dynamic}</span></div>` : ''}
-        ${ship.trope && ship.trope !== 'NA' ? `<div class="info-row"><span class="info-label">Trope:</span><span class="info-value">${ship.trope}</span></div>` : ''}
         ${ship.notes ? `<div class="info-row"><span class="info-label">Notes:</span><span class="info-value">${ship.notes}</span></div>` : ''}
         
-        <div class="tags-container" style="display: flex; gap: 10px; margin-top: 15px;">
+        <div class="tags-container" style="display: flex; gap: 10px; margin-top: 10px;">
             <span class="tag ${statusClass}">${ship.status}</span>
             <span class="tag ${relClass}">${ship.relationship}</span>
         </div>
@@ -485,6 +489,7 @@ window.onclick = (event) => {
         closeAddModal(); closeExportModal(); closeImportModal(); closeConfirmModal();
     }
 };
+
 
 
 
