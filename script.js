@@ -228,21 +228,18 @@ function createShipCard(ship) {
     const card = document.createElement('div');
     card.className = 'pairing-card';
     
-    const statusClass = ship.status.toLowerCase().replace(' ', '-').replace('(', '').replace(')', '');
-    const relClass = ship.relationship.toLowerCase().replace('/', '-').replace(' ', '-');
+    const statusClass = ship.status.toLowerCase().replace(/\s+/g, '-').replace(/[()]/g, '');
+    const relClass = ship.relationship.toLowerCase().replace('/', '-').replace(/\s+/g, '-');
     
     let cardHTML = '';
     
-    if (ship.favorite) {
-        cardHTML += `<div class="favorite-star"><i class="fas fa-star"></i></div>`;
-    }
-    
+    // Image or Header Section
     if (ship.image) {
         cardHTML += `
         <div class="image-container">
             <div class="card-actions">
                 <button class="action-btn favorite-btn" onclick="toggleFavorite(${ship.id})">
-                    cardHTML += `<i class="${ship.favorite ? 'fas' : 'far'} fa-star"></i>`;
+                    <i class="${ship.favorite ? 'fas' : 'far'} fa-star"></i>
                 </button>
                 <button class="action-btn edit-btn" onclick="openEditModal(${ship.id})">
                     <i class="fas fa-edit"></i>
@@ -252,14 +249,13 @@ function createShipCard(ship) {
                 </button>
             </div>
             <img src="${ship.image}" alt="${ship.name}" class="ship-image" 
-                 onerror="handleImageError(this, '${escapeString(ship.name)}', '${escapeString(ship.characters)}')">
+                 onerror="this.parentElement.style.display='none'">
             <div class="image-overlay">
                 <h3 class="pairing-name">${ship.name}</h3>
                 <p class="pairing-characters">${ship.characters}</p>
             </div>
         </div>`;
-    } 
-    else {
+    } else {
         cardHTML += `
         <div class="card-header">
             <div class="card-actions">
@@ -278,26 +274,18 @@ function createShipCard(ship) {
         </div>`;
     }
     
+    // Body Section
     cardHTML += `
     <div class="card-body">
         <div class="info-row"><span class="info-label">Fandom:</span><span class="info-value">${ship.fandom}</span></div>
-        
         ${ship.media ? `<div class="info-row"><span class="info-label">Media:</span><span class="info-value">${ship.media}</span></div>` : ''}
         ${ship.dynamic && ship.dynamic !== 'NA' ? `<div class="info-row"><span class="info-label">Dynamic:</span><span class="info-value">${ship.dynamic}</span></div>` : ''}
-        ${ship.universe && ship.universe !== 'In-universe' ? `<div class="info-row"><span class="info-label">Universe:</span><span class="info-value">${ship.universe}</span></div>` : ''}
         ${ship.trope && ship.trope !== 'NA' ? `<div class="info-row"><span class="info-label">Trope:</span><span class="info-value">${ship.trope}</span></div>` : ''}
-        
-        ${ship.yearStarted ? `<div class="info-row"><span class="info-label">Started:</span><span class="info-value">${ship.yearStarted}</span>
-        </div>` : ''}
         ${ship.notes ? `<div class="info-row"><span class="info-label">Notes:</span><span class="info-value">${ship.notes}</span></div>` : ''}
         
-        <div class="tags-container">
-            <span class="tag ${statusClass}">
-                <i class="fas fa-${ship.status === 'Canon' ? 'check-circle' : 'users'}"></i> ${ship.status}
-            </span>
-            <span class="tag ${relClass}">
-                <i class="fas fa-heart"></i> ${ship.relationship}
-            </span>
+        <div class="tags-container" style="display: flex; gap: 10px; margin-top: 15px;">
+            <span class="tag ${statusClass}">${ship.status}</span>
+            <span class="tag ${relClass}">${ship.relationship}</span>
         </div>
     </div>`;
     
@@ -497,6 +485,7 @@ window.onclick = (event) => {
         closeAddModal(); closeExportModal(); closeImportModal(); closeConfirmModal();
     }
 };
+
 
 
 
