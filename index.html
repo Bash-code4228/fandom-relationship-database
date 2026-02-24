@@ -69,15 +69,144 @@ Just to be transparent, I did not build this on my own, I definitely asked AI fo
             </div>
         
         <div id="add-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modal-title">Add New Pairing</h2>
-                <button class="close-btn" onclick="closeAddModal()">
-                    <i class="fas fa-times"></i>
-                </button>
+    <div class="modal-content">
+        <div class="card-header">
+            <h2 id="modal-title">Add New Pairing</h2>
+            <button class="action-btn" onclick="closeAddModal()" style="position: absolute; right: 20px; top: 20px;">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <form id="pairing-form" onsubmit="event.preventDefault(); addNewPairing();" style="padding: 30px;">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="input-name">Ship Name *</label>
+                    <input type="text" id="input-name" placeholder="e.g., Stucky, Dramione" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="input-characters">Characters *</label>
+                    <input type="text" id="input-characters" placeholder="e.g., Steve Rogers x Bucky Barnes" required>
+                </div>
             </div>
-            <form id="pairing-form">
-                </form>
+            
+            <div class="form-group full-width">
+                <label>Ship Image</label>
+                <div class="upload-options">
+                    <div class="upload-option-btn active" id="upload-option-file" onclick="setUploadMethod('file')">
+                        <i class="fas fa-upload"></i><br>Upload File
+                    </div>
+                    <div class="upload-option-btn" id="upload-option-url" onclick="setUploadMethod('url')">
+                        <i class="fas fa-link"></i><br>Use URL
+                    </div>
+                </div>
+                
+                <div id="file-upload-container" class="file-input-wrapper">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <div>Click to upload image</div>
+                    <input type="file" id="input-file" accept="image/*" onchange="handleFileSelect(event)">
+                </div>
+                
+                <div id="url-upload-container" style="display: none;">
+                    <input type="url" id="input-image-url" placeholder="https://example.com/image.jpg" class="form-group">
+                </div>
+                
+                <div class="image-preview-container" id="image-preview-container">
+                    <div id="image-loading" style="display: none;"><i class="fas fa-spinner fa-spin"></i></div>
+                    <img id="preview-img" class="preview-img" style="display: none;">
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="input-fandom">Fandom *</label>
+                    <input type="text" id="input-fandom" required>
+                </div>
+                <div class="form-group">
+                    <label for="input-universe">Universe Type</label>
+                    <select id="input-universe">
+                        <option value="From universe">From universe</option>
+                        <option value="Crossover">Crossover</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="input-year">Year Started Shipping</label>
+                    <input type="number" id="input-year" min="1900" max="2099">
+                </div>
+                <div class="form-group">
+                    <label for="input-status">Relationship Status</label>
+                    <select id="input-status">
+                        <option value="Canon">Canon</option>
+                        <option value="Fanon">Fanon</option>
+                        <option value="Crack">Crack Ship</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="input-relationship">Relationship Type</label>
+                    <select id="input-relationship">
+                        <option value="Romantic">Romantic</option>
+                        <option value="Platonic">Platonic</option>
+                        <option value="Polyamorous">Polyamorous</option>
+                        <option value="Family">Family</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="input-media">Media Type</label>
+                    <select id="input-media">
+                        <option value="Literature/Books">Literature/Books</option>
+                        <option value="Comics/Manga">Comics/Manga</option>
+                        <option value="Film Series">Film Series</option>
+                        <option value="Animation Series">Animation Series</option>
+                        <option value="Game">Game</option>
+                        <option value="Mixed">Mixed</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="input-dynamic">Dynamic Type</label>
+                    <select id="input-dynamic">
+                        <option value="Opposing Energies">Opposing Energies</option>
+                        <option value="Similar Energies">Similar Energies</option>
+                        <option value="NA">Not Applicable</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="input-trope">Trope Type</label>
+                    <select id="input-trope">
+                        <option value="Friends to Lovers">Friends to Lovers</option>
+                        <option value="Enemies to Lovers">Enemies to Lovers</option>
+                        <option value="NA">Not Applicable</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="favorite-toggle">
+                    <input type="checkbox" id="input-favorite">
+                    <span class="star"><i class="fas fa-star"></i></span>
+                    <span>Mark as Active Favorite</span>
+                </label>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="input-notes">Notes / Why You Ship It</label>
+                <textarea id="input-notes" rows="3"></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+                <i class="fas fa-heart"></i> Save Ship
+            </button>
+        </form>
+    </div>
+</div>
         </div>
     </div>
 
@@ -342,6 +471,7 @@ Just to be transparent, I did not build this on my own, I definitely asked AI fo
     <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
