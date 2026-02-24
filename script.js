@@ -460,6 +460,16 @@ function confirmDelete() {
 }
 
 function openExportModal() { exportModal.style.display = 'flex'; }
+    addModal.style.display = 'none'; 
+    const exportText = document.getElementById('export-text');
+    if (exportText) {
+        exportText.value = JSON.stringify(pairings, null, 2);
+    }
+    
+    // Show the Export modal
+    exportModal.style.display = 'flex';
+}
+
 function closeExportModal() { exportModal.style.display = 'none'; }
 function openImportModal() { importModal.style.display = 'flex'; }
 function closeImportModal() { importModal.style.display = 'none'; }
@@ -489,6 +499,7 @@ window.onclick = (event) => {
         closeAddModal(); closeExportModal(); closeImportModal(); closeConfirmModal();
     }
 };
+
 
 
 
