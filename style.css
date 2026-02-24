@@ -7,7 +7,8 @@
 }
 
 body {
-    background: linear-gradient(135deg, #D32F2F 0%, #1A237E 100%);
+    /* Changed to Solid Grounding Brown */
+    background-color: #5D4037; 
     color: #333;
     min-height: 100vh;
     padding: 20px;
@@ -25,15 +26,18 @@ body {
 
 /* Header */
 .header {
-    background: linear-gradient(135deg, #2E7D32 0%, #1A237E 100%);
-    color: white;
+    /* Changed to Solid Imperial Red with a Gold border */
+    background: #B71C1C;
+    color: #FFD700; /* Gold text */
     padding: 40px;
     border-radius: 15px;
     margin-bottom: 30px;
     position: relative;
     overflow: hidden;
+    border-bottom: 4px solid #D4AF37; 
 }
 
+/* Kept your floating animation but made it subtle for a solid background */
 .header::before {
     content: '';
     position: absolute;
@@ -41,7 +45,7 @@ body {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background: radial-gradient(circle, rgba(255,215,0,0.05) 1px, transparent 1px);
     background-size: 30px 30px;
     animation: float 20s linear infinite;
 }
@@ -296,7 +300,6 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    /* Imperial Red - Primary Lucky Color */
     background: #B71C1C; 
     color: #FFFFFF;
     border: 1px solid #921717;
@@ -305,12 +308,12 @@ body {
 }
 
 .tag i {
-    color: #FFD700; /* Gold accents for the icons for extra luck */
+    color: #FFD700; 
 }
 
 .tag:hover {
     transform: scale(1.05);
-    background: #D32F2F; /* Slightly brighter red on hover */
+    background: #D32F2F; 
 }
 
 /* Card Actions */
@@ -367,9 +370,9 @@ body {
 .modal-content {
     background: white;
     border-radius: 20px;
-    max-width: 650px; /* Slightly wider for the new dropdowns */
+    max-width: 650px; 
     width: 100%;
-    max-height: 85vh; /* Improved height for scrolling */
+    max-height: 85vh; 
     overflow-y: auto;
     position: relative;
     animation: modalSlideIn 0.3s ease;
@@ -391,7 +394,7 @@ body {
 /* Form Styles */
 .form-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Auto-adapts to new fields */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
     gap: 20px;
     margin-bottom: 20px;
 }
