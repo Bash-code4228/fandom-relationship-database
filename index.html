@@ -474,40 +474,130 @@ Just to be transparent, I did not build this on my own, I definitely asked AI fo
         </div>
     </div>
 
-    <div id="export-modal" class="modal">
-        <div class="modal-content" style="max-width: 500px;">
-            <div class="card-header">
-                <h2 style="color: white;">Export Data</h2>
-                <button class="action-btn" onclick="closeExportModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div style="padding: 20px;">
-                <textarea id="export-text" readonly style="width: 100%; height: 200px; margin-bottom: 20px; font-family: monospace;"></textarea>
-                <button class="btn btn-primary" onclick="exportData()" style="width: 100%;">
-                    <i class="fas fa-download"></i> Download JSON
-                </button>
-            </div>
+<div id="add-modal" class="modal">
+    <div class="modal-content">
+        <div class="card-header">
+            <h2 id="modal-title">Add New Pairing</h2>
+            <button class="action-btn" onclick="closeAddModal()" style="position: absolute; right: 20px; top: 20px;">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
-    </div>
-
-    <div id="import-modal" class="modal">
-        <div class="modal-content" style="max-width: 500px;">
-            <div class="card-header">
-                <h2 style="color: white;">Import Data</h2>
-                <button class="action-btn" onclick="closeImportModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div style="padding: 20px;">
-                <input type="file" id="import-file" accept=".json" style="margin-bottom: 20px;">
-                <button class="btn btn-primary" onclick="importData()" style="width: 100%; background: #dc3545;">
-                    <i class="fas fa-upload"></i> Import and Replace
-                </button>
-            </div>
-        </div>
-    </div>
         
+        <form id="pairing-form" onsubmit="event.preventDefault(); addNewPairing();" style="padding: 30px;">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="input-name">Ship Name *</label>
+                    <input type="text" id="input-name" placeholder="e.g., Stucky, Dramione" required>
+                </div>
+                <div class="form-group">
+                    <label for="input-characters">Characters *</label>
+                    <input type="text" id="input-characters" placeholder="e.g., Steve Rogers x Bucky Barnes" required>
+                </div>
+            </div>
+            
+            <div class="form-group full-width">
+                <label>Ship Image</label>
+                <div class="upload-options">
+                    <div class="upload-option-btn active" id="upload-option-file" onclick="setUploadMethod('file')">
+                        <i class="fas fa-upload"></i><br>Upload File
+                    </div>
+                    <div class="upload-option-btn" id="upload-option-url" onclick="setUploadMethod('url')">
+                        <i class="fas fa-link"></i><br>Use URL
+                    </div>
+                </div>
+                <div id="file-upload-container" class="file-input-wrapper">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <div>Click to upload image</div>
+                    <input type="file" id="input-file" accept="image/*" onchange="handleFileSelect(event)">
+                </div>
+                <div id="url-upload-container" style="display: none;">
+                    <input type="url" id="input-image-url" placeholder="https://example.com/image.jpg" class="form-group">
+                </div>
+                <div class="image-preview-container" id="image-preview-container">
+                    <div id="image-loading" style="display: none;"><i class="fas fa-spinner fa-spin"></i></div>
+                    <img id="preview-img" class="preview-img" style="display: none;">
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="input-fandom">Fandom *</label>
+                    <input type="text" id="input-fandom" required>
+                </div>
+                <div class="form-group">
+                    <label for="input-universe">Universe Type</label>
+                    <select id="input-universe">
+                        <option value="From universe">From universe</option>
+                        <option value="Crossover">Crossover</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="input-year">Year Started Shipping</label>
+                    <input type="number" id="input-year" min="1900" max="2099">
+                </div>
+                <div class="form-group">
+                    <label for="input-status">Relationship Status</label>
+                    <select id="input-status">
+                        <option value="Canon">Canon</option>
+                        <option value="Fanon">Fanon</option>
+                        <option value="Crack">Crack Ship</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="favorite-toggle">
+                    <input type="checkbox" id="input-favorite">
+                    <span class="star"><i class="fas fa-star"></i></span>
+                    <span>Mark as Active Favorite</span>
+                </label>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="input-notes">Notes / Why You Ship It</label>
+                <textarea id="input-notes" rows="3"></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+                <i class="fas fa-heart"></i> Save Ship
+            </button>
+        </form>
+    </div> </div> <div id="export-modal" class="modal">
+    <div class="modal-content" style="max-width: 500px;">
+        <div class="card-header">
+            <h2 style="color: white;">Export Data</h2>
+            <button class="action-btn" onclick="closeExportModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div style="padding: 20px;">
+            <textarea id="export-text" readonly style="width: 100%; height: 200px; margin-bottom: 20px; font-family: monospace;"></textarea>
+            <button class="btn btn-primary" onclick="exportData()" style="width: 100%;">
+                <i class="fas fa-download"></i> Download JSON
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="import-modal" class="modal">
+    <div class="modal-content" style="max-width: 500px;">
+        <div class="card-header">
+            <h2 style="color: white;">Import Data</h2>
+            <button class="action-btn" onclick="closeImportModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div style="padding: 20px;">
+            <input type="file" id="import-file" accept=".json" style="margin-bottom: 20px;">
+            <button class="btn btn-primary" onclick="importData()" style="width: 100%; background: #dc3545;">
+                <i class="fas fa-upload"></i> Import and Replace
+            </button>
+        </div>
+    </div>
+</div>
         <div class="modal" id="confirm-modal">
             <div class="modal-content" style="max-width: 400px;">
                 <div class="card-header" style="border-radius: 20px 20px 0 0;">
@@ -543,6 +633,7 @@ Just to be transparent, I did not build this on my own, I definitely asked AI fo
     <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
