@@ -34,7 +34,9 @@ body {
     margin-bottom: 30px;
     position: relative;
     overflow: hidden;
+    .header {
     border-bottom: 4px solid #D4AF37; 
+}
 }
 
 /* Kept your floating animation but made it subtle for a solid background */
@@ -62,10 +64,19 @@ body {
     align-items: center;
     gap: 15px;
     position: relative;
+
+    color: #D4AF37; 
+
+    text-shadow: 
+        1px 1px 0px #F5E09E,  /* Light highlight on top */
+        2px 2px 0px #9A7B2C,  /* Darker "etched" shadow */
+        3px 3px 5px rgba(0,0,0,0.3); /* Soft drop shadow for lift */
 }
 
 .header h1 i {
-    color: #ffd700;
+    /* Matching the icon to the metallic text */
+    color: #D4AF37;
+    filter: drop-shadow(1px 1px 0px #F5E09E);
 }
 
 /* Stats Cards */
@@ -548,6 +559,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .toast-info { border-left: 5px solid #17a2b8; }
+
 
 
 
