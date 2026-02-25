@@ -1,5 +1,22 @@
 [
   {
+    "id": 1772016203918,
+    "name": "-",
+    "characters": "Gouhin & Legoshi",
+    "fandom": "Beastars",
+    "universe": "From universe",
+    "status": "Canon",
+    "relationship": "Romantic",
+    "yearStarted": "2022",
+    "media": "Mixed",
+    "dynamic": "NA",
+    "trope": "Found Family",
+    "notes": "",
+    "favorite": false,
+    "image": null,
+    "addedDate": "2026-02-25"
+  },
+  {
     "id": 1772011098054,
     "name": "Perwaine",
     "characters": "Gwaine/Percival",
@@ -104,7 +121,7 @@
   {
     "id": 1772001392438,
     "name": "Eremika",
-    "characters": "Eren Yeager/Mikasa Ackermen",
+    "characters": "Eren Yeager/Mikasa Ackerman",
     "fandom": "Attack on Titan",
     "universe": "From universe",
     "status": "Canon",
@@ -211,14 +228,14 @@
     "universe": "",
     "status": "Fanon",
     "relationship": "Romantic",
-    "yearStarted": "",
+    "yearStarted": "2015",
     "media": "Mixed",
     "dynamic": "Opposing Energies",
     "trope": "Enemies to Lovers",
     "notes": "",
     "favorite": false,
     "image": null,
-    "addedDate": "2026-02-24"
+    "addedDate": "2026-02-25"
   },
   {
     "id": 2,
@@ -228,13 +245,13 @@
     "universe": "From universe",
     "status": "Fanon",
     "relationship": "Romantic",
-    "yearStarted": "",
+    "yearStarted": "2016",
     "media": "Mixed",
     "dynamic": "Opposing Energies",
     "trope": "Enemies to Lovers",
     "notes": "",
     "favorite": false,
     "image": null,
-    "addedDate": "2026-02-24"
+    "addedDate": "2026-02-25"
   }
 ]
