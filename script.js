@@ -315,6 +315,8 @@ function escapeString(str) {
 
 function getFilteredPairings() {
     let filtered = [...pairings];
+    
+    // 1. Apply search filter
     if (currentSearch) {
         filtered = filtered.filter(p => 
             p.name.toLowerCase().includes(currentSearch) ||
@@ -322,6 +324,16 @@ function getFilteredPairings() {
             p.fandom.toLowerCase().includes(currentSearch)
         );
     }
+
+    // 2. Sort alphabetically by Ship Name
+    filtered.sort((a, b) => {
+        const nameA = a.name.toLowerCase();
+        const nameB = b.name.toLowerCase();
+        if (nameA < nameB) return -1;
+        if (nameA > nameB) return 1;
+        return 0;
+    });
+
     return filtered;
 }
 
@@ -486,3 +498,4 @@ window.onclick = (event) => {
         closeAddModal(); closeExportModal(); closeImportModal(); closeConfirmModal();
     }
 };
+
