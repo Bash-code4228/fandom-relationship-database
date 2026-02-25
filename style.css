@@ -27,7 +27,7 @@ body {
 /* Header */
 .header {
     /* Changed to Solid Imperial Red with a Gold border */
-    background: #B71C1C;
+    background: #0992C2;
     color: #FFD700; /* Gold text */
     padding: 40px;
     border-radius: 15px;
@@ -548,6 +548,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .toast-info { border-left: 5px solid #17a2b8; }
+
 
 
 
