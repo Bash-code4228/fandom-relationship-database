@@ -1,7 +1,58 @@
 [
   {
+    "id": 1772095602524,
+    "name": "Jorgairy",
+    "characters": "Jorgen Von Strangle/Tooth Fairy",
+    "fandom": "Fairy Odd Parents",
+    "universe": "From universe",
+    "status": "Canon",
+    "relationship": "Romantic",
+    "yearStarted": "2011",
+    "media": "Animation Series",
+    "dynamic": "Similar Energies",
+    "trope": "Unrequited to Requited Love",
+    "notes": "",
+    "favorite": false,
+    "image": null,
+    "addedDate": "2026-02-26"
+  },
+  {
+    "id": 1772095354677,
+    "name": "Coswan",
+    "characters": "Cosmo/Wanda",
+    "fandom": "Fairy Odd Parents",
+    "universe": "From universe",
+    "status": "Canon",
+    "relationship": "Romantic",
+    "yearStarted": "2011",
+    "media": "Animation Series",
+    "dynamic": "Brain and Himbo",
+    "trope": "Mutual Pining",
+    "notes": "",
+    "favorite": false,
+    "image": null,
+    "addedDate": "2026-02-26"
+  },
+  {
+    "id": 1772095145561,
+    "name": "Anti-Coswan",
+    "characters": "Anti-Cosmo/Anti-Wanda",
+    "fandom": "Fairy Odd Parents",
+    "universe": "From universe",
+    "status": "Canon",
+    "relationship": "Romantic",
+    "yearStarted": "2011",
+    "media": "Animation Series",
+    "dynamic": "Similar Energies",
+    "trope": "Mutual Pining",
+    "notes": "",
+    "favorite": false,
+    "image": null,
+    "addedDate": "2026-02-26"
+  },
+  {
     "id": 1772031873241,
-    "name": "-",
+    "name": "Fridanny",
     "characters": "Manny Rivera/Frida Suarez",
     "fandom": "El Tigre: The Adventures of Manny Rivera",
     "universe": "From universe",
@@ -14,7 +65,7 @@
     "notes": "",
     "favorite": false,
     "image": null,
-    "addedDate": "2026-02-25"
+    "addedDate": "2026-02-26"
   },
   {
     "id": 1772030190683,
@@ -273,7 +324,7 @@
   },
   {
     "id": 1772022774163,
-    "name": "-",
+    "name": "CreepyThinLove",
     "characters": "Thin Man/Dylan Sanders",
     "fandom": "Charlie's Angels",
     "universe": "From universe",
@@ -286,7 +337,7 @@
     "notes": "",
     "favorite": false,
     "image": null,
-    "addedDate": "2026-02-25"
+    "addedDate": "2026-02-26"
   },
   {
     "id": 1772022608052,
@@ -324,7 +375,7 @@
   },
   {
     "id": 1772022147846,
-    "name": "-",
+    "name": "Sakutomo",
     "characters": "Tomoyo Daidouji & Sakura Kinomoto",
     "fandom": "Cardcaptor Sakura",
     "universe": "From universe",
@@ -337,7 +388,7 @@
     "notes": "",
     "favorite": false,
     "image": null,
-    "addedDate": "2026-02-25"
+    "addedDate": "2026-02-26"
   },
   {
     "id": 1772022086102,
@@ -358,7 +409,7 @@
   },
   {
     "id": 1772021917934,
-    "name": "-",
+    "name": "Binkey",
     "characters": "Bunsen & Mikey Munroe",
     "fandom": "Bunsen is A Beast",
     "universe": "From universe",
@@ -371,7 +422,7 @@
     "notes": "",
     "favorite": false,
     "image": null,
-    "addedDate": "2026-02-25"
+    "addedDate": "2026-02-26"
   },
   {
     "id": 1772021800807,
@@ -477,7 +528,7 @@
   },
   {
     "id": 1772020437845,
-    "name": "-",
+    "name": "Boya",
     "characters": "Boboiboy/Yaya Yah",
     "fandom": "Boboiboy",
     "universe": "From universe",
@@ -490,11 +541,11 @@
     "notes": "",
     "favorite": false,
     "image": null,
-    "addedDate": "2026-02-25"
+    "addedDate": "2026-02-26"
   },
   {
     "id": 1772020246597,
-    "name": "-",
+    "name": "Bopal",
     "characters": "Boboiboy & Gopal",
     "fandom": "Boboiboy",
     "universe": "From universe",
@@ -507,11 +558,11 @@
     "notes": "",
     "favorite": false,
     "image": null,
-    "addedDate": "2026-02-25"
+    "addedDate": "2026-02-26"
   },
   {
     "id": 1772020057365,
-    "name": "-",
+    "name": "Bofang",
     "characters": "Boboiboy & Fang",
     "fandom": "Boboiboy",
     "universe": "From universe",
@@ -524,7 +575,7 @@
     "notes": "",
     "favorite": false,
     "image": null,
-    "addedDate": "2026-02-25"
+    "addedDate": "2026-02-26"
   },
   {
     "id": 1772019854191,
@@ -562,20 +613,20 @@
   },
   {
     "id": 1772019601408,
-    "name": "-",
+    "name": "Maknight",
     "characters": "Austin Mahone/Katie Knight",
     "fandom": "Big Time Rush",
     "universe": "From universe",
     "status": "Fanon",
     "relationship": "Romantic",
-    "yearStarted": "2009",
+    "yearStarted": "2012",
     "media": "Film Series",
     "dynamic": "Similar Energies",
     "trope": "Mutual Pining",
     "notes": "",
     "favorite": false,
     "image": null,
-    "addedDate": "2026-02-25"
+    "addedDate": "2026-02-26"
   },
   {
     "id": 1772019422824,
@@ -596,7 +647,7 @@
   },
   {
     "id": 1772019258321,
-    "name": "-",
+    "name": "Yusmanis",
     "characters": "Yusof/Manja Suhana",
     "fandom": "Bidadari Kiriman Tuhan",
     "universe": "From universe",
@@ -609,7 +660,7 @@
     "notes": " ☆ couldve been a nice representation of someone with special needs getting a relationship with the male lead (he was dang respectful and HE GETS IT, unfortunately the showrunners dont see past that vision).",
     "favorite": false,
     "image": null,
-    "addedDate": "2026-02-25"
+    "addedDate": "2026-02-26"
   },
   {
     "id": 1772018948938,
@@ -630,7 +681,7 @@
   },
   {
     "id": 1772018857259,
-    "name": "-",
+    "name": "The Maitlands & Lydia",
     "characters": "Adam Maitland & Barbara Maitland & Lydia Deetz",
     "fandom": "Beetlejuice",
     "universe": "From universe",
@@ -643,7 +694,7 @@
     "notes": " ☆ adam and barbara proved to be the best parents that they could be to lydia.",
     "favorite": false,
     "image": null,
-    "addedDate": "2026-02-25"
+    "addedDate": "2026-02-26"
   },
   {
     "id": 1772018270597,
@@ -698,7 +749,7 @@
   },
   {
     "id": 1772017936694,
-    "name": "-",
+    "name": "Ibulouis",
     "characters": "Ibuki & Louis",
     "fandom": "Beastars",
     "universe": "From universe",
@@ -711,11 +762,11 @@
     "notes": "",
     "favorite": false,
     "image": null,
-    "addedDate": "2026-02-25"
+    "addedDate": "2026-02-26"
   },
   {
     "id": 1772016203918,
-    "name": "-",
+    "name": "Goulego",
     "characters": "Gouhin & Legoshi",
     "fandom": "Beastars",
     "universe": "From universe",
@@ -728,7 +779,7 @@
     "notes": "",
     "favorite": false,
     "image": null,
-    "addedDate": "2026-02-25"
+    "addedDate": "2026-02-26"
   },
   {
     "id": 1772011098054,
@@ -851,7 +902,7 @@
   },
   {
     "id": 1772001203272,
-    "name": "-",
+    "name": "Relicity",
     "characters": "Big Dick Richie/Felicity Smoke",
     "fandom": "Arrow, Magic Mike",
     "universe": "Crossover",
@@ -864,7 +915,7 @@
     "notes": "",
     "favorite": false,
     "image": null,
-    "addedDate": "2026-02-25"
+    "addedDate": "2026-02-26"
   },
   {
     "id": 1772001059968,
