@@ -59,8 +59,23 @@
     </aside>
 
     <div class="content-area" style="flex: 1;">
-        <div class="controls"> ... </div>
-        <div class="pairings-grid" id="pairings-grid"> ... </div>
+    <div class="controls" style="margin-bottom: 20px;">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="search-input" placeholder="Search ships by name, characters, or fandom...">
+        </div>
+        <button class="btn btn-primary" onclick="openAddModal()">
+            <i class="fas fa-plus"></i> Add New Ship
+        </button>
+        <button class="btn btn-secondary" onclick="openExportModal()">
+            <i class="fas fa-file-export"></i> Export
+        </button>
+        <button class="btn btn-secondary" onclick="openImportModal()">
+            <i class="fas fa-file-import"></i> Import
+        </button>
+    </div>
+    
+    <div class="pairings-grid" id="pairings-grid">
     </div>
 </div>
         
@@ -300,6 +315,7 @@
     <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
