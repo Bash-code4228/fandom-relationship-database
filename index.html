@@ -17,7 +17,7 @@
             Just to be transparent, I did not build this on my own, I definitely asked AI for help.</p>
         </div>
 
-        <div class="stats-grid">
+<div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-icon" style="background: linear-gradient(135deg, #D32F2F 0%, #B71C1C 100%);">
                     <i class="fas fa-heart"></i>
@@ -44,9 +44,8 @@
                     <h3>CANON SHIPS</h3>
                     <div class="count" id="canon-count">0</div>
                 </div>
-
- <div class="main-layout" style="display: flex; gap: 30px; margin-top: 30px;">
-            <div class="sidebar" style="width: 250px; background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); height: fit-content;">
+            </div> </div> <div class="main-layout" style="display: flex; gap: 30px; margin-top: 30px; align-items: flex-start;">
+            <div class="sidebar" style="width: 250px; background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 20px;">
                 <h3 style="color: #D32F2F; margin-bottom: 15px; border-bottom: 2px solid #fdecea; padding-bottom: 10px;">
                     <i class="fas fa-tags"></i> Fandoms
                 </h3>
@@ -55,8 +54,8 @@
             </div>
 
             <div class="content-area" style="flex: 1;">
-                <div class="controls" style="margin-bottom: 25px;">
-                    <div class="search-box">
+                <div class="controls" style="margin-bottom: 25px; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <div class="search-box" style="flex: 1; min-width: 200px;">
                         <i class="fas fa-search"></i>
                         <input type="text" id="search-input" placeholder="Search ships by name, characters, or fandom...">
                     </div>
@@ -75,7 +74,6 @@
                     </div>
             </div>
         </div>
-        
         <div class="pairings-grid" id="pairings-grid">
             </div>
 
@@ -296,6 +294,7 @@
     <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
