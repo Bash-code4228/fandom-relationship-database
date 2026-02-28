@@ -58,41 +58,35 @@
         </div>
     </aside>
 
-    <div class="content-area" style="flex: 1;">
-    <div class="controls" style="margin-bottom: 20px;">
-        <div class="search-box">
-            <i class="fas fa-search"></i>
-            <input type="text" id="search-input" placeholder="Search ships by name, characters, or fandom...">
-        </div>
-        <button class="btn btn-primary" onclick="openAddModal()">
-            <i class="fas fa-plus"></i> Add New Ship
-        </button>
-        <button class="btn btn-secondary" onclick="openExportModal()">
-            <i class="fas fa-file-export"></i> Export
-        </button>
-        <button class="btn btn-secondary" onclick="openImportModal()">
-            <i class="fas fa-file-import"></i> Import
-        </button>
-    </div>
-    
-    <div class="pairings-grid" id="pairings-grid">
-    </div>
-</div>
-        
-        <div class="controls">
-            <div class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" id="search-input" placeholder="Search ships by name, characters, or fandom...">
+ <div class="main-layout" style="display: flex; gap: 30px; margin-top: 30px;">
+            <div class="sidebar" style="width: 250px; background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); height: fit-content;">
+                <h3 style="color: #D32F2F; margin-bottom: 15px; border-bottom: 2px solid #fdecea; padding-bottom: 10px;">
+                    <i class="fas fa-tags"></i> Fandoms
+                </h3>
+                <ul id="fandom-list" style="list-style: none; padding: 0;">
+                    </ul>
             </div>
-            <button class="btn btn-primary" onclick="openAddModal()">
-                <i class="fas fa-plus"></i> Add New Ship
-            </button>
-            <button class="btn btn-secondary" onclick="openExportModal()">
-                <i class="fas fa-file-export"></i> Export
-            </button>
-            <button class="btn btn-secondary" onclick="openImportModal()">
-                <i class="fas fa-file-import"></i> Import
-            </button>
+
+            <div class="content-area" style="flex: 1;">
+                <div class="controls" style="margin-bottom: 25px;">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="search-input" placeholder="Search ships by name, characters, or fandom...">
+                    </div>
+                    <button class="btn btn-primary" onclick="openAddModal()">
+                        <i class="fas fa-plus"></i> Add New Ship
+                    </button>
+                    <button class="btn btn-secondary" onclick="openExportModal()">
+                        <i class="fas fa-file-export"></i> Export
+                    </button>
+                    <button class="btn btn-secondary" onclick="openImportModal()">
+                        <i class="fas fa-file-import"></i> Import
+                    </button>
+                </div>
+
+                <div class="pairings-grid" id="pairings-grid">
+                    </div>
+            </div>
         </div>
         
         <div class="pairings-grid" id="pairings-grid">
@@ -315,6 +309,7 @@
     <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
