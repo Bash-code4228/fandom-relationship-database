@@ -489,7 +489,6 @@ function exportData() {
             </span>
         </li>
     `).join('');
-}
 
 function importData() {
     const file = document.getElementById('import-file').files[0];
@@ -556,6 +555,7 @@ function updateFandomSidebar() {
         fandomList.appendChild(li);
     });
 }
+
 
 
 
