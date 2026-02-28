@@ -521,4 +521,47 @@ window.onclick = (event) => {
     }
 };
 
+// Function to update the fandom list in the sidebar
+function updateFandomSidebar() {
+    const fandomList = document.getElementById('fandom-list');
+    if (!fandomList) return;
+
+    // Get unique fandom names and sort them alphabetically
+    const uniqueFandoms = [...new Set(pairings.map(p => p.fandom))].sort();
+
+    // Clear the current list
+    fandomList.innerHTML = '';
+
+    // Add "All Fandoms" option
+    const allLi = document.createElement('li');
+    allLi.style.cssText = 'padding: 8px 12px; cursor: pointer; border-radius: 4px; margin-bottom: 5px; background: #f0f0f0;';
+    allLi.innerHTML = `<i class="fas fa-globe" style="margin-right: 8px;"></i> All Fandoms`;
+    allLi.onclick = () => {
+        searchInput.value = '';
+        currentSearch = '';
+        applyFilters();
+    };
+    fandomList.appendChild(allLi);
+
+    // Add each unique fandom to the list
+    uniqueFandoms.forEach(fandom => {
+        if (!fandom) return;
+        const li = document.createElement('li');
+        li.style.cssText = 'padding: 8px 12px; cursor: pointer; border-radius: 4px; margin-bottom: 5px; transition: background 0.2s;';
+        li.innerHTML = `<i class="fas fa-tag" style="margin-right: 8px; font-size: 0.8em; color: #D32F2F;"></i> ${fandom}`;
+        
+        // Hover effect
+        li.onmouseover = () => li.style.background = '#fdecea';
+        li.onmouseout = () => li.style.background = 'transparent';
+        
+        // Click to filter by this fandom
+        li.onclick = () => {
+            searchInput.value = fandom;
+            currentSearch = fandom.toLowerCase();
+            applyFilters();
+        };
+        
+        fandomList.appendChild(li);
+    });
+}
 
