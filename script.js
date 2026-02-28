@@ -441,6 +441,7 @@ function completeSubmission(imageData) {
     saveToStorage();
     applyFilters();
     updateStats();
+    updateFandomSidebar();
     closeAddModal();
     showToast('Remember to Export and upload pairings.json to keep changes permanent!', 'info');
 }
@@ -453,7 +454,7 @@ function openDeleteModal(id, name) {
 function closeConfirmModal() { confirmModal.style.display = 'none'; }
 function confirmDelete() {
     pairings = pairings.filter(p => p.id !== deletingId);
-    saveToStorage(); applyFilters(); updateStats(); closeConfirmModal();
+    saveToStorage(); applyFilters(); updateStats(); updateFandomSidebar(); closeConfirmModal();
 }
 
 function openExportModal() { 
@@ -506,7 +507,7 @@ function importData() {
     reader.onload = (e) => {
         try {
             pairings = JSON.parse(e.target.result);
-            saveToStorage(); applyFilters(); updateStats(); closeImportModal();
+            saveToStorage(); applyFilters(); updateStats(); updateFandomSidebar(); closeImportModal();
             showToast('Data imported successfully!', 'success');
         } catch (err) {
             showToast('Invalid JSON file', 'error');
@@ -564,4 +565,5 @@ function updateFandomSidebar() {
         fandomList.appendChild(li);
     });
 }
+
 
