@@ -355,6 +355,7 @@ function updateStats() {
     document.getElementById('total-count').textContent = pairings.length;
     document.getElementById('favorite-count').textContent = pairings.filter(p => p.favorite).length;
     document.getElementById('canon-count').textContent = pairings.filter(p => p.status === 'Canon').length;
+    updateFandomSidebar();
 }
 
 function showToast(message, type = 'info') {
@@ -477,6 +478,27 @@ function exportData() {
     closeExportModal();
 }
 
+function updateFandomSidebar() {
+    const fandomList = document.getElementById('fandom-list');
+    if (!fandomList) return;
+    const counts = pairings.reduce((acc, ship) => {
+        const fandom = ship.fandom || 'Unknown';
+        acc[fandom] = (acc[fandom] || 0) + 1;
+        return acc;
+    }, {});
+
+    const sortedFandoms = Object.keys(counts).sort();
+
+    fandomList.innerHTML = sortedFandoms.map(fandom => `
+        <li style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 0.9rem;">
+            <span style="font-weight: 500;">${fandom}</span>
+            <span class="tag" style="background: #eee; color: #333; margin: 0; padding: 2px 8px; border-radius: 10px;">
+                ${counts[fandom]}
+            </span>
+        </li>
+    `).join('');
+}
+
 function importData() {
     const file = document.getElementById('import-file').files[0];
     if (!file) return;
@@ -498,4 +520,5 @@ window.onclick = (event) => {
         closeAddModal(); closeExportModal(); closeImportModal(); closeConfirmModal();
     }
 };
+
 
