@@ -479,15 +479,6 @@ function exportData() {
     closeExportModal();
 }
 
-function updateFandomSidebar() {
-    const fandomList = document.getElementById('fandom-list');
-    if (!fandomList) return;
-    const counts = pairings.reduce((acc, ship) => {
-        const fandom = ship.fandom || 'Unknown';
-        acc[fandom] = (acc[fandom] || 0) + 1;
-        return acc;
-    }, {});
-
     const sortedFandoms = Object.keys(counts).sort();
 
     fandomList.innerHTML = sortedFandoms.map(fandom => `
@@ -565,5 +556,6 @@ function updateFandomSidebar() {
         fandomList.appendChild(li);
     });
 }
+
 
 
