@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function loadFromStorage() {
     try {
+        // Try to fetch from your live GitHub site
         const response = await fetch('https://Bash-code4228.github.io/fandom-relationship-database/pairings.json');
         if (response.ok) {
             pairings = await response.json();
@@ -37,10 +38,13 @@ async function loadFromStorage() {
         if (saved) pairings = JSON.parse(saved);
     }
     
-    // Migration: Ensure every "image" is treated as a list for the slideshow
+    // Migration: Handle nulls and ensure every "image" is treated as a list
     pairings.forEach(p => {
-        if (p.image && !Array.isArray(p.image)) p.image = [p.image];
-        if (!p.image) p.image = [];
+        if (p.image === null || p.image === undefined) {
+            p.image = [];
+        } else if (!Array.isArray(p.image)) {
+            p.image = [p.image];
+        }
     });
 
     renderPairings();
@@ -65,24 +69,30 @@ function createShipCard(ship) {
     const card = document.createElement('div');
     card.className = 'pairing-card';
     
-    // Clicking the card opens the expanded slideshow view
     card.onclick = (e) => {
         if (!e.target.closest('.action-btn')) openExpandedView(ship.id);
     };
 
-    const hasImages = ship.image && ship.image.length > 0;
+    const hasImages = Array.isArray(ship.image) && ship.image.length > 0 && ship.image[0] !== null;
     const thumb = hasImages ? ship.image[0] : '';
 
+    // If there is an image, we show the image container. 
+    // If not, we just show the name badge in the body of the card.
     card.innerHTML = `
+        ${hasImages ? `
         <div class="image-container">
-            ${hasImages ? `<img src="${thumb}" class="ship-image">` : '<div class="no-image">No Image</div>'}
+            <img src="${thumb}" class="ship-image">
             <div class="image-overlay">
-                <div class="name-badge" style="background: #1976D2; color: white; padding: 5px 12px; border-radius: 20px; font-weight: bold; display: inline-block; margin-bottom: 5px;">
-                    ${ship.name}
-                </div>
+                <div class="name-badge">${ship.name}</div>
                 <p class="pairing-characters" style="color: white; margin: 0; font-size: 0.9rem;">${ship.characters}</p>
             </div>
         </div>
+        ` : `
+        <div class="card-body" style="padding-top: 30px;">
+            <div class="name-badge">${ship.name}</div>
+            <p class="pairing-characters" style="color: #666; margin-top: 5px;">${ship.characters}</p>
+        </div>
+        `}
         <div class="card-body">
             <div class="info-row"><strong>Fandom:</strong> ${ship.fandom}</div>
             <div class="card-actions" style="margin-top: 10px;">
@@ -105,6 +115,14 @@ function openExpandedView(id) {
     document.getElementById('exp-characters').textContent = activeShip.characters;
     document.getElementById('exp-notes').textContent = activeShip.notes || 'No notes added.';
     
+    // Fill the info grid in expanded view
+    const infoGrid = document.getElementById('exp-info-grid');
+    infoGrid.innerHTML = `
+        <div><strong>Status:</strong> ${activeShip.status}</div>
+        <div><strong>Relationship:</strong> ${activeShip.relationship}</div>
+        <div><strong>Fandom:</strong> ${activeShip.fandom}</div>
+    `;
+    
     renderSlideshow();
     document.getElementById('expanded-modal').style.display = 'flex';
 }
@@ -118,7 +136,7 @@ function renderSlideshow() {
     const imgs = activeShip.image || [];
     
     if (imgs.length === 0) {
-        container.innerHTML = '<div style="color:white; padding: 20px;">No images available</div>';
+        container.innerHTML = '<div style="color:white; padding: 20px;">No images available for this ship.</div>';
         return;
     }
 
@@ -155,43 +173,13 @@ function openExportModal() {
     
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'pairings_backup.json';
+    link.download = 'pairings.json';
     document.body.appendChild(link);
     link.click();
     
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-    showToast('Data exported successfully!');
-}
-
-function openImportModal() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json';
-    
-    input.onchange = e => {
-        const file = e.target.files[0];
-        const reader = new FileReader();
-        
-        reader.onload = event => {
-            try {
-                const importedData = JSON.parse(event.target.result);
-                if (Array.isArray(importedData)) {
-                    pairings = importedData;
-                    pairings.forEach(p => {
-                        if (p.image && !Array.isArray(p.image)) p.image = [p.image];
-                    });
-                    renderPairings();
-                    updateStats();
-                    showToast('Data imported successfully!');
-                }
-            } catch (err) {
-                showToast('Error: Invalid JSON file');
-            }
-        };
-        reader.readAsText(file);
-    };
-    input.click();
+    showToast('Data exported! Upload this file to GitHub.');
 }
 
 // Stats & Helpers
@@ -236,7 +224,6 @@ function showToast(message) {
     }, 3000);
 }
 
-// Close modals when clicking outside
 window.onclick = (event) => {
     if (event.target.classList.contains('modal')) {
         closeAddModal();
