@@ -37,7 +37,7 @@ async function loadFromStorage() {
         if (saved) pairings = JSON.parse(saved);
     }
     
-    // Migration: Fix old data so every "image" is treated as a list
+    // Migration: Ensure every "image" is treated as a list for the slideshow
     pairings.forEach(p => {
         if (p.image && !Array.isArray(p.image)) p.image = [p.image];
         if (!p.image) p.image = [];
@@ -118,7 +118,7 @@ function renderSlideshow() {
     const imgs = activeShip.image || [];
     
     if (imgs.length === 0) {
-        container.innerHTML = '<div style="color:white;">No images available</div>';
+        container.innerHTML = '<div style="color:white; padding: 20px;">No images available</div>';
         return;
     }
 
@@ -147,6 +147,53 @@ function closeExpandedModal() {
     document.getElementById('expanded-modal').style.display = 'none';
 }
 
+// EXPORT & IMPORT LOGIC
+function openExportModal() {
+    const dataStr = JSON.stringify(pairings, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'pairings_backup.json';
+    document.body.appendChild(link);
+    link.click();
+    
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    showToast('Data exported successfully!');
+}
+
+function openImportModal() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    
+    input.onchange = e => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        
+        reader.onload = event => {
+            try {
+                const importedData = JSON.parse(event.target.result);
+                if (Array.isArray(importedData)) {
+                    pairings = importedData;
+                    pairings.forEach(p => {
+                        if (p.image && !Array.isArray(p.image)) p.image = [p.image];
+                    });
+                    renderPairings();
+                    updateStats();
+                    showToast('Data imported successfully!');
+                }
+            } catch (err) {
+                showToast('Error: Invalid JSON file');
+            }
+        };
+        reader.readAsText(file);
+    };
+    input.click();
+}
+
 // Stats & Helpers
 function updateStats() {
     document.getElementById('total-count').textContent = pairings.length;
@@ -164,19 +211,34 @@ function updateFandomSidebar() {
     const list = document.getElementById('fandom-list');
     if (!list) return;
     const fandoms = [...new Set(pairings.map(p => p.fandom))].sort();
-    list.innerHTML = '<li onclick="currentSearch=\'\'; renderPairings();" style="cursor:pointer; padding:5px;">All Fandoms</li>';
+    list.innerHTML = '<li onclick="currentSearch=\'\'; renderPairings();" style="cursor:pointer; padding:8px; background:#f0f0f0; border-radius:4px; margin-bottom:5px;">All Fandoms</li>';
     fandoms.forEach(f => {
+        if(!f) return;
         const li = document.createElement('li');
         li.textContent = f;
-        li.style.cursor = 'pointer';
+        li.style.cssText = 'cursor:pointer; padding:8px; border-radius:4px; margin-bottom:5px;';
         li.onclick = () => { currentSearch = f.toLowerCase(); renderPairings(); };
         list.appendChild(li);
     });
 }
 
+function showToast(message) {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+    const toast = document.createElement('div');
+    toast.className = 'toast toast-info';
+    toast.style.cssText = 'background:white; padding:15px; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.2); margin-top:10px; border-left:5px solid #1976D2;';
+    toast.textContent = message;
+    container.appendChild(toast);
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
 // Close modals when clicking outside
 window.onclick = (event) => {
-    if (event.target.className === 'modal') {
+    if (event.target.classList.contains('modal')) {
         closeAddModal();
         closeExpandedModal();
     }
