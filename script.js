@@ -11,10 +11,13 @@ const searchInput = document.getElementById('search-input');
 document.addEventListener('DOMContentLoaded', async () => {
     await loadFromStorage();
     
-    searchInput.addEventListener('input', (e) => {
-        currentSearch = e.target.value.toLowerCase();
-        renderPairings();
-    });
+    // Search functionality
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            currentSearch = e.target.value.toLowerCase();
+            renderPairings();
+        });
+    }
 });
 
 async function loadFromStorage() {
@@ -31,9 +34,9 @@ async function loadFromStorage() {
         if (saved) pairings = JSON.parse(saved);
     }
     
-    // Fix data so "image" is always a list (Array) for the slideshow
+    // Ensure every "image" is a list for the slideshow
     pairings.forEach(p => {
-        if (p.image === null || p.image === undefined) p.image = [];
+        if (!p.image) p.image = [];
         else if (!Array.isArray(p.image)) p.image = [p.image];
     });
 
@@ -42,7 +45,9 @@ async function loadFromStorage() {
 }
 
 function renderPairings() {
+    if (!pairingsGrid) return;
     pairingsGrid.innerHTML = '';
+    
     const filtered = pairings.filter(p => 
         p.name.toLowerCase().includes(currentSearch) || 
         p.fandom.toLowerCase().includes(currentSearch) ||
@@ -59,7 +64,7 @@ function createShipCard(ship) {
     const card = document.createElement('div');
     card.className = 'pairing-card';
     
-    // Open slideshow on click
+    // Open slideshow when clicking the card (but not buttons)
     card.onclick = (e) => {
         if (!e.target.closest('.action-btn')) openExpandedView(ship.id);
     };
@@ -67,7 +72,7 @@ function createShipCard(ship) {
     const hasImages = ship.image && ship.image.length > 0;
     const thumb = hasImages ? ship.image[0] : '';
 
-    // REVERTED TO YOUR ORIGINAL LAYOUT STRUCTURE
+    // Structure matches your CSS classes exactly
     card.innerHTML = `
         <div class="card-header">
             <div class="pairing-name">${ship.name}</div>
@@ -81,18 +86,18 @@ function createShipCard(ship) {
         ` : ''}
 
         <div class="card-body">
-            <p class="pairing-characters"><strong>${ship.characters}</strong></p>
+            <p class="pairing-characters">${ship.characters}</p>
             <div class="info-row"><span class="info-label">Fandom:</span> ${ship.fandom}</div>
             <div class="card-actions">
-                <button class="action-btn" onclick="openEditModal(${ship.id})"><i class="fas fa-edit"></i></button>
-                <button class="action-btn" onclick="openDeleteModal(${ship.id})"><i class="fas fa-trash"></i></button>
+                <button class="action-btn" onclick="event.stopPropagation(); openEditModal(${ship.id})"><i class="fas fa-edit"></i></button>
+                <button class="action-btn" onclick="event.stopPropagation(); openDeleteModal(${ship.id})"><i class="fas fa-trash"></i></button>
             </div>
         </div>
     `;
     return card;
 }
 
-// Slideshow Logic for the "Expanded View"
+// Slideshow / Expanded View Logic
 function openExpandedView(id) {
     activeShip = pairings.find(p => p.id === id);
     if (!activeShip) return;
@@ -102,21 +107,13 @@ function openExpandedView(id) {
     document.getElementById('exp-characters').textContent = activeShip.characters;
     document.getElementById('exp-notes').textContent = activeShip.notes || 'No notes.';
     
-    const infoGrid = document.getElementById('exp-info-grid');
-    infoGrid.innerHTML = `
-        <div><strong>Status:</strong> ${activeShip.status}</div>
-        <div><strong>Relationship:</strong> ${activeShip.relationship}</div>
-        <div><strong>Fandom:</strong> ${activeShip.fandom}</div>
-    `;
-    
     renderSlideshow();
     document.getElementById('expanded-modal').style.display = 'flex';
 }
 
 function renderSlideshow() {
     const container = document.getElementById('slideshow-images');
-    const dots = document.getElementById('slide-dots');
-    container.innerHTML = ''; dots.innerHTML = '';
+    container.innerHTML = '';
     const imgs = activeShip.image || [];
     
     if (imgs.length === 0) {
@@ -130,11 +127,6 @@ function renderSlideshow() {
         img.className = 'slide-img' + (i === currentSlideIndex ? ' active' : '');
         img.style.display = (i === currentSlideIndex ? 'block' : 'none');
         container.appendChild(img);
-
-        const dot = document.createElement('span');
-        dot.className = 'dot' + (i === currentSlideIndex ? ' active' : '');
-        dot.onclick = () => { currentSlideIndex = i; renderSlideshow(); };
-        dots.appendChild(dot);
     });
 }
 
@@ -150,28 +142,6 @@ function closeExpandedModal() {
 }
 
 function updateStats() {
-    document.getElementById('total-count').textContent = pairings.length;
-    updateFandomSidebar();
-}
-
-function updateFandomSidebar() {
-    const list = document.getElementById('fandom-list');
-    if (!list) return;
-    const fandoms = [...new Set(pairings.map(p => p.fandom))].sort();
-    list.innerHTML = '<li onclick="currentSearch=\'\'; renderPairings();" style="cursor:pointer; padding:5px;">All Fandoms</li>';
-    fandoms.forEach(f => {
-        const li = document.createElement('li');
-        li.textContent = f;
-        li.onclick = () => { currentSearch = f.toLowerCase(); renderPairings(); };
-        list.appendChild(li);
-    });
-}
-
-function openExportModal() {
-    const dataStr = JSON.stringify(pairings, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement('a');
-    link.href = url; link.download = 'pairings.json';
-    link.click();
+    const countEl = document.getElementById('total-count');
+    if (countEl) countEl.textContent = pairings.length;
 }
