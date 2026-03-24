@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>FandomVerse - Ship/Pairings Tracker</title>
+    <title>Fandom Relationships Tracker</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="data:,">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -12,215 +11,76 @@
     <div class="container">
         <div class="header">
             <h1><i class="fas fa-heart"></i> Fandom Relationships Tracker</h1>
-            <p>Tracking the ships that live rent-free in my head.</p>
+            <p>I'm tracking and organizing the relationships that I like throughout any fandoms I am in. It started with a Google sheet between me and my friend and now uh...a personal website? Ehe. 
+            <br><br>
+            Just to be transparent, I did not build this on my own, I definitely asked AI for help.</p>
         </div>
 
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-icon" style="background: linear-gradient(135deg, #D32F2F 0%, #B71C1C 100%);">
-                    <i class="fas fa-heart"></i>
-                </div>
                 <div class="stat-info">
                     <h3>TOTAL SHIPS</h3>
                     <div class="count" id="total-count">0</div>
                 </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon" style="background: linear-gradient(135deg, #D32F2F 0%, #B71C1C 100%);">
-                    <i class="fas fa-star"></i>
-                </div>
-                <div class="stat-info">
-                    <h3>ACTIVE</h3>
-                    <div class="count" id="favorite-count">0</div>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon" style="background: linear-gradient(135deg, #D32F2F 0%, #B71C1C 100%);">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <div class="stat-info">
-                    <h3>CANON SHIPS</h3>
-                    <div class="count" id="canon-count">0</div>
-                </div>
-            </div>
         </div>
 
-        <div class="main-layout" style="display: flex; gap: 30px; margin-top: 30px; align-items: flex-start;">
-            <div class="sidebar" style="width: 250px; background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 20px;">
-                <h3 style="color: #D32F2F; margin-bottom: 15px; border-bottom: 2px solid #fdecea; padding-bottom: 10px;">
-                    <i class="fas fa-tags"></i> Fandoms
-                </h3>
-                <ul id="fandom-list" style="list-style: none; padding: 0;"></ul>
-            </div>
-
-            <div class="content-area" style="flex: 1;">
-                <div class="controls" style="margin-bottom: 25px; display: flex; gap: 10px; flex-wrap: wrap;">
-                    <div class="search-box" style="flex: 1; min-width: 200px;">
-                        <i class="fas fa-search"></i>
-                        <input type="text" id="search-input" placeholder="Search ships...">
-                    </div>
-                    <button class="btn btn-primary" onclick="openAddModal()">
-                        <i class="fas fa-plus"></i> Add New Ship
-                    </button>
-                    <button class="btn btn-secondary" onclick="openExportModal()">
-                        <i class="fas fa-file-export"></i> Export
-                    </button>
-                    <button class="btn btn-secondary" onclick="openImportModal()">
-                        <i class="fas fa-file-import"></i> Import
-                    </button>
-                </div>
-
-                <div class="pairings-grid" id="pairings-grid"></div>
-            </div>
+        <div class="action-bar" style="margin-bottom: 30px; display: flex; gap: 15px;">
+            <input type="text" id="search-input" placeholder="Search by ship name or fandom..." style="flex-grow: 1; padding: 12px; border-radius: 10px; border: 1px solid #ddd;">
+            <button class="btn btn-primary" onclick="openExportModal()" style="padding: 10px 20px; border-radius: 10px; cursor: pointer; background: #0992C2; color: white; border: none;">
+                <i class="fas fa-file-export"></i> Export Data
+            </button>
         </div>
 
-        <div id="add-modal" class="modal">
-            <div class="modal-content">
-                <div class="card-header">
-                    <h2 id="modal-title">Add New Pairing</h2>
-                    <button class="action-btn" onclick="closeAddModal()" style="position: absolute; right: 20px; top: 20px;">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                
-                <form id="pairing-form" onsubmit="event.preventDefault(); addNewPairing();" style="padding: 30px;">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="input-name">Ship Name *</label>
-                            <input type="text" id="input-name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="input-characters">Characters *</label>
-                            <input type="text" id="input-characters" required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group full-width">
-                        <label>Ship Image(s)</label>
-                        <div class="upload-options">
-                            <div class="upload-option-btn active" id="upload-option-file" onclick="setUploadMethod('file')">
-                                <i class="fas fa-upload"></i><br>Upload Files
-                            </div>
-                            <div class="upload-option-btn" id="upload-option-url" onclick="setUploadMethod('url')">
-                                <i class="fas fa-link"></i><br>URL
-                            </div>
-                        </div>
-                        <div id="file-upload-container" class="file-input-wrapper">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                            <div>Select one or more images</div>
-                            <input type="file" id="input-file" accept="image/*" onchange="handleFileSelect(event)" multiple>
-                        </div>
-                        <div id="url-upload-container" style="display: none;">
-                            <input type="url" id="input-image-url" placeholder="Paste image URL (comma separated for multiple)">
-                        </div>
-                        <div class="image-preview-container" id="image-preview-container">
-                            <div id="image-loading" style="display: none;"><i class="fas fa-spinner fa-spin"></i></div>
-                            <img id="preview-img" class="preview-img" style="display: none;">
-                        </div>
-                    </div>
-
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="input-fandom">Fandom *</label>
-                            <input type="text" id="input-fandom" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="input-universe">Universe Type</label>
-                            <select id="input-universe">
-                                <option value="From universe">From universe</option>
-                                <option value="Crossover">Crossover</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="input-year">Year Started</label>
-                            <input type="number" id="input-year" min="1900" max="2099">
-                        </div>
-                        <div class="form-group">
-                            <label for="input-status">Status</label>
-                            <select id="input-status">
-                                <option value="Canon">Canon</option>
-                                <option value="Fanon">Fanon</option>
-                                <option value="Crack">Crack Ship</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="input-relationship">Type</label>
-                            <select id="input-relationship">
-                                <option value="Romantic">Romantic</option>
-                                <option value="Platonic">Platonic</option>
-                                <option value="Polyamorous">Polyamorous</option>
-                                <option value="Family">Family</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="input-media">Media</label>
-                            <select id="input-media">
-                                <option value="Literature/Books">Literature/Books</option>
-                                <option value="Comics/Manga">Comics/Manga</option>
-                                <option value="Film Series">Film Series</option>
-                                <option value="Animation Series">Animation Series</option>
-                                <option value="Game">Game</option>
-                                <option value="Mixed">Mixed</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="favorite-toggle">
-                            <input type="checkbox" id="input-favorite">
-                            <span class="star"><i class="fas fa-star"></i></span>
-                            <span>Mark as Favorite</span>
-                        </label>
-                    </div>
-
-                    <div class="form-group full-width">
-                        <label for="input-notes">Notes</label>
-                        <textarea id="input-notes" rows="3"></textarea>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Save Ship</button>
-                </form>
+        <div style="display: grid; grid-template-columns: 250px 1fr; gap: 30px;">
+            <div class="fandom-sidebar">
+                <h3 style="margin-bottom: 15px; color: #333;">Fandoms</h3>
+                <ul id="fandom-list" class="fandom-list">
+                    </ul>
             </div>
+
+            <div id="pairings-grid" class="pairings-grid">
+                </div>
         </div>
 
         <div id="expanded-modal" class="modal">
-            <div class="modal-content expanded-content">
-                <div class="expanded-header">
-                    <h2 id="exp-name"></h2>
-                    <button class="action-btn" onclick="closeExpandedModal()">
+            <div class="modal-content">
+                <div class="card-header" style="background: #1976D2; padding: 20px;">
+                    <div id="exp-name" class="pairing-name" style="font-size: 1.5rem;">Ship Name</div>
+                    <button class="action-btn" onclick="closeExpandedModal()" style="color: white; font-size: 1.5rem;">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
+
                 <div class="expanded-layout">
                     <div class="slideshow-container">
                         <div id="slideshow-images"></div>
                         <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
                         <a class="next" onclick="changeSlide(1)">&#10095;</a>
-                        <div class="slide-dots" id="slide-dots"></div>
                     </div>
+
                     <div class="expanded-details">
-                        <p id="exp-characters" class="subtitle" style="font-weight: bold; color: #D32F2F;"></p>
-                        <div id="exp-info-grid" class="info-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;"></div>
-                        <hr style="margin: 20px 0;">
-                        <div class="exp-notes-section">
-                            <h4>Notes</h4>
-                            <p id="exp-notes"></p>
+                        <p id="exp-characters" style="font-weight: bold; color: #D32F2F; font-size: 1.2rem; margin-bottom: 15px;"></p>
+                        <div class="notes-container">
+                            <h4 style="border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 10px;">Notes</h4>
+                            <p id="exp-notes" style="color: #555; line-height: 1.6;"></p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div id="export-modal" class="modal">...</div>
-        <div id="import-modal" class="modal">...</div>
-        <div id="confirm-modal" class="modal">...</div>
-        <div class="toast-container" id="toast-container"></div>
+        <div id="export-modal" class="modal">
+            <div class="modal-content" style="max-width: 500px; padding: 30px; text-align: center;">
+                <h3>Export Database</h3>
+                <p style="margin: 20px 0; color: #666;">Download your current pairings as a JSON file to keep as a backup.</p>
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <button onclick="exportData()" class="btn btn-primary" style="background: #0992C2; border: none; padding: 10px 20px; color: white; border-radius: 5px; cursor: pointer;">Download JSON</button>
+                    <button onclick="document.getElementById('export-modal').style.display='none'" style="padding: 10px 20px; border-radius: 5px; cursor: pointer; border: 1px solid #ddd;">Close</button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script src="script.js"></script>
