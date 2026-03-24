@@ -11,9 +11,7 @@
     <div class="container">
         <div class="header">
             <h1><i class="fas fa-heart"></i> Fandom Relationships Tracker</h1>
-            <p>I'm tracking and organizing the relationships that I like throughout any fandoms I am in. It started with a Google sheet between me and my friend and now uh...a personal website? Ehe. 
-            <br><br>
-            Just to be transparent, I did not build this on my own, I definitely asked AI for help.</p>
+            <p>I'm tracking and organizing the relationships that I like throughout any fandoms I am in.</p>
         </div>
 
         <div class="stats-grid">
@@ -25,62 +23,41 @@
             </div>
         </div>
 
-        <div class="action-bar" style="margin-bottom: 30px; display: flex; gap: 15px;">
-            <input type="text" id="search-input" placeholder="Search by ship name or fandom..." style="flex-grow: 1; padding: 12px; border-radius: 10px; border: 1px solid #ddd;">
-            <button class="btn btn-primary" onclick="openExportModal()" style="padding: 10px 20px; border-radius: 10px; cursor: pointer; background: #0992C2; color: white; border: none;">
-                <i class="fas fa-file-export"></i> Export Data
-            </button>
+        <div class="action-bar">
+            <input type="text" id="search-input" placeholder="Search by ship name or fandom...">
         </div>
 
-        <div style="display: grid; grid-template-columns: 250px 1fr; gap: 30px;">
+        <div class="main-layout">
             <div class="fandom-sidebar">
-                <h3 style="margin-bottom: 15px; color: #333;">Fandoms</h3>
-                <ul id="fandom-list" class="fandom-list">
-                    </ul>
+                <h3>Fandoms</h3>
+                <ul id="fandom-list" class="fandom-list"></ul>
             </div>
 
-            <div id="pairings-grid" class="pairings-grid">
-                </div>
+            <div class="grid-container">
+                <div id="pairings-grid" class="pairings-grid"></div>
+            </div>
         </div>
+    </div>
 
-        <div id="expanded-modal" class="modal">
-            <div class="modal-content">
-                <div class="card-header" style="background: #1976D2; padding: 20px;">
-                    <div id="exp-name" class="pairing-name" style="font-size: 1.5rem;">Ship Name</div>
-                    <button class="action-btn" onclick="closeExpandedModal()" style="color: white; font-size: 1.5rem;">
-                        <i class="fas fa-times"></i>
-                    </button>
+    <div id="expanded-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeExpandedModal()">&times;</span>
+            <div class="expanded-layout">
+                <div class="slideshow-container">
+                    <div id="slideshow-images"></div>
+                    <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
+                    <a class="next" onclick="changeSlide(1)">&#10095;</a>
                 </div>
-
-                <div class="expanded-layout">
-                    <div class="slideshow-container">
-                        <div id="slideshow-images"></div>
-                        <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
-                        <a class="next" onclick="changeSlide(1)">&#10095;</a>
-                    </div>
-
-                    <div class="expanded-details">
-                        <p id="exp-characters" style="font-weight: bold; color: #D32F2F; font-size: 1.2rem; margin-bottom: 15px;"></p>
-                        <div class="notes-container">
-                            <h4 style="border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 10px;">Notes</h4>
-                            <p id="exp-notes" style="color: #555; line-height: 1.6;"></p>
-                        </div>
+                <div class="expanded-details">
+                    <h2 id="exp-name"></h2>
+                    <p id="exp-characters" class="pairing-characters"></p>
+                    <div class="notes-container">
+                        <h4>Notes</h4>
+                        <p id="exp-notes"></p>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div id="export-modal" class="modal">
-            <div class="modal-content" style="max-width: 500px; padding: 30px; text-align: center;">
-                <h3>Export Database</h3>
-                <p style="margin: 20px 0; color: #666;">Download your current pairings as a JSON file to keep as a backup.</p>
-                <div style="display: flex; gap: 10px; justify-content: center;">
-                    <button onclick="exportData()" class="btn btn-primary" style="background: #0992C2; border: none; padding: 10px 20px; color: white; border-radius: 5px; cursor: pointer;">Download JSON</button>
-                    <button onclick="document.getElementById('export-modal').style.display='none'" style="padding: 10px 20px; border-radius: 5px; cursor: pointer; border: 1px solid #ddd;">Close</button>
-                </div>
-            </div>
-        </div>
-
     </div>
 
     <script src="script.js"></script>
