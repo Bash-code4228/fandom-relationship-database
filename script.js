@@ -7,6 +7,7 @@ let activeShip = null;
 // DOM Elements
 const pairingsGrid = document.getElementById('pairings-grid');
 const searchInput = document.getElementById('search-input');
+const fandomList = document.getElementById('fandom-list');
 
 document.addEventListener('DOMContentLoaded', async () => {
     await loadFromStorage();
@@ -22,7 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function loadFromStorage() {
     try {
-        const response = await fetch('https://Bash-code4228.github.io/fandom-relationship-database/pairings.json');
+        const response = await fetch('https://bash-code4228.github.io/fandom-relationship-database/pairings.json');
         if (response.ok) {
             pairings = await response.json();
         } else {
@@ -34,14 +35,44 @@ async function loadFromStorage() {
         if (saved) pairings = JSON.parse(saved);
     }
     
-    // Ensure every "image" is a list for the slideshow
+    // Fix paths for the image/ folder and .jpg extension
     pairings.forEach(p => {
-        if (!p.image) p.image = [];
-        else if (!Array.isArray(p.image)) p.image = [p.image];
+        if (!p.image) {
+            p.image = [];
+        } else {
+            let imgArray = Array.isArray(p.image) ? p.image : [p.image];
+            p.image = imgArray.map(img => {
+                // If it's just a name like "shinoi", it becomes "image/shinoi.jpg"
+                if (!img.includes('.') && !img.includes('/')) {
+                    return `image/${img}.jpg`; 
+                }
+                return img;
+            });
+        }
     });
 
     renderPairings();
+    renderFandoms(); 
     updateStats();
+}
+
+function renderFandoms() {
+    if (!fandomList) return;
+    const fandoms = [...new Set(pairings.map(p => p.fandom))].filter(f => f).sort();
+    
+    fandomList.innerHTML = fandoms.map(fandom => `
+        <li class="fandom-item" onclick="filterByFandom('${fandom.replace(/'/g, "\\'")}')">
+            ${fandom}
+        </li>
+    `).join('');
+}
+
+function filterByFandom(fandom) {
+    if (searchInput) {
+        searchInput.value = fandom;
+        currentSearch = fandom.toLowerCase();
+        renderPairings();
+    }
 }
 
 function renderPairings() {
@@ -49,9 +80,9 @@ function renderPairings() {
     pairingsGrid.innerHTML = '';
     
     const filtered = pairings.filter(p => 
-        p.name.toLowerCase().includes(currentSearch) || 
-        p.fandom.toLowerCase().includes(currentSearch) ||
-        p.characters.toLowerCase().includes(currentSearch)
+        (p.name && p.name.toLowerCase().includes(currentSearch)) || 
+        (p.fandom && p.fandom.toLowerCase().includes(currentSearch)) ||
+        (p.characters && p.characters.toLowerCase().includes(currentSearch))
     );
 
     filtered.forEach(ship => {
@@ -64,7 +95,6 @@ function createShipCard(ship) {
     const card = document.createElement('div');
     card.className = 'pairing-card';
     
-    // Open slideshow when clicking the card (but not buttons)
     card.onclick = (e) => {
         if (!e.target.closest('.action-btn')) openExpandedView(ship.id);
     };
@@ -72,7 +102,6 @@ function createShipCard(ship) {
     const hasImages = ship.image && ship.image.length > 0;
     const thumb = hasImages ? ship.image[0] : '';
 
-    // Structure matches your CSS classes exactly
     card.innerHTML = `
         <div class="card-header">
             <div class="pairing-name">${ship.name}</div>
@@ -81,7 +110,7 @@ function createShipCard(ship) {
         
         ${hasImages ? `
         <div class="image-container">
-            <img src="${thumb}" class="ship-image">
+            <img src="${thumb}" class="ship-image" onerror="this.src='https://via.placeholder.com/350x250?text=Image+Not+Found'">
         </div>
         ` : ''}
 
@@ -97,7 +126,6 @@ function createShipCard(ship) {
     return card;
 }
 
-// Slideshow / Expanded View Logic
 function openExpandedView(id) {
     activeShip = pairings.find(p => p.id === id);
     if (!activeShip) return;
@@ -131,6 +159,7 @@ function renderSlideshow() {
 }
 
 function changeSlide(n) {
+    if (!activeShip || !activeShip.image) return;
     const len = activeShip.image.length;
     if (len <= 1) return;
     currentSlideIndex = (currentSlideIndex + n + len) % len;
