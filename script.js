@@ -12,7 +12,6 @@ const fandomList = document.getElementById('fandom-list');
 document.addEventListener('DOMContentLoaded', async () => {
     await loadFromStorage();
     
-    // Search functionality
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
             currentSearch = e.target.value.toLowerCase();
@@ -35,16 +34,16 @@ async function loadFromStorage() {
         if (saved) pairings = JSON.parse(saved);
     }
     
-    // Fix paths for the image/ folder and .jpg extension
+    // Path Logic: Folder is "image" and extension is ".jpg" (all lowercase)
     pairings.forEach(p => {
         if (!p.image) {
             p.image = [];
         } else {
             let imgArray = Array.isArray(p.image) ? p.image : [p.image];
             p.image = imgArray.map(img => {
-                // If it's just a name like "shinoi", it becomes "image/shinoi.jpg"
-                if (!img.includes('.') && !img.includes('/')) {
-                    return `image/${img}.jpg`; 
+                // If it's just a name like "shinoi", point to ./image/shinoi.jpg
+                if (!img.includes('.') && !img.includes('/') && !img.startsWith('http')) {
+                    return `./image/${img}.jpg`; 
                 }
                 return img;
             });
@@ -60,11 +59,19 @@ function renderFandoms() {
     if (!fandomList) return;
     const fandoms = [...new Set(pairings.map(p => p.fandom))].filter(f => f).sort();
     
-    fandomList.innerHTML = fandoms.map(fandom => `
+    let listHTML = `
+        <li class="fandom-item" style="background: #D4AF37; color: #333; margin-bottom: 15px; font-weight: bold;" onclick="filterByFandom('')">
+            <i class="fas fa-border-all"></i> Display All
+        </li>
+    `;
+    
+    listHTML += fandoms.map(fandom => `
         <li class="fandom-item" onclick="filterByFandom('${fandom.replace(/'/g, "\\'")}')">
             ${fandom}
         </li>
     `).join('');
+    
+    fandomList.innerHTML = listHTML;
 }
 
 function filterByFandom(fandom) {
@@ -108,18 +115,19 @@ function createShipCard(ship) {
             <div class="favorite-badge">${ship.favorite ? '<i class="fas fa-star"></i>' : ''}</div>
         </div>
         
-        ${hasImages ? `
         <div class="image-container">
-            <img src="${thumb}" class="ship-image" onerror="this.src='https://via.placeholder.com/350x250?text=Image+Not+Found'">
+            ${hasImages ? 
+                `<img src="${thumb}" class="ship-image" alt="${ship.name}" onerror="this.src='https://via.placeholder.com/350x250?text=Image+Not+Found'">` 
+                : `<div style="padding:40px; text-align:center; color:#999;">No image set</div>`
+            }
         </div>
-        ` : ''}
 
         <div class="card-body">
-            <p class="pairing-characters">${ship.characters}</p>
-            <div class="info-row"><span class="info-label">Fandom:</span> ${ship.fandom}</div>
+            <p class="pairing-characters">${ship.characters || 'Unknown'}</p>
+            <div class="info-row"><span class="info-label">Fandom:</span> ${ship.fandom || 'General'}</div>
             <div class="card-actions">
-                <button class="action-btn" onclick="event.stopPropagation(); openEditModal(${ship.id})"><i class="fas fa-edit"></i></button>
-                <button class="action-btn" onclick="event.stopPropagation(); openDeleteModal(${ship.id})"><i class="fas fa-trash"></i></button>
+                <button class="action-btn" onclick="event.stopPropagation();"><i class="fas fa-edit"></i></button>
+                <button class="action-btn" onclick="event.stopPropagation();"><i class="fas fa-trash"></i></button>
             </div>
         </div>
     `;
