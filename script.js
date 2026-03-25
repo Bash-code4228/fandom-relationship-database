@@ -4,10 +4,10 @@ let editingId = null;
 let deletingId = null;
 let currentFilter = 'all';
 let currentSearch = '';
-let uploadMethod = 'file'; // 'file' or 'url'
+let uploadMethod = 'file';
 let selectedFile = null;
 let selectedImageUrl = '';
-let currentFandomFilter = ''; // New variable for fandom filtering
+let currentFandomFilter = '';
 
 // DOM Elements
 const pairingsGrid = document.getElementById('pairings-grid');
@@ -20,14 +20,13 @@ const confirmMessage = document.getElementById('confirm-message');
 const pairingForm = document.getElementById('pairing-form');
 const fandomList = document.getElementById('fandom-list');
 
-// Helper function to parse fandoms (supports comma-separated values)
+// Helper function to parse fandoms
 function parseFandoms(fandomString) {
     if (!fandomString) return [];
-    // Split by comma and trim each fandom
     return fandomString.split(',').map(f => f.trim()).filter(f => f);
 }
 
-// Get all unique fandoms from all pairings
+// Get all unique fandoms
 function getAllUniqueFandoms() {
     const fandomsSet = new Set();
     pairings.forEach(p => {
@@ -58,7 +57,6 @@ function shipMatchesFandomFilter(ship) {
 function renderFandoms() {
     if (!fandomList) return;
     
-    // Get unique fandoms
     const fandoms = getAllUniqueFandoms();
     
     let html = `<li class="fandom-item ${currentFandomFilter === '' ? 'active' : ''}" onclick="filterByFandom('')">
@@ -82,16 +80,14 @@ function filterByFandom(fandom) {
     applyFilters();
 }
 
-// Get filtered pairings with fandom filter
+// Get filtered pairings
 function getFilteredPairings() {
     let filtered = [...pairings];
     
-    // Apply fandom filter
     if (currentFandomFilter && currentFandomFilter !== '') {
         filtered = filtered.filter(p => shipMatchesFandomFilter(p));
     }
     
-    // Apply search filter
     if (currentSearch) {
         filtered = filtered.filter(p => 
             (p.name && p.name.toLowerCase().includes(currentSearch)) ||
@@ -100,7 +96,6 @@ function getFilteredPairings() {
         );
     }
 
-    // Sort alphabetically by Ship Name
     filtered.sort((a, b) => {
         const nameA = (a.name || '').toLowerCase();
         const nameB = (b.name || '').toLowerCase();
@@ -116,7 +111,37 @@ function applyFilters() {
     renderPairings(getFilteredPairings());
 }
 
-// Load from GitHub/WordPress JSON file
+// Get image path for a ship - tries multiple possible filenames
+function getShipImagePath(ship) {
+    // If ship already has an image path stored, use it
+    if (ship.image && ship.image !== null && ship.image !== '') {
+        return ship.image;
+    }
+    
+    // Try to find image in images folder based on ship name
+    const possibleNames = [
+        ship.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
+        ship.name.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, ''),
+        ship.name.toLowerCase().replace(/[^a-z0-9]/g, ''),
+        ship.id.toString()
+    ];
+    
+    // Check for common image extensions
+    const extensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+    
+    for (let name of possibleNames) {
+        for (let ext of extensions) {
+            const path = `images/${name}${ext}`;
+            // We can't check if file exists synchronously, but we'll return the first candidate
+            // The onerror handler on the img tag will handle missing images
+            return path;
+        }
+    }
+    
+    return null;
+}
+
+// Load from pairings.json
 async function loadFromStorage() {
     try {
         const response = await fetch('pairings.json');
@@ -164,7 +189,7 @@ function addSampleData() {
             trope: "Friends to Lovers",
             notes: "The loyalty and history between them gets me every time",
             favorite: true,
-            image: null,
+            image: "images/stucky.jpg",
             addedDate: "2024-01-15"
         },
         {
@@ -181,7 +206,7 @@ function addSampleData() {
             trope: "Enemies to Lovers",
             notes: "Enemies to lovers perfection",
             favorite: true,
-            image: null,
+            image: "images/dramione.jpg",
             addedDate: "2026-02-25"
         },
         {
@@ -198,16 +223,13 @@ function addSampleData() {
             trope: "Enemies to Lovers",
             notes: "The sun and the moon",
             favorite: false,
-            image: null,
+            image: "images/superbat.jpg",
             addedDate: "2026-03-20"
         }
     ];
     
     pairings = sampleShips;
     saveToStorage();
-    renderFandoms();
-    renderPairings(getFilteredPairings());
-    updateStats();
 }
 
 // Render pairings
@@ -232,94 +254,131 @@ function renderPairings(pairingsToRender = getFilteredPairings()) {
     });
 }
 
-// Format fandoms for display (join with commas)
+// Format fandoms for display
 function formatFandomsForDisplay(fandomString) {
     if (!fandomString) return '';
     const fandoms = parseFandoms(fandomString);
     return fandoms.join(', ');
 }
 
-// Create ship card element
+// Create ship card element with image from images/ folder
 function createShipCard(ship) {
     const card = document.createElement('div');
     card.className = 'pairing-card';
+    card.style.cssText = 'background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.2s;';
     
-    // Handle image (simplified to work with your form)
-    let imageUrl = null;
-    if (ship.image && typeof ship.image === 'string' && ship.image !== 'null' && ship.image !== '') {
-        imageUrl = ship.image;
-    } else if (ship.image && Array.isArray(ship.image) && ship.image[0]) {
-        imageUrl = ship.image[0];
+    // Get image path - either from ship.image or try to find it
+    let imagePath = ship.image;
+    if (!imagePath || imagePath === 'null' || imagePath === '') {
+        // Try to auto-detect image based on ship name
+        const possibleName = ship.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+        imagePath = `images/${possibleName}.jpg`;
     }
+    
+    // Check if it's a full URL or relative path
+    const imageUrl = imagePath && imagePath !== 'null' ? imagePath : null;
     
     let cardHTML = '';
     
+    // Favorite badge
     if (ship.favorite) {
-        cardHTML += `<div class="favorite-star" style="position:absolute; top:10px; left:10px; color:gold; z-index:5; background: rgba(0,0,0,0.5); padding: 5px 8px; border-radius: 20px;"><i class="fas fa-star"></i> Active</div>`;
+        cardHTML += `<div style="position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); padding: 6px 12px; border-radius: 20px; color: gold; font-size: 12px; z-index: 10;">
+            <i class="fas fa-star"></i> Active
+        </div>`;
     }
 
-    // Show crossover badge if multiple fandoms
+    // Crossover badge
     const fandomsList = parseFandoms(ship.fandom);
     const isCrossover = fandomsList.length > 1 || ship.universe === 'Crossover';
     
     if (isCrossover) {
-        cardHTML += `<div class="crossover-badge" style="position:absolute; top:10px; right:10px; background: #D4AF37; color: #333; padding: 5px 8px; border-radius: 20px; font-size: 11px; z-index:5;"><i class="fas fa-code-branch"></i> Crossover</div>`;
+        cardHTML += `<div style="position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); padding: 6px 12px; border-radius: 20px; color: #D4AF37; font-size: 12px; z-index: 10;">
+            <i class="fas fa-code-branch"></i> Crossover
+        </div>`;
     }
 
+    // Image section
     if (imageUrl) {
         cardHTML += `
-        <div class="image-container">
-            <div class="card-actions">
-                <button class="action-btn favorite-btn" onclick="event.stopPropagation(); toggleFavorite(${ship.id})">
+        <div style="position: relative;">
+            <div style="position: absolute; top: 12px; right: 12px; z-index: 10; display: flex; gap: 8px;">
+                <button class="action-btn" onclick="event.stopPropagation(); toggleFavorite(${ship.id})" style="background: rgba(0,0,0,0.6); border: none; border-radius: 50%; width: 32px; height: 32px; color: ${ship.favorite ? '#ffc107' : 'white'}; cursor: pointer;">
                     <i class="${ship.favorite ? 'fas' : 'far'} fa-star"></i>
                 </button>
-                <button class="action-btn edit-btn" onclick="event.stopPropagation(); openEditModal(${ship.id})">
+                <button class="action-btn" onclick="event.stopPropagation(); openEditModal(${ship.id})" style="background: rgba(0,0,0,0.6); border: none; border-radius: 50%; width: 32px; height: 32px; color: white; cursor: pointer;">
                     <i class="fas fa-edit"></i>
                 </button>
-                <button class="action-btn delete-btn" onclick="event.stopPropagation(); openDeleteModal(${ship.id}, '${escapeString(ship.name)}')">
+                <button class="action-btn" onclick="event.stopPropagation(); openDeleteModal(${ship.id}, '${escapeString(ship.name)}')" style="background: rgba(0,0,0,0.6); border: none; border-radius: 50%; width: 32px; height: 32px; color: white; cursor: pointer;">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
-            <img src="${imageUrl}" alt="${ship.name}" class="ship-image" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
-            <div class="image-overlay">
-                <h3 class="pairing-name">${escapeHtml(ship.name)}</h3>
-                <p class="pairing-characters">${escapeHtml(ship.characters)}</p>
+            <img src="${imageUrl}" alt="${ship.name}" 
+                style="width: 100%; height: 200px; object-fit: cover;" 
+                onerror="this.onerror=null; this.src='https://via.placeholder.com/400x200?text=No+Image'; this.parentElement.querySelector('.image-fallback').style.display='flex'; this.style.display='none';">
+            <div class="image-fallback" style="display: none; width: 100%; height: 200px; background: linear-gradient(135deg, #ffe6e6, #ffcccc); align-items: center; justify-content: center; flex-direction: column; color: #c92a2a;">
+                <i class="fas fa-heart" style="font-size: 48px;"></i>
+                <p style="margin-top: 10px;">No Image</p>
+            </div>
+            <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.7)); padding: 20px; color: white;">
+                <h3 style="margin: 0; font-size: 1.2rem;">${escapeHtml(ship.name)}</h3>
+                <p style="margin: 5px 0 0; font-size: 0.9rem;">${escapeHtml(ship.characters)}</p>
             </div>
         </div>`;
     } else {
         cardHTML += `
-        <div class="card-header">
-            <div class="card-actions">
-                <button class="action-btn favorite-btn" onclick="event.stopPropagation(); toggleFavorite(${ship.id})">
+        <div style="padding: 20px; background: linear-gradient(135deg, #ffe6e6, #ffcccc);">
+            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-bottom: 10px;">
+                <button class="action-btn" onclick="event.stopPropagation(); toggleFavorite(${ship.id})" style="background: none; border: none; cursor: pointer; color: ${ship.favorite ? '#ffc107' : '#999'}; font-size: 18px;">
                     <i class="${ship.favorite ? 'fas' : 'far'} fa-star"></i>
                 </button>
-                <button class="action-btn edit-btn" onclick="event.stopPropagation(); openEditModal(${ship.id})">
+                <button class="action-btn" onclick="event.stopPropagation(); openEditModal(${ship.id})" style="background: none; border: none; cursor: pointer; color: #999;">
                     <i class="fas fa-edit"></i>
                 </button>
-                <button class="action-btn delete-btn" onclick="event.stopPropagation(); openDeleteModal(${ship.id}, '${escapeString(ship.name)}')">
+                <button class="action-btn" onclick="event.stopPropagation(); openDeleteModal(${ship.id}, '${escapeString(ship.name)}')" style="background: none; border: none; cursor: pointer; color: #999;">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
-            <h3 class="pairing-name">${escapeHtml(ship.name)}</h3>
-            <p class="pairing-characters">${escapeHtml(ship.characters)}</p>
+            <h3 style="margin: 0 0 5px 0;">${escapeHtml(ship.name)}</h3>
+            <p style="margin: 0; color: #666;">${escapeHtml(ship.characters)}</p>
         </div>`;
     }
     
+    // Card body with details
     cardHTML += `
-    <div class="card-body">
-        <div class="info-row"><span class="info-label">Fandom${isCrossover ? 's' : ''}:</span><span class="info-value">${escapeHtml(formatFandomsForDisplay(ship.fandom))}</span></div>
-        ${ship.media ? `<div class="info-row"><span class="info-label">Media:</span><span class="info-value">${escapeHtml(ship.media)}</span></div>` : ''}
-        ${ship.dynamic && ship.dynamic !== 'NA' ? `<div class="info-row"><span class="info-label">Dynamic:</span><span class="info-value">${escapeHtml(ship.dynamic)}</span></div>` : ''}
-        ${ship.notes ? `<div class="info-row"><span class="info-label">Notes:</span><span class="info-value">${escapeHtml(ship.notes)}</span></div>` : ''}
+    <div style="padding: 15px;">
+        <div style="margin-bottom: 8px;">
+            <span style="font-weight: bold;">Fandom${isCrossover ? 's' : ''}:</span>
+            <span style="margin-left: 8px;">${escapeHtml(formatFandomsForDisplay(ship.fandom))}</span>
+        </div>
+        ${ship.media ? `<div style="margin-bottom: 8px;"><span style="font-weight: bold;">Media:</span> <span>${escapeHtml(ship.media)}</span></div>` : ''}
+        ${ship.dynamic && ship.dynamic !== 'NA' ? `<div style="margin-bottom: 8px;"><span style="font-weight: bold;">Dynamic:</span> <span>${escapeHtml(ship.dynamic)}</span></div>` : ''}
+        ${ship.notes ? `<div style="margin-bottom: 8px;"><span style="font-weight: bold;">Notes:</span> <span>${escapeHtml(ship.notes)}</span></div>` : ''}
         
-        <div class="tags-container" style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
-            <span class="tag"><i class="fas fa-info-circle"></i>${escapeHtml(ship.status || 'Fanon')}</span>
-            <span class="tag"><i class="fas fa-heart"></i>${escapeHtml(ship.relationship || 'Romantic')}</span>
-            ${ship.universe === 'Crossover' ? `<span class="tag"><i class="fas fa-globe"></i>Crossover</span>` : ''}
+        <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+            <span style="background: #f0f0f0; padding: 4px 12px; border-radius: 20px; font-size: 12px;">
+                <i class="fas fa-info-circle"></i> ${escapeHtml(ship.status || 'Fanon')}
+            </span>
+            <span style="background: #f0f0f0; padding: 4px 12px; border-radius: 20px; font-size: 12px;">
+                <i class="fas fa-heart"></i> ${escapeHtml(ship.relationship || 'Romantic')}
+            </span>
+            ${ship.universe === 'Crossover' ? `<span style="background: #f0f0f0; padding: 4px 12px; border-radius: 20px; font-size: 12px;">
+                <i class="fas fa-globe"></i> Crossover
+            </span>` : ''}
         </div>
     </div>`;
     
     card.innerHTML = cardHTML;
+    
+    // Handle image fallback display
+    const img = card.querySelector('img');
+    if (img) {
+        img.onerror = function() {
+            this.style.display = 'none';
+            const fallback = this.parentElement.querySelector('.image-fallback');
+            if (fallback) fallback.style.display = 'flex';
+        };
+    }
+    
     return card;
 }
 
@@ -360,8 +419,8 @@ function showToast(message, type = 'info') {
     const toastContainer = document.getElementById('toast-container');
     if (!toastContainer) return;
     const toast = document.createElement('div');
-    toast.className = `toast toast-${type}`;
-    toast.innerHTML = `<i class="fas fa-info-circle"></i><span>${message}</span>`;
+    toast.style.cssText = 'background: white; padding: 12px 24px; border-radius: 50px; margin-top: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);';
+    toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}" style="color: ${type === 'success' ? '#2ecc71' : '#3498db'};"></i><span style="margin-left: 8px;">${message}</span>`;
     toastContainer.appendChild(toast);
     setTimeout(() => toast.remove(), 3000);
 }
@@ -386,21 +445,10 @@ function openEditModal(id) {
     document.getElementById('input-notes').value = pairing.notes || '';
     document.getElementById('input-favorite').checked = pairing.favorite || false;
     
-    // Handle image if exists
-    if (pairing.image && pairing.image !== null) {
-        if (typeof pairing.image === 'string') {
-            setUploadMethod('url');
-            document.getElementById('input-image-url').value = pairing.image;
-            previewImageUrl(pairing.image);
-        } else if (Array.isArray(pairing.image) && pairing.image[0]) {
-            setUploadMethod('url');
-            document.getElementById('input-image-url').value = pairing.image[0];
-            previewImageUrl(pairing.image[0]);
-        }
-    } else {
-        // Clear image fields
-        if (document.getElementById('input-image-url')) document.getElementById('input-image-url').value = '';
-        clearImagePreview();
+    if (pairing.image && pairing.image !== 'null' && pairing.image !== '') {
+        setUploadMethod('url');
+        document.getElementById('input-image-url').value = pairing.image;
+        previewImageUrl(pairing.image);
     }
     
     openAddModal();
@@ -433,20 +481,6 @@ function setUploadMethod(method) {
 function handleFileSelect(event) {
     const file = event.target.files[0];
     if (!file) return;
-    
-    const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-    const maxSize = 5 * 1024 * 1024;
-    
-    if (!validTypes.includes(file.type)) {
-        showToast('Please select a valid image file (JPG, PNG, GIF, WebP)', 'error');
-        return;
-    }
-    
-    if (file.size > maxSize) {
-        showToast('Image size should be less than 5MB', 'error');
-        return;
-    }
-    
     selectedFile = file;
     previewImageFile(file);
 }
@@ -465,11 +499,6 @@ function previewImageFile(file) {
             previewImg.style.display = 'block';
         }
         if (loadingEl) loadingEl.style.display = 'none';
-    };
-    
-    reader.onerror = function() {
-        if (loadingEl) loadingEl.style.display = 'none';
-        showToast('Error loading image file', 'error');
     };
     
     reader.readAsDataURL(file);
@@ -522,25 +551,25 @@ function clearImagePreview() {
 }
 
 function addNewPairing() {
-    // Get image data based on upload method
-    let imageData = null;
+    let imagePath = null;
     
-    if (uploadMethod === 'file' && selectedFile) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            completeSubmission(e.target.result);
-        };
-        reader.readAsDataURL(selectedFile);
-        return;
-    } else if (uploadMethod === 'url') {
-        imageData = document.getElementById('input-image-url').value;
+    if (uploadMethod === 'url') {
+        imagePath = document.getElementById('input-image-url').value;
+    } else if (uploadMethod === 'file' && selectedFile) {
+        // For file upload, we'd need to save to images folder
+        // For now, just show a message
+        showToast('File upload will save image to images folder. For now, please use URL or manually add to images folder.', 'info');
+        // Generate filename suggestion
+        const shipName = document.getElementById('input-name').value;
+        const filename = shipName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') + '.jpg';
+        imagePath = `images/${filename}`;
+        showToast(`Suggested filename: ${filename}. Please save your image with this name in the images folder.`, 'info');
     }
     
-    completeSubmission(imageData);
+    completeSubmission(imagePath);
 }
 
-function completeSubmission(imageData) {
-    // Get fandom value
+function completeSubmission(imagePath) {
     let fandomValue = document.getElementById('input-fandom').value;
     
     const pairingData = {
@@ -557,7 +586,7 @@ function completeSubmission(imageData) {
         trope: document.getElementById('input-trope').value,
         notes: document.getElementById('input-notes').value,
         favorite: document.getElementById('input-favorite').checked,
-        image: imageData && imageData !== '' ? imageData : null,
+        image: imagePath && imagePath !== '' ? imagePath : null,
         addedDate: new Date().toISOString().split('T')[0]
     };
     
@@ -635,7 +664,6 @@ function importData() {
     reader.readAsText(file);
 }
 
-// Close modals when clicking outside
 window.onclick = (event) => {
     if (event.target.classList && event.target.classList.contains('modal')) {
         closeAddModal();
@@ -645,12 +673,9 @@ window.onclick = (event) => {
     }
 };
 
-// Initialize the app when page loads
 document.addEventListener('DOMContentLoaded', () => {
-    // Load data from JSON or localStorage
     loadFromStorage();
     
-    // Set up search input listener
     const searchInputElem = document.getElementById('search-input');
     if (searchInputElem) {
         searchInputElem.addEventListener('input', (e) => {
