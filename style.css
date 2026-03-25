@@ -24,19 +24,16 @@ body {
     padding: 30px;
 }
 
-/* Header */
+/* Header - FIXED merged version */
 .header {
-    /* Changed to Solid Imperial Red with a Gold border */
     background: #0992C2;
-    color: #FFD700; /* Gold text */
+    color: #FFD700;
     padding: 40px;
     border-radius: 15px;
     margin-bottom: 30px;
     position: relative;
     overflow: hidden;
-}
-.header {
-    border-bottom: 4px solid #D4AF37; 
+    border-bottom: 4px solid #D4AF37;
 }
 
 /* Kept your floating animation but made it subtle for a solid background */
@@ -373,7 +370,7 @@ body {
 .info-label {
     font-weight: 600;
     color: #666;
-    width: 110px; /* Widened to fit Dynamic/Media labels */
+    width: 110px;
     flex-shrink: 0;
     font-size: 0.9rem;
 }
@@ -571,10 +568,12 @@ body {
     cursor: pointer;
 }
 
-.file-input-wrapper input[type="number"] {
+/* FIXED - Number input styling */
+input[type="number"] {
     -moz-appearance: textfield;
 }
-.file-input-wrapper input[type="number"]::-webkit-outer-spin-button,
+
+input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
