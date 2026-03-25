@@ -231,11 +231,10 @@ function formatFandomsForDisplay(fandomString) {
     return fandoms.join(', ');
 }
 
-// Create ship card element with red tags
+// Create ship card element using CSS classes from style.css
 function createShipCard(ship) {
     const card = document.createElement('div');
     card.className = 'pairing-card';
-    card.style.cssText = 'background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.2s; margin-bottom: 20px;';
     
     // Get image path
     let imagePath = ship.image;
@@ -248,9 +247,9 @@ function createShipCard(ship) {
     
     let cardHTML = '';
     
-    // Active badge
+    // Favorite/Active badge - red background with gold text
     if (ship.favorite) {
-        cardHTML += `<div style="position: absolute; top: 12px; left: 12px; background: #ff4757; padding: 6px 12px; border-radius: 20px; color: white; font-size: 12px; font-weight: bold; z-index: 10;">
+        cardHTML += `<div style="position: absolute; top: 12px; left: 12px; background: #B71C1C; padding: 5px 12px; border-radius: 20px; color: #FFD700; font-size: 11px; font-weight: bold; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
             <i class="fas fa-star"></i> ACTIVE
         </div>`;
     }
@@ -260,80 +259,89 @@ function createShipCard(ship) {
     const isCrossover = fandomsList.length > 1 || ship.universe === 'Crossover';
     
     if (isCrossover) {
-        cardHTML += `<div style="position: absolute; top: 12px; right: 12px; background: #ff4757; padding: 6px 12px; border-radius: 20px; color: white; font-size: 12px; font-weight: bold; z-index: 10;">
+        cardHTML += `<div style="position: absolute; top: 12px; right: 12px; background: #B71C1C; padding: 5px 12px; border-radius: 20px; color: white; font-size: 11px; font-weight: bold; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
             <i class="fas fa-code-branch"></i> CROSSOVER
         </div>`;
     }
 
-    // Image section with action buttons
+    // Image section
     if (imageUrl) {
         cardHTML += `
-        <div style="position: relative;">
-            <div style="position: absolute; top: 12px; right: 12px; z-index: 10; display: flex; gap: 8px;">
-                <button class="action-btn" onclick="event.stopPropagation(); toggleFavorite(${ship.id})" style="background: rgba(0,0,0,0.6); border: none; border-radius: 50%; width: 32px; height: 32px; color: ${ship.favorite ? '#ffc107' : 'white'}; cursor: pointer;">
+        <div class="image-container" style="position: relative; height: 200px;">
+            <div class="card-actions" style="position: absolute; top: 12px; right: 12px; z-index: 10; display: flex; gap: 8px; opacity: 1;">
+                <button class="action-btn favorite-btn" onclick="event.stopPropagation(); toggleFavorite(${ship.id})" style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 35px; height: 35px; color: ${ship.favorite ? '#ffd700' : '#999'}; cursor: pointer;">
                     <i class="${ship.favorite ? 'fas' : 'far'} fa-star"></i>
                 </button>
-                <button class="action-btn" onclick="event.stopPropagation(); openEditModal(${ship.id})" style="background: rgba(0,0,0,0.6); border: none; border-radius: 50%; width: 32px; height: 32px; color: white; cursor: pointer;">
+                <button class="action-btn edit-btn" onclick="event.stopPropagation(); openEditModal(${ship.id})" style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 35px; height: 35px; color: #1A237E; cursor: pointer;">
                     <i class="fas fa-edit"></i>
                 </button>
-                <button class="action-btn" onclick="event.stopPropagation(); openDeleteModal(${ship.id}, '${escapeString(ship.name)}')" style="background: rgba(0,0,0,0.6); border: none; border-radius: 50%; width: 32px; height: 32px; color: white; cursor: pointer;">
+                <button class="action-btn delete-btn" onclick="event.stopPropagation(); openDeleteModal(${ship.id}, '${escapeString(ship.name)}')" style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 35px; height: 35px; color: #7f8c8d; cursor: pointer;">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
-            <img src="${imageUrl}" alt="${ship.name}" 
-                style="width: 100%; height: 200px; object-fit: cover;" 
-                onerror="this.onerror=null; this.src='https://via.placeholder.com/400x200?text=No+Image'; this.parentElement.querySelector('.image-fallback').style.display='flex'; this.style.display='none';">
-            <div class="image-fallback" style="display: none; width: 100%; height: 200px; background: linear-gradient(135deg, #ffe6e6, #ffcccc); align-items: center; justify-content: center; flex-direction: column; color: #ff4757;">
-                <i class="fas fa-heart" style="font-size: 48px;"></i>
-                <p style="margin-top: 10px;">No Image</p>
+            <img src="${imageUrl}" alt="${ship.name}" class="ship-image" style="width: 100%; height: 100%; object-fit: cover;" 
+                onerror="this.onerror=null; this.src='https://via.placeholder.com/400x200?text=No+Image'; this.style.display='none'; this.parentElement.querySelector('.image-fallback').style.display='flex';">
+            <div class="image-fallback" style="display: none; width: 100%; height: 100%; background: linear-gradient(135deg, #ffe6e6, #ffcccc); align-items: center; justify-content: center; flex-direction: column; color: #B71C1C;">
+                <i class="fas fa-heart" style="font-size: 40px;"></i>
+                <p style="margin-top: 8px; font-size: 12px;">No Image</p>
             </div>
-            <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.7)); padding: 20px; color: white;">
-                <h3 style="margin: 0; font-size: 1.2rem;">${escapeHtml(ship.name)}</h3>
-                <p style="margin: 5px 0 0; font-size: 0.9rem;">${escapeHtml(ship.characters)}</p>
+            <div class="image-overlay">
+                <h3 class="pairing-name">${escapeHtml(ship.name)}</h3>
+                <p class="pairing-characters">${escapeHtml(ship.characters)}</p>
             </div>
         </div>`;
     } else {
         cardHTML += `
-        <div style="padding: 20px; background: linear-gradient(135deg, #ffe6e6, #ffcccc);">
-            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-bottom: 10px;">
-                <button class="action-btn" onclick="event.stopPropagation(); toggleFavorite(${ship.id})" style="background: none; border: none; cursor: pointer; color: ${ship.favorite ? '#ffc107' : '#999'}; font-size: 18px;">
+        <div class="card-header">
+            <div class="card-actions" style="position: absolute; top: 12px; right: 12px; display: flex; gap: 8px;">
+                <button class="action-btn favorite-btn" onclick="event.stopPropagation(); toggleFavorite(${ship.id})" style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 35px; height: 35px; color: ${ship.favorite ? '#ffd700' : '#999'}; cursor: pointer;">
                     <i class="${ship.favorite ? 'fas' : 'far'} fa-star"></i>
                 </button>
-                <button class="action-btn" onclick="event.stopPropagation(); openEditModal(${ship.id})" style="background: none; border: none; cursor: pointer; color: #999;">
+                <button class="action-btn edit-btn" onclick="event.stopPropagation(); openEditModal(${ship.id})" style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 35px; height: 35px; color: #1A237E; cursor: pointer;">
                     <i class="fas fa-edit"></i>
                 </button>
-                <button class="action-btn" onclick="event.stopPropagation(); openDeleteModal(${ship.id}, '${escapeString(ship.name)}')" style="background: none; border: none; cursor: pointer; color: #999;">
+                <button class="action-btn delete-btn" onclick="event.stopPropagation(); openDeleteModal(${ship.id}, '${escapeString(ship.name)}')" style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 35px; height: 35px; color: #7f8c8d; cursor: pointer;">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
-            <h3 style="margin: 0 0 5px 0;">${escapeHtml(ship.name)}</h3>
-            <p style="margin: 0; color: #666;">${escapeHtml(ship.characters)}</p>
+            <h3 class="pairing-name">${escapeHtml(ship.name)}</h3>
+            <p class="pairing-characters">${escapeHtml(ship.characters)}</p>
         </div>`;
     }
     
-    // Card body with details - RED TAGS for status and relationship
+    // Card body with info rows using CSS classes
     cardHTML += `
-    <div style="padding: 15px;">
-        <div style="margin-bottom: 8px;">
-            <span style="font-weight: bold;">Fandom${isCrossover ? 's' : ''}:</span>
-            <span style="margin-left: 8px;">${escapeHtml(formatFandomsForDisplay(ship.fandom))}</span>
+    <div class="card-body">
+        <div class="info-row">
+            <span class="info-label">Fandom${isCrossover ? 's' : ''}:</span>
+            <span class="info-value">${escapeHtml(formatFandomsForDisplay(ship.fandom))}</span>
         </div>
-        ${ship.media ? `<div style="margin-bottom: 8px;"><span style="font-weight: bold;">Media:</span> <span>${escapeHtml(ship.media)}</span></div>` : ''}
-        ${ship.dynamic && ship.dynamic !== 'NA' ? `<div style="margin-bottom: 8px;"><span style="font-weight: bold;">Dynamic:</span> <span>${escapeHtml(ship.dynamic)}</span></div>` : ''}
-        ${ship.notes ? `<div style="margin-bottom: 8px;"><span style="font-weight: bold;">Notes:</span> <span>${escapeHtml(ship.notes)}</span></div>` : ''}
+        ${ship.media ? `
+        <div class="info-row">
+            <span class="info-label">Media:</span>
+            <span class="info-value">${escapeHtml(ship.media)}</span>
+        </div>` : ''}
+        ${ship.dynamic && ship.dynamic !== 'NA' ? `
+        <div class="info-row">
+            <span class="info-label">Dynamic:</span>
+            <span class="info-value">${escapeHtml(ship.dynamic)}</span>
+        </div>` : ''}
+        ${ship.notes ? `
+        <div class="info-row">
+            <span class="info-label">Notes:</span>
+            <span class="info-value">${escapeHtml(ship.notes)}</span>
+        </div>` : ''}
         
-        <!-- RED COLORED TAGS -->
-        <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
-            <span style="background: #ff4757; padding: 4px 12px; border-radius: 20px; font-size: 12px; color: white;">
+        <!-- Tags using CSS class .tag -->
+        <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+            <span class="tag">
                 <i class="fas fa-info-circle"></i> ${escapeHtml(ship.status || 'Fanon')}
             </span>
-            <span style="background: #ff4757; padding: 4px 12px; border-radius: 20px; font-size: 12px; color: white;">
+            <span class="tag">
                 <i class="fas fa-heart"></i> ${escapeHtml(ship.relationship || 'Romantic')}
             </span>
-            ${ship.universe === 'Crossover' ? `<span style="background: #ff4757; padding: 4px 12px; border-radius: 20px; font-size: 12px; color: white;">
-                <i class="fas fa-globe"></i> Crossover
-            </span>` : ''}
-            ${ship.yearStarted ? `<span style="background: #ff4757; padding: 4px 12px; border-radius: 20px; font-size: 12px; color: white;">
+            ${ship.yearStarted ? `
+            <span class="tag">
                 <i class="fas fa-calendar"></i> ${escapeHtml(ship.yearStarted)}
             </span>` : ''}
         </div>
@@ -341,7 +349,7 @@ function createShipCard(ship) {
     
     card.innerHTML = cardHTML;
     
-    // Handle image fallback display
+    // Handle image fallback
     const img = card.querySelector('img');
     if (img) {
         img.onerror = function() {
@@ -391,8 +399,8 @@ function showToast(message, type = 'info') {
     const toastContainer = document.getElementById('toast-container');
     if (!toastContainer) return;
     const toast = document.createElement('div');
-    toast.style.cssText = 'background: white; padding: 12px 24px; border-radius: 50px; margin-top: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);';
-    toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}" style="color: ${type === 'success' ? '#2ecc71' : '#3498db'};"></i><span style="margin-left: 8px;">${message}</span>`;
+    toast.className = `toast toast-${type}`;
+    toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}"></i><span>${message}</span>`;
     toastContainer.appendChild(toast);
     setTimeout(() => toast.remove(), 3000);
 }
