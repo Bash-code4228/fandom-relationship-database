@@ -160,6 +160,7 @@ function addSampleData() {
             notes: "The loyalty and history between them gets me every time",
             favorite: true,
             image: "images/stucky.jpg",
+            artist: "fanartist123",
             addedDate: "2024-01-15"
         },
         {
@@ -177,6 +178,7 @@ function addSampleData() {
             notes: "Enemies to lovers perfection",
             favorite: true,
             image: "images/dramione.jpg",
+            artist: "",
             addedDate: "2026-02-25"
         },
         {
@@ -194,6 +196,7 @@ function addSampleData() {
             notes: "The sun and the moon",
             favorite: false,
             image: "images/superbat.jpg",
+            artist: "art by jane_doe",
             addedDate: "2026-03-20"
         }
     ];
@@ -309,9 +312,15 @@ function createShipCard(ship) {
         </div>`;
     }
     
-    // Card body with info rows using CSS classes
+    // Card body with info rows - Artist Credit appears right after the header (before Fandom)
     cardHTML += `
     <div class="card-body">
+        ${ship.artist && ship.artist !== '' && ship.artist !== null ? `
+        <div class="info-row" style="border-bottom: 1px solid #f0f0f0; margin-bottom: 12px; padding-bottom: 8px;">
+            <span class="info-label" style="color: #B71C1C;"><i class="fas fa-palette"></i> Art by:</span>
+            <span class="info-value" style="color: #0992C2; font-style: italic;">☆ ${escapeHtml(ship.artist)}</span>
+        </div>` : ''}
+        
         <div class="info-row">
             <span class="info-label">Fandom${isCrossover ? 's' : ''}:</span>
             <span class="info-value">${escapeHtml(formatFandomsForDisplay(ship.fandom))}</span>
@@ -424,6 +433,7 @@ function openEditModal(id) {
     document.getElementById('input-trope').value = pairing.trope || 'NA';
     document.getElementById('input-notes').value = pairing.notes || '';
     document.getElementById('input-favorite').checked = pairing.favorite || false;
+    document.getElementById('input-artist').value = pairing.artist || '';
     
     if (pairing.image && pairing.image !== 'null' && pairing.image !== '') {
         setUploadMethod('url');
@@ -563,6 +573,7 @@ function completeSubmission(imagePath) {
         notes: document.getElementById('input-notes').value,
         favorite: document.getElementById('input-favorite').checked,
         image: imagePath && imagePath !== '' ? imagePath : null,
+        artist: document.getElementById('input-artist').value || '',
         addedDate: new Date().toISOString().split('T')[0]
     };
     
