@@ -160,7 +160,7 @@ function addSampleData() {
             notes: "The loyalty and history between them gets me every time",
             favorite: true,
             image: "images/stucky.jpg",
-            artist: "fanartist123",
+            artist: "",
             addedDate: "2024-01-15"
         },
         {
@@ -196,7 +196,7 @@ function addSampleData() {
             notes: "The sun and the moon",
             favorite: false,
             image: "images/superbat.jpg",
-            artist: "art by jane_doe",
+            artist: "",
             addedDate: "2026-03-20"
         }
     ];
@@ -234,7 +234,7 @@ function formatFandomsForDisplay(fandomString) {
     return fandoms.join(', ');
 }
 
-// Create ship card element using CSS classes from style.css
+// Create ship card element
 function createShipCard(ship) {
     const card = document.createElement('div');
     card.className = 'pairing-card';
@@ -250,7 +250,7 @@ function createShipCard(ship) {
     
     let cardHTML = '';
     
-    // Favorite/Active badge - red background with gold text
+    // Favorite/Active badge
     if (ship.favorite) {
         cardHTML += `<div style="position: absolute; top: 12px; left: 12px; background: #B71C1C; padding: 5px 12px; border-radius: 20px; color: #FFD700; font-size: 11px; font-weight: bold; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
             <i class="fas fa-star"></i> ACTIVE
@@ -312,13 +312,12 @@ function createShipCard(ship) {
         </div>`;
     }
     
-    // Card body with info rows - Artist Credit appears right after the header (before Fandom)
+    // Card body with info rows
     cardHTML += `
     <div class="card-body">
         ${ship.artist && ship.artist !== '' && ship.artist !== null ? `
-        <div class="info-row" style="border-bottom: 1px solid #f0f0f0; margin-bottom: 12px; padding-bottom: 8px;">
-            <span class="info-label" style="color: #B71C1C;"><i class="fas fa-palette"></i> Art by:</span>
-            <span class="info-value" style="color: #0992C2; font-style: italic;">☆ ${escapeHtml(ship.artist)}</span>
+        <div style="text-align: center; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 1px solid #f0f0f0;">
+            <span style="color: #0992C2; font-style: italic;">☆ art by ${escapeHtml(ship.artist)}</span>
         </div>` : ''}
         
         <div class="info-row">
@@ -341,7 +340,6 @@ function createShipCard(ship) {
             <span class="info-value">${escapeHtml(ship.notes)}</span>
         </div>` : ''}
         
-        <!-- Tags using CSS class .tag -->
         <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
             <span class="tag">
                 <i class="fas fa-info-circle"></i> ${escapeHtml(ship.status || 'Fanon')}
@@ -358,7 +356,6 @@ function createShipCard(ship) {
     
     card.innerHTML = cardHTML;
     
-    // Handle image fallback
     const img = card.querySelector('img');
     if (img) {
         img.onerror = function() {
