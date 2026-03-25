@@ -317,7 +317,7 @@ function createShipCard(ship) {
     <div class="card-body">
         ${ship.artist && ship.artist !== '' && ship.artist !== null ? `
         <div style="text-align: center; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 1px solid #f0f0f0;">
-            <span style="color: #0992C2; font-style: italic;">☆ art by ${escapeHtml(ship.artist)}</span>
+            <span style="color: #0992C2; font-style: italic;">☆ commissioned art by ${escapeHtml(ship.artist)}</span>
         </div>` : ''}
         
         <div class="info-row">
