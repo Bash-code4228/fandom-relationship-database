@@ -12,7 +12,7 @@
     <div class="container">
         <div class="header">
             <h1><i class="fas fa-heart"></i> Fandom Relationships Tracker</h1>
-            <p>I'm tracking and organizing the relationships that I like throughout any fandoms I am in. It started with a Google sheet between me and my friend and now uh...a personal website? Ehe. 
+            <p>I'm tracking and organizing the relationships that I like throughout any fandoms I am in. It started with a Google sheet between me and my friend and now uh...a personal website? Ehe. I will be using the words 'ship' as a shortened word to 'relationship' and yes I am aware of discussions over the word only being used for romantic purposes but I'm so done with having to type the word too long, sorry y'alls.  
             <br><br>
             Just to be transparent, I did not build this on my own, I definitely asked AI for help.</p>
         </div>
@@ -23,7 +23,7 @@
                     <i class="fas fa-heart"></i>
                 </div>
                 <div class="stat-info">
-                    <h3>TOTAL SHIPS</h3>
+                    <h3>TOTAL RELATIONSHIPS</h3>
                     <div class="count" id="total-count">0</div>
                 </div>
             </div>
@@ -41,7 +41,7 @@
                     <i class="fas fa-check-circle"></i>
                 </div>
                 <div class="stat-info">
-                    <h3>CANON SHIPS</h3>
+                    <h3>CANON RELATIONSHIPS</h3>
                     <div class="count" id="canon-count">0</div>
                 </div>
             </div>
@@ -53,7 +53,7 @@
                 <input type="text" id="search-input" placeholder="Search ships by name, characters, or fandom...">
             </div>
             <button class="btn btn-primary" onclick="openAddModal()">
-                <i class="fas fa-plus"></i> Add New Ship
+                <i class="fas fa-plus"></i> Add New
             </button>
             <button class="btn btn-secondary" onclick="openExportModal()">
                 <i class="fas fa-file-export"></i> Export
@@ -87,7 +87,7 @@
                 <form id="pairing-form" onsubmit="event.preventDefault(); addNewPairing();" style="padding: 30px;">
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="input-name">Ship Name *</label>
+                            <label for="input-name">Relationship Name *</label>
                             <input type="text" id="input-name" placeholder="e.g., Stucky, Dramione" required>
                         </div>
                         <div class="form-group">
@@ -97,7 +97,7 @@
                     </div>
                     
                     <div class="form-group full-width">
-                        <label>Ship Image</label>
+                        <label>Relationship Image</label>
                         <div class="upload-options">
                             <div class="upload-option-btn active" id="upload-option-file" onclick="setUploadMethod('file')">
                                 <i class="fas fa-upload"></i><br>Upload File
