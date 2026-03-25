@@ -137,52 +137,31 @@ async function loadFromStorage() {
         }
     }
     
-    // Process images - check for images in the images folder
-    pairings.forEach(p => {
-        // Check if there's an image file in the images folder with the ship name
-        if (!p.image || p.image === null) {
-            // Try to find image in images folder by ship name (lowercase, no spaces)
-            const possibleImageName = p.name.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '');
-            // Also try with the ID
-            const possibleImages = [
-                `images/${possibleImageName}.jpg`,
-                `images/${possibleImageName}.png`,
-                `images/${possibleImageName}.gif`,
-                `images/${p.id}.jpg`,
-                `images/${p.id}.png`
-            ];
-            p.image = possibleImages;
-        } else if (typeof p.image === 'string') {
-            p.image = [p.image];
-        } else if (!Array.isArray(p.image)) {
-            p.image = [];
-        }
-    });
-    
     renderFandoms();
     renderPairings(getFilteredPairings());
     updateStats();
 }
 
-// Save to localStorage (Temporary save)
+// Save to localStorage
 function saveToStorage() {
     localStorage.setItem('fandomShips', JSON.stringify(pairings));
 }
 
-// Add sample ships data with crossover examples
+// Add sample ships data
 function addSampleData() {
     const sampleShips = [
         {
             id: 1,
-            name: "Stony",
-            characters: "Steve Rogers x Tony Stark",
+            name: "Stucky",
+            characters: "Steve Rogers x Bucky Barnes",
             fandom: "Marvel Cinematic Universe",
             universe: "From universe",
             status: "Fanon",
             relationship: "Romantic",
+            yearStarted: "2014",
             media: "Film Series",
             dynamic: "Opposing Energies",
-            trope: "Enemies to Lovers",
+            trope: "Friends to Lovers",
             notes: "The loyalty and history between them gets me every time",
             favorite: true,
             image: null,
@@ -190,33 +169,35 @@ function addSampleData() {
         },
         {
             id: 2,
-            name: "Shinoi",
-            characters: "Shin/Noi",
-            fandom: "Dorohedoro",
+            name: "Dramione",
+            characters: "Draco Malfoy x Hermione Granger",
+            fandom: "Harry Potter",
             universe: "From universe",
             status: "Fanon",
             relationship: "Romantic",
-            media: "Mixed",
-            dynamic: "Similar Energies",
-            trope: "Friends to Lovers",
-            notes: "☆ power couple yas.",
-            favorite: false,
+            yearStarted: "2010",
+            media: "Literature/Books",
+            dynamic: "Opposing Energies",
+            trope: "Enemies to Lovers",
+            notes: "Enemies to lovers perfection",
+            favorite: true,
             image: null,
             addedDate: "2026-02-25"
         },
         {
             id: 3,
-            name: "Rick and Morty x Gravity Falls Crossover",
-            characters: "Rick Sanchez x Stanford Pines",
-            fandom: "Rick and Morty, Gravity Falls",
+            name: "Superbat",
+            characters: "Clark Kent x Bruce Wayne",
+            fandom: "DC",
             universe: "Crossover",
             status: "Fanon",
             relationship: "Romantic",
-            media: "Animation Series",
-            dynamic: "Similar Energies",
+            yearStarted: "2015",
+            media: "Comics/Manga",
+            dynamic: "Opposing Energies",
             trope: "Enemies to Lovers",
-            notes: "Two genius scientists from different dimensions",
-            favorite: true,
+            notes: "The sun and the moon",
+            favorite: false,
             image: null,
             addedDate: "2026-03-20"
         }
@@ -263,18 +244,12 @@ function createShipCard(ship) {
     const card = document.createElement('div');
     card.className = 'pairing-card';
     
-    // Determine which image to use
+    // Handle image (simplified to work with your form)
     let imageUrl = null;
-    if (ship.image && Array.isArray(ship.image)) {
-        // Find first existing image
-        for (let img of ship.image) {
-            if (img && img !== 'null' && img !== '') {
-                imageUrl = img;
-                break;
-            }
-        }
-    } else if (ship.image && typeof ship.image === 'string' && ship.image !== 'null') {
+    if (ship.image && typeof ship.image === 'string' && ship.image !== 'null' && ship.image !== '') {
         imageUrl = ship.image;
+    } else if (ship.image && Array.isArray(ship.image) && ship.image[0]) {
+        imageUrl = ship.image[0];
     }
     
     let cardHTML = '';
@@ -285,7 +260,7 @@ function createShipCard(ship) {
 
     // Show crossover badge if multiple fandoms
     const fandomsList = parseFandoms(ship.fandom);
-    const isCrossover = fandomsList.length > 1;
+    const isCrossover = fandomsList.length > 1 || ship.universe === 'Crossover';
     
     if (isCrossover) {
         cardHTML += `<div class="crossover-badge" style="position:absolute; top:10px; right:10px; background: #D4AF37; color: #333; padding: 5px 8px; border-radius: 20px; font-size: 11px; z-index:5;"><i class="fas fa-code-branch"></i> Crossover</div>`;
@@ -411,22 +386,30 @@ function openEditModal(id) {
     document.getElementById('input-notes').value = pairing.notes || '';
     document.getElementById('input-favorite').checked = pairing.favorite || false;
     
+    // Handle image if exists
     if (pairing.image && pairing.image !== null) {
-        if (Array.isArray(pairing.image) && pairing.image[0]) {
-            setUploadMethod('url');
-            document.getElementById('input-image-url').value = pairing.image[0];
-            previewImageUrl(pairing.image[0]);
-        } else if (typeof pairing.image === 'string') {
+        if (typeof pairing.image === 'string') {
             setUploadMethod('url');
             document.getElementById('input-image-url').value = pairing.image;
             previewImageUrl(pairing.image);
+        } else if (Array.isArray(pairing.image) && pairing.image[0]) {
+            setUploadMethod('url');
+            document.getElementById('input-image-url').value = pairing.image[0];
+            previewImageUrl(pairing.image[0]);
         }
+    } else {
+        // Clear image fields
+        if (document.getElementById('input-image-url')) document.getElementById('input-image-url').value = '';
+        clearImagePreview();
     }
+    
     openAddModal();
 }
 
 function resetForm() {
-    editingId = null; selectedFile = null; selectedImageUrl = '';
+    editingId = null; 
+    selectedFile = null; 
+    selectedImageUrl = '';
     if (pairingForm) pairingForm.reset();
     clearImagePreview();
 }
@@ -539,22 +522,26 @@ function clearImagePreview() {
 }
 
 function addNewPairing() {
+    // Get image data based on upload method
+    let imageData = null;
+    
     if (uploadMethod === 'file' && selectedFile) {
         const reader = new FileReader();
-        reader.onload = (e) => completeSubmission(e.target.result);
+        reader.onload = (e) => {
+            completeSubmission(e.target.result);
+        };
         reader.readAsDataURL(selectedFile);
         return;
-    } 
-    const imageData = uploadMethod === 'url' ? document.getElementById('input-image-url').value : null;
-    completeSubmission(imageData || (editingId ? pairings.find(p => p.id === editingId).image : null));
+    } else if (uploadMethod === 'url') {
+        imageData = document.getElementById('input-image-url').value;
+    }
+    
+    completeSubmission(imageData);
 }
 
 function completeSubmission(imageData) {
-    // Get fandom value and ensure it's stored as comma-separated string
+    // Get fandom value
     let fandomValue = document.getElementById('input-fandom').value;
-    
-    // If user entered multiple fandoms separated by commas, keep as is
-    // If not, store as single fandom
     
     const pairingData = {
         id: editingId || Date.now(),
@@ -570,7 +557,7 @@ function completeSubmission(imageData) {
         trope: document.getElementById('input-trope').value,
         notes: document.getElementById('input-notes').value,
         favorite: document.getElementById('input-favorite').checked,
-        image: imageData ? (Array.isArray(imageData) ? imageData : [imageData]) : null,
+        image: imageData && imageData !== '' ? imageData : null,
         addedDate: new Date().toISOString().split('T')[0]
     };
     
@@ -664,9 +651,9 @@ document.addEventListener('DOMContentLoaded', () => {
     loadFromStorage();
     
     // Set up search input listener
-    const searchInput = document.getElementById('search-input');
-    if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
+    const searchInputElem = document.getElementById('search-input');
+    if (searchInputElem) {
+        searchInputElem.addEventListener('input', (e) => {
             currentSearch = e.target.value.toLowerCase();
             applyFilters();
         });
