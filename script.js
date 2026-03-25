@@ -123,12 +123,18 @@ async function loadFromStorage() {
         }
     } catch (e) {
         console.error('Error loading data:', e);
+        // If there's an error loading the file, start with empty array instead of sample data
+        pairings = [];
+        // Try to load from localStorage as backup
         const saved = localStorage.getItem('fandomShips');
-        if (saved) {
-            pairings = JSON.parse(saved);
-            console.log('Loaded from localStorage:', pairings.length, 'ships');
-        } else {
-            addSampleData();
+        if (saved && saved !== '[]') {
+            try {
+                pairings = JSON.parse(saved);
+                console.log('Loaded from localStorage:', pairings.length, 'ships');
+            } catch (parseErr) {
+                console.error('Error parsing localStorage:', parseErr);
+                pairings = [];
+            }
         }
     }
     
@@ -142,67 +148,131 @@ function saveToStorage() {
     localStorage.setItem('fandomShips', JSON.stringify(pairings));
 }
 
-// Add sample ships data
-function addSampleData() {
-    const sampleShips = [
-        {
-            id: 1,
-            name: "Stucky",
-            characters: "Steve Rogers x Bucky Barnes",
-            fandom: "Marvel Cinematic Universe",
-            universe: "From universe",
-            status: "Fanon",
-            relationship: "Romantic",
-            yearStarted: "2014",
-            media: "Film Series",
-            dynamic: "Opposing Energies",
-            trope: "Friends to Lovers",
-            notes: "The loyalty and history between them gets me every time",
-            favorite: true,
-            image: "images/stucky.jpg",
-            artist: "",
-            addedDate: "2024-01-15"
-        },
-        {
-            id: 2,
-            name: "Dramione",
-            characters: "Draco Malfoy x Hermione Granger",
-            fandom: "Harry Potter",
-            universe: "From universe",
-            status: "Fanon",
-            relationship: "Romantic",
-            yearStarted: "2010",
-            media: "Literature/Books",
-            dynamic: "Opposing Energies",
-            trope: "Enemies to Lovers",
-            notes: "Enemies to lovers perfection",
-            favorite: true,
-            image: "images/dramione.jpg",
-            artist: "",
-            addedDate: "2026-02-25"
-        },
-        {
-            id: 3,
-            name: "Superbat",
-            characters: "Clark Kent x Bruce Wayne",
-            fandom: "DC",
-            universe: "Crossover",
-            status: "Fanon",
-            relationship: "Romantic",
-            yearStarted: "2015",
-            media: "Comics/Manga",
-            dynamic: "Opposing Energies",
-            trope: "Enemies to Lovers",
-            notes: "The sun and the moon",
-            favorite: false,
-            image: "images/superbat.jpg",
-            artist: "",
-            addedDate: "2026-03-20"
-        }
-    ];
+// NO sample data function - removed to prevent unwanted ships
+
+// Lightbox functions
+function openLightbox(imageUrl, shipName) {
+    // Create lightbox overlay if it doesn't exist
+    let lightbox = document.getElementById('lightbox-overlay');
+    if (!lightbox) {
+        lightbox = document.createElement('div');
+        lightbox.id = 'lightbox-overlay';
+        lightbox.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        `;
+        
+        const lightboxContent = document.createElement('div');
+        lightboxContent.style.cssText = `
+            max-width: 90vw;
+            max-height: 90vh;
+            position: relative;
+        `;
+        
+        const img = document.createElement('img');
+        img.id = 'lightbox-img';
+        img.style.cssText = `
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        `;
+        
+        const closeBtn = document.createElement('button');
+        closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+        closeBtn.style.cssText = `
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            padding: 10px;
+            transition: transform 0.2s;
+        `;
+        closeBtn.onmouseover = () => closeBtn.style.transform = 'scale(1.1)';
+        closeBtn.onmouseout = () => closeBtn.style.transform = 'scale(1)';
+        
+        const caption = document.createElement('div');
+        caption.id = 'lightbox-caption';
+        caption.style.cssText = `
+            position: absolute;
+            bottom: -40px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: white;
+            font-size: 14px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 8px;
+        `;
+        
+        lightboxContent.appendChild(img);
+        lightboxContent.appendChild(closeBtn);
+        lightboxContent.appendChild(caption);
+        lightbox.appendChild(lightboxContent);
+        document.body.appendChild(lightbox);
+        
+        lightbox.onclick = function(e) {
+            if (e.target === lightbox) {
+                closeLightbox();
+            }
+        };
+        
+        closeBtn.onclick = function(e) {
+            e.stopPropagation();
+            closeLightbox();
+        };
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('lightbox-overlay') && document.getElementById('lightbox-overlay').style.display !== 'none') {
+                closeLightbox();
+            }
+        });
+    }
     
-    pairings = sampleShips;
-    saveToStorage();
+    const lightboxOverlay = document.getElementById('lightbox-overlay');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxCaption = document.getElementById('lightbox-caption');
+    
+    lightboxImg.src = imageUrl;
+    lightboxCaption.textContent = shipName || 'Ship Image';
+    
+    // Handle image loading error
+    lightboxImg.onerror = function() {
+        lightboxImg.src = 'https://via.placeholder.com/800x600?text=Image+Not+Available';
+        lightboxCaption.textContent = shipName + ' (Image not available)';
+    };
+    
+    lightboxOverlay.style.display = 'flex';
+    setTimeout(() => {
+        lightboxOverlay.style.opacity = '1';
+    }, 10);
+}
+
+function closeLightbox() {
+    const lightbox = document.getElementById('lightbox-overlay');
+    if (lightbox) {
+        lightbox.style.opacity = '0';
+        setTimeout(() => {
+            lightbox.style.display = 'none';
+        }, 300);
+    }
 }
 
 // Render pairings
@@ -267,10 +337,10 @@ function createShipCard(ship) {
         </div>`;
     }
 
-    // Image section
+    // Image section with click handler for lightbox
     if (imageUrl) {
         cardHTML += `
-        <div class="image-container" style="position: relative; height: 200px;">
+        <div class="image-container" style="position: relative; height: 200px; cursor: pointer;" onclick="openLightbox('${escapeString(imageUrl)}', '${escapeString(ship.name)} - ${escapeString(ship.characters)}')">
             <div class="card-actions" style="position: absolute; top: 12px; right: 12px; z-index: 10; display: flex; gap: 8px; opacity: 1;">
                 <button class="action-btn favorite-btn" onclick="event.stopPropagation(); toggleFavorite(${ship.id})" style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 35px; height: 35px; color: ${ship.favorite ? '#ffd700' : '#999'}; cursor: pointer;">
                     <i class="${ship.favorite ? 'fas' : 'far'} fa-star"></i>
@@ -317,7 +387,7 @@ function createShipCard(ship) {
     <div class="card-body">
         ${ship.artist && ship.artist !== '' && ship.artist !== null ? `
         <div style="text-align: center; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 1px solid #f0f0f0;">
-            <span style="color: #0992C2; font-style: italic;">☆ commissioned art by ${escapeHtml(ship.artist)}</span>
+            <span style="color: #0992C2; font-style: italic;">☆ art by ${escapeHtml(ship.artist)}</span>
         </div>` : ''}
         
         <div class="info-row">
