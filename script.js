@@ -111,36 +111,6 @@ function applyFilters() {
     renderPairings(getFilteredPairings());
 }
 
-// Get image path for a ship - tries multiple possible filenames
-function getShipImagePath(ship) {
-    // If ship already has an image path stored, use it
-    if (ship.image && ship.image !== null && ship.image !== '') {
-        return ship.image;
-    }
-    
-    // Try to find image in images folder based on ship name
-    const possibleNames = [
-        ship.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
-        ship.name.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, ''),
-        ship.name.toLowerCase().replace(/[^a-z0-9]/g, ''),
-        ship.id.toString()
-    ];
-    
-    // Check for common image extensions
-    const extensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
-    
-    for (let name of possibleNames) {
-        for (let ext of extensions) {
-            const path = `images/${name}${ext}`;
-            // We can't check if file exists synchronously, but we'll return the first candidate
-            // The onerror handler on the img tag will handle missing images
-            return path;
-        }
-    }
-    
-    return null;
-}
-
 // Load from pairings.json
 async function loadFromStorage() {
     try {
@@ -261,29 +231,27 @@ function formatFandomsForDisplay(fandomString) {
     return fandoms.join(', ');
 }
 
-// Create ship card element with image from images/ folder
+// Create ship card element with red tags
 function createShipCard(ship) {
     const card = document.createElement('div');
     card.className = 'pairing-card';
-    card.style.cssText = 'background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.2s;';
+    card.style.cssText = 'background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.2s; margin-bottom: 20px;';
     
-    // Get image path - either from ship.image or try to find it
+    // Get image path
     let imagePath = ship.image;
     if (!imagePath || imagePath === 'null' || imagePath === '') {
-        // Try to auto-detect image based on ship name
         const possibleName = ship.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
         imagePath = `images/${possibleName}.jpg`;
     }
     
-    // Check if it's a full URL or relative path
     const imageUrl = imagePath && imagePath !== 'null' ? imagePath : null;
     
     let cardHTML = '';
     
-    // Favorite badge
+    // Active badge
     if (ship.favorite) {
-        cardHTML += `<div style="position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); padding: 6px 12px; border-radius: 20px; color: gold; font-size: 12px; z-index: 10;">
-            <i class="fas fa-star"></i> Active
+        cardHTML += `<div style="position: absolute; top: 12px; left: 12px; background: #ff4757; padding: 6px 12px; border-radius: 20px; color: white; font-size: 12px; font-weight: bold; z-index: 10;">
+            <i class="fas fa-star"></i> ACTIVE
         </div>`;
     }
 
@@ -292,12 +260,12 @@ function createShipCard(ship) {
     const isCrossover = fandomsList.length > 1 || ship.universe === 'Crossover';
     
     if (isCrossover) {
-        cardHTML += `<div style="position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); padding: 6px 12px; border-radius: 20px; color: #D4AF37; font-size: 12px; z-index: 10;">
-            <i class="fas fa-code-branch"></i> Crossover
+        cardHTML += `<div style="position: absolute; top: 12px; right: 12px; background: #ff4757; padding: 6px 12px; border-radius: 20px; color: white; font-size: 12px; font-weight: bold; z-index: 10;">
+            <i class="fas fa-code-branch"></i> CROSSOVER
         </div>`;
     }
 
-    // Image section
+    // Image section with action buttons
     if (imageUrl) {
         cardHTML += `
         <div style="position: relative;">
@@ -315,7 +283,7 @@ function createShipCard(ship) {
             <img src="${imageUrl}" alt="${ship.name}" 
                 style="width: 100%; height: 200px; object-fit: cover;" 
                 onerror="this.onerror=null; this.src='https://via.placeholder.com/400x200?text=No+Image'; this.parentElement.querySelector('.image-fallback').style.display='flex'; this.style.display='none';">
-            <div class="image-fallback" style="display: none; width: 100%; height: 200px; background: linear-gradient(135deg, #ffe6e6, #ffcccc); align-items: center; justify-content: center; flex-direction: column; color: #c92a2a;">
+            <div class="image-fallback" style="display: none; width: 100%; height: 200px; background: linear-gradient(135deg, #ffe6e6, #ffcccc); align-items: center; justify-content: center; flex-direction: column; color: #ff4757;">
                 <i class="fas fa-heart" style="font-size: 48px;"></i>
                 <p style="margin-top: 10px;">No Image</p>
             </div>
@@ -343,7 +311,7 @@ function createShipCard(ship) {
         </div>`;
     }
     
-    // Card body with details
+    // Card body with details - RED TAGS for status and relationship
     cardHTML += `
     <div style="padding: 15px;">
         <div style="margin-bottom: 8px;">
@@ -354,15 +322,19 @@ function createShipCard(ship) {
         ${ship.dynamic && ship.dynamic !== 'NA' ? `<div style="margin-bottom: 8px;"><span style="font-weight: bold;">Dynamic:</span> <span>${escapeHtml(ship.dynamic)}</span></div>` : ''}
         ${ship.notes ? `<div style="margin-bottom: 8px;"><span style="font-weight: bold;">Notes:</span> <span>${escapeHtml(ship.notes)}</span></div>` : ''}
         
+        <!-- RED COLORED TAGS -->
         <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
-            <span style="background: #f0f0f0; padding: 4px 12px; border-radius: 20px; font-size: 12px;">
+            <span style="background: #ff4757; padding: 4px 12px; border-radius: 20px; font-size: 12px; color: white;">
                 <i class="fas fa-info-circle"></i> ${escapeHtml(ship.status || 'Fanon')}
             </span>
-            <span style="background: #f0f0f0; padding: 4px 12px; border-radius: 20px; font-size: 12px;">
+            <span style="background: #ff4757; padding: 4px 12px; border-radius: 20px; font-size: 12px; color: white;">
                 <i class="fas fa-heart"></i> ${escapeHtml(ship.relationship || 'Romantic')}
             </span>
-            ${ship.universe === 'Crossover' ? `<span style="background: #f0f0f0; padding: 4px 12px; border-radius: 20px; font-size: 12px;">
+            ${ship.universe === 'Crossover' ? `<span style="background: #ff4757; padding: 4px 12px; border-radius: 20px; font-size: 12px; color: white;">
                 <i class="fas fa-globe"></i> Crossover
+            </span>` : ''}
+            ${ship.yearStarted ? `<span style="background: #ff4757; padding: 4px 12px; border-radius: 20px; font-size: 12px; color: white;">
+                <i class="fas fa-calendar"></i> ${escapeHtml(ship.yearStarted)}
             </span>` : ''}
         </div>
     </div>`;
@@ -556,10 +528,6 @@ function addNewPairing() {
     if (uploadMethod === 'url') {
         imagePath = document.getElementById('input-image-url').value;
     } else if (uploadMethod === 'file' && selectedFile) {
-        // For file upload, we'd need to save to images folder
-        // For now, just show a message
-        showToast('File upload will save image to images folder. For now, please use URL or manually add to images folder.', 'info');
-        // Generate filename suggestion
         const shipName = document.getElementById('input-name').value;
         const filename = shipName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') + '.jpg';
         imagePath = `images/${filename}`;
