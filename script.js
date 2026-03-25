@@ -20,44 +20,53 @@ const confirmMessage = document.getElementById('confirm-message');
 const pairingForm = document.getElementById('pairing-form');
 const fandomList = document.getElementById('fandom-list');
 
-// Load initial data
-document.addEventListener('DOMContentLoaded', async () => {
-    await loadFromStorage();
-    
-    // Initialize upload method toggle
-    setUploadMethod('file');
-    
-    // URL input listener
-    const imageUrlInput = document.getElementById('input-image-url');
-    if (imageUrlInput) {
-        imageUrlInput.addEventListener('input', function() {
-            selectedImageUrl = this.value;
-            previewImageUrl(this.value);
+// Helper function to parse fandoms (supports comma-separated values)
+function parseFandoms(fandomString) {
+    if (!fandomString) return [];
+    // Split by comma and trim each fandom
+    return fandomString.split(',').map(f => f.trim()).filter(f => f);
+}
+
+// Get all unique fandoms from all pairings
+function getAllUniqueFandoms() {
+    const fandomsSet = new Set();
+    pairings.forEach(p => {
+        const fandoms = parseFandoms(p.fandom);
+        fandoms.forEach(f => {
+            if (f) fandomsSet.add(f);
         });
-    }
-    
-    // Search functionality
-    if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-            currentSearch = e.target.value.toLowerCase();
-            applyFilters();
-        });
-    }
-});
+    });
+    return Array.from(fandomsSet).sort();
+}
+
+// Get count of ships for a specific fandom
+function getFandomCount(fandom) {
+    return pairings.filter(p => {
+        const fandoms = parseFandoms(p.fandom);
+        return fandoms.includes(fandom);
+    }).length;
+}
+
+// Check if a ship matches the current fandom filter
+function shipMatchesFandomFilter(ship) {
+    if (!currentFandomFilter) return true;
+    const fandoms = parseFandoms(ship.fandom);
+    return fandoms.includes(currentFandomFilter);
+}
 
 // Render Fandom Sidebar
 function renderFandoms() {
     if (!fandomList) return;
     
-    // Get unique fandoms from pairings
-    const fandoms = [...new Set(pairings.map(p => p.fandom))].filter(f => f && f.trim() !== '').sort();
+    // Get unique fandoms
+    const fandoms = getAllUniqueFandoms();
     
     let html = `<li class="fandom-item ${currentFandomFilter === '' ? 'active' : ''}" onclick="filterByFandom('')">
         <i class="fas fa-globe"></i> All Fandoms (${pairings.length})
     </li>`;
     
     fandoms.forEach(f => {
-        const count = pairings.filter(p => p.fandom === f).length;
+        const count = getFandomCount(f);
         html += `<li class="fandom-item ${currentFandomFilter === f ? 'active' : ''}" onclick="filterByFandom('${escapeString(f)}')">
             <i class="fas fa-tag"></i> ${escapeHtml(f)} (${count})
         </li>`;
@@ -71,15 +80,6 @@ function filterByFandom(fandom) {
     currentFandomFilter = fandom;
     renderFandoms();
     applyFilters();
-    
-    // Update search input to show filter
-    if (searchInput && fandom) {
-        searchInput.value = fandom;
-        currentSearch = fandom.toLowerCase();
-    } else if (searchInput && !fandom) {
-        searchInput.value = '';
-        currentSearch = '';
-    }
 }
 
 // Get filtered pairings with fandom filter
@@ -88,7 +88,7 @@ function getFilteredPairings() {
     
     // Apply fandom filter
     if (currentFandomFilter && currentFandomFilter !== '') {
-        filtered = filtered.filter(p => p.fandom === currentFandomFilter);
+        filtered = filtered.filter(p => shipMatchesFandomFilter(p));
     }
     
     // Apply search filter
@@ -169,7 +169,7 @@ function saveToStorage() {
     localStorage.setItem('fandomShips', JSON.stringify(pairings));
 }
 
-// Add sample ships data
+// Add sample ships data with crossover examples
 function addSampleData() {
     const sampleShips = [
         {
@@ -203,6 +203,22 @@ function addSampleData() {
             favorite: false,
             image: null,
             addedDate: "2026-02-25"
+        },
+        {
+            id: 3,
+            name: "Rick and Morty x Gravity Falls Crossover",
+            characters: "Rick Sanchez x Stanford Pines",
+            fandom: "Rick and Morty, Gravity Falls",
+            universe: "Crossover",
+            status: "Fanon",
+            relationship: "Romantic",
+            media: "Animation Series",
+            dynamic: "Similar Energies",
+            trope: "Enemies to Lovers",
+            notes: "Two genius scientists from different dimensions",
+            favorite: true,
+            image: null,
+            addedDate: "2026-03-20"
         }
     ];
     
@@ -235,6 +251,13 @@ function renderPairings(pairingsToRender = getFilteredPairings()) {
     });
 }
 
+// Format fandoms for display (join with commas)
+function formatFandomsForDisplay(fandomString) {
+    if (!fandomString) return '';
+    const fandoms = parseFandoms(fandomString);
+    return fandoms.join(', ');
+}
+
 // Create ship card element
 function createShipCard(ship) {
     const card = document.createElement('div');
@@ -258,6 +281,14 @@ function createShipCard(ship) {
     
     if (ship.favorite) {
         cardHTML += `<div class="favorite-star" style="position:absolute; top:10px; left:10px; color:gold; z-index:5; background: rgba(0,0,0,0.5); padding: 5px 8px; border-radius: 20px;"><i class="fas fa-star"></i> Active</div>`;
+    }
+
+    // Show crossover badge if multiple fandoms
+    const fandomsList = parseFandoms(ship.fandom);
+    const isCrossover = fandomsList.length > 1;
+    
+    if (isCrossover) {
+        cardHTML += `<div class="crossover-badge" style="position:absolute; top:10px; right:10px; background: #D4AF37; color: #333; padding: 5px 8px; border-radius: 20px; font-size: 11px; z-index:5;"><i class="fas fa-code-branch"></i> Crossover</div>`;
     }
 
     if (imageUrl) {
@@ -301,7 +332,7 @@ function createShipCard(ship) {
     
     cardHTML += `
     <div class="card-body">
-        <div class="info-row"><span class="info-label">Fandom:</span><span class="info-value">${escapeHtml(ship.fandom)}</span></div>
+        <div class="info-row"><span class="info-label">Fandom${isCrossover ? 's' : ''}:</span><span class="info-value">${escapeHtml(formatFandomsForDisplay(ship.fandom))}</span></div>
         ${ship.media ? `<div class="info-row"><span class="info-label">Media:</span><span class="info-value">${escapeHtml(ship.media)}</span></div>` : ''}
         ${ship.dynamic && ship.dynamic !== 'NA' ? `<div class="info-row"><span class="info-label">Dynamic:</span><span class="info-value">${escapeHtml(ship.dynamic)}</span></div>` : ''}
         ${ship.notes ? `<div class="info-row"><span class="info-label">Notes:</span><span class="info-value">${escapeHtml(ship.notes)}</span></div>` : ''}
@@ -309,6 +340,7 @@ function createShipCard(ship) {
         <div class="tags-container" style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
             <span class="tag"><i class="fas fa-info-circle"></i>${escapeHtml(ship.status || 'Fanon')}</span>
             <span class="tag"><i class="fas fa-heart"></i>${escapeHtml(ship.relationship || 'Romantic')}</span>
+            ${ship.universe === 'Crossover' ? `<span class="tag"><i class="fas fa-globe"></i>Crossover</span>` : ''}
         </div>
     </div>`;
     
@@ -518,11 +550,17 @@ function addNewPairing() {
 }
 
 function completeSubmission(imageData) {
+    // Get fandom value and ensure it's stored as comma-separated string
+    let fandomValue = document.getElementById('input-fandom').value;
+    
+    // If user entered multiple fandoms separated by commas, keep as is
+    // If not, store as single fandom
+    
     const pairingData = {
         id: editingId || Date.now(),
         name: document.getElementById('input-name').value,
         characters: document.getElementById('input-characters').value,
-        fandom: document.getElementById('input-fandom').value,
+        fandom: fandomValue,
         universe: document.getElementById('input-universe').value,
         status: document.getElementById('input-status').value,
         relationship: document.getElementById('input-relationship').value,
