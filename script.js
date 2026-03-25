@@ -657,3 +657,20 @@ window.onclick = (event) => {
         closeConfirmModal();
     }
 };
+
+// Initialize the app when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    // Load data from JSON or localStorage
+    loadFromStorage();
+    
+    // Set up search input listener
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            currentSearch = e.target.value.toLowerCase();
+            applyFilters();
+        });
+    }
+    
+    console.log('Fandom Relationship Tracker initialized!');
+});
