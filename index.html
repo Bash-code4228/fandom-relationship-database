@@ -7,6 +7,137 @@
     <link rel="icon" href="data:,">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Compact Lightbox Styles */
+        .lightbox-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .lightbox-content {
+            background: #F5F5F5;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            cursor: default;
+            animation: lightboxFadeIn 0.2s ease;
+        }
+        
+        @keyframes lightboxFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .lightbox-header {
+            background: #B71C1C;
+            color: #FFD700;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .lightbox-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .lightbox-close {
+            background: none;
+            border: none;
+            color: #FFD700;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+            transition: transform 0.2s;
+        }
+        
+        .lightbox-close:hover {
+            transform: scale(1.1);
+        }
+        
+        .lightbox-image-container {
+            padding: 20px;
+            text-align: center;
+            background: #F3E2D4;
+            border-bottom: 1px solid #e0c8b8;
+        }
+        
+        .lightbox-image {
+            max-width: 100%;
+            max-height: 300px;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .lightbox-info {
+            padding: 15px 20px;
+            background: white;
+        }
+        
+        .lightbox-info p {
+            margin: 8px 0;
+            font-size: 0.9rem;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .lightbox-info .ship-characters {
+            color: #0992C2;
+            font-weight: 500;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .lightbox-info .ship-detail {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        
+        .lightbox-info .detail-label {
+            font-weight: 600;
+            color: #B71C1C;
+            min-width: 70px;
+        }
+        
+        .lightbox-info .detail-value {
+            color: #555;
+        }
+        
+        .lightbox-footer {
+            background: #F8F9FA;
+            padding: 12px 20px;
+            text-align: center;
+            border-top: 1px solid #e0e0e0;
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .lightbox-footer i {
+            color: #B71C1C;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -289,14 +420,23 @@
         <div class="toast-container" id="toast-container"></div>
     </div>
 
-    <!-- Lightbox Overlay (added for image popup) -->
-    <div id="lightbox-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); z-index: 2000; align-items: center; justify-content: center; cursor: pointer;">
-        <div style="max-width: 90vw; max-height: 90vh; position: relative;">
-            <img id="lightbox-img" style="max-width: 100%; max-height: 90vh; object-fit: contain; border-radius: 10px; box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);">
-            <button id="lightbox-close" style="position: absolute; top: -40px; right: -40px; background: none; border: none; color: white; font-size: 30px; cursor: pointer; padding: 10px;">
-                <i class="fas fa-times"></i>
-            </button>
-            <div id="lightbox-caption" style="position: absolute; bottom: -40px; left: 0; right: 0; text-align: center; color: white; font-size: 14px; padding: 10px; background: rgba(0, 0, 0, 0.7); border-radius: 8px;"></div>
+    <!-- Compact Lightbox Popup -->
+    <div id="lightbox-overlay" class="lightbox-overlay">
+        <div class="lightbox-content">
+            <div class="lightbox-header">
+                <h3 id="lightbox-ship-name"><i class="fas fa-heart"></i> Ship Details</h3>
+                <button class="lightbox-close" id="lightbox-close-btn"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="lightbox-image-container">
+                <img id="lightbox-img" class="lightbox-image" src="" alt="Ship image">
+            </div>
+            <div class="lightbox-info">
+                <p id="lightbox-characters" class="ship-characters"></p>
+                <div id="lightbox-details"></div>
+            </div>
+            <div class="lightbox-footer">
+                <i class="fas fa-heart"></i> Click outside or press ESC to close
+            </div>
         </div>
     </div>
 
