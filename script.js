@@ -146,7 +146,7 @@ function saveToStorage() {
     localStorage.setItem('fandomShips', JSON.stringify(pairings));
 }
 
-// Lightbox functions - compact version with ship details
+// Lightbox functions - compact version with side-by-side layout (no emojis)
 function openLightbox(imageUrl, shipName, characters, fandom, media, dynamic, status, relationship, yearStarted, artist, notes) {
     const overlay = document.getElementById('lightbox-overlay');
     const img = document.getElementById('lightbox-img');
@@ -156,21 +156,21 @@ function openLightbox(imageUrl, shipName, characters, fandom, media, dynamic, st
     
     if (!overlay) return;
     
-    // Set image
+// Set image
     img.src = imageUrl;
     
-    // Handle image error
+// Handle image error
     img.onerror = function() {
         img.src = 'https://via.placeholder.com/400x300?text=No+Image+Available';
     };
     
-    // Set ship name in header
+// Set ship name in header
     shipNameEl.innerHTML = `<i class="fas fa-heart"></i> ${escapeHtml(shipName)}`;
     
-    // Set characters
-    charactersEl.innerHTML = `<i class="fas fa-users"></i> ${escapeHtml(characters)}`;
+// Set characters (no emoji)
+    charactersEl.innerHTML = escapeHtml(characters);
     
-    // Build details HTML
+// Build details HTML (no emojis)
     let detailsHtml = '';
     
     if (fandom && fandom !== '') {
@@ -192,10 +192,10 @@ function openLightbox(imageUrl, shipName, characters, fandom, media, dynamic, st
         detailsHtml += `<div class="ship-detail"><span class="detail-label">Since:</span><span class="detail-value">${escapeHtml(yearStarted)}</span></div>`;
     }
     if (artist && artist !== '') {
-        detailsHtml += `<div class="ship-detail"><span class="detail-label">Artist:</span><span class="detail-value">✨ ${escapeHtml(artist)}</span></div>`;
+        detailsHtml += `<div class="ship-detail"><span class="detail-label">Artist:</span><span class="detail-value">${escapeHtml(artist)}</span></div>`;
     }
     if (notes && notes !== '') {
-        detailsHtml += `<div class="ship-detail"><span class="detail-label">Notes:</span><span class="detail-value">💭 ${escapeHtml(notes)}</span></div>`;
+        detailsHtml += `<div class="ship-detail"><span class="detail-label">Notes:</span><span class="detail-value">${escapeHtml(notes)}</span></div>`;
     }
     
     if (detailsHtml === '') {
@@ -204,7 +204,7 @@ function openLightbox(imageUrl, shipName, characters, fandom, media, dynamic, st
     
     detailsEl.innerHTML = detailsHtml;
     
-    // Show overlay
+// Show overlay
     overlay.style.display = 'flex';
 }
 
