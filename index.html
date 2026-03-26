@@ -26,7 +26,7 @@
         .lightbox-content {
             background: #F5F5F5;
             border-radius: 20px;
-            max-width: 500px;
+            max-width: 700px;
             width: 90%;
             overflow: hidden;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
@@ -74,23 +74,34 @@
             transform: scale(1.1);
         }
         
+        /* Side-by-side layout */
+        .lightbox-main {
+            display: flex;
+            flex-direction: row;
+        }
+        
         .lightbox-image-container {
+            flex: 1;
             padding: 20px;
             text-align: center;
             background: #F3E2D4;
-            border-bottom: 1px solid #e0c8b8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 200px;
         }
         
         .lightbox-image {
             max-width: 100%;
-            max-height: 300px;
+            max-height: 250px;
             object-fit: contain;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
         
         .lightbox-info {
-            padding: 15px 20px;
+            flex: 1.5;
+            padding: 20px;
             background: white;
         }
         
@@ -107,35 +118,50 @@
             margin-bottom: 12px;
             padding-bottom: 8px;
             border-bottom: 1px solid #f0f0f0;
+            font-size: 0.95rem;
         }
         
         .lightbox-info .ship-detail {
             display: flex;
             gap: 8px;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
         
         .lightbox-info .detail-label {
             font-weight: 600;
             color: #B71C1C;
             min-width: 70px;
+            font-size: 0.85rem;
         }
         
         .lightbox-info .detail-value {
             color: #555;
+            font-size: 0.85rem;
         }
         
         .lightbox-footer {
             background: #F8F9FA;
-            padding: 12px 20px;
+            padding: 10px 20px;
             text-align: center;
             border-top: 1px solid #e0e0e0;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #666;
         }
         
         .lightbox-footer i {
             color: #B71C1C;
+        }
+        
+        @media (max-width: 550px) {
+            .lightbox-main {
+                flex-direction: column;
+            }
+            .lightbox-image-container {
+                padding: 15px;
+            }
+            .lightbox-image {
+                max-height: 200px;
+            }
         }
     </style>
 </head>
@@ -420,19 +446,21 @@
         <div class="toast-container" id="toast-container"></div>
     </div>
 
-    <!-- Compact Lightbox Popup -->
+    <!-- Compact Lightbox Popup - Side by Side Layout -->
     <div id="lightbox-overlay" class="lightbox-overlay">
         <div class="lightbox-content">
             <div class="lightbox-header">
                 <h3 id="lightbox-ship-name"><i class="fas fa-heart"></i> Ship Details</h3>
                 <button class="lightbox-close" id="lightbox-close-btn"><i class="fas fa-times"></i></button>
             </div>
-            <div class="lightbox-image-container">
-                <img id="lightbox-img" class="lightbox-image" src="" alt="Ship image">
-            </div>
-            <div class="lightbox-info">
-                <p id="lightbox-characters" class="ship-characters"></p>
-                <div id="lightbox-details"></div>
+            <div class="lightbox-main">
+                <div class="lightbox-image-container">
+                    <img id="lightbox-img" class="lightbox-image" src="" alt="Ship image">
+                </div>
+                <div class="lightbox-info">
+                    <p id="lightbox-characters" class="ship-characters"></p>
+                    <div id="lightbox-details"></div>
+                </div>
             </div>
             <div class="lightbox-footer">
                 <i class="fas fa-heart"></i> Click outside or press ESC to close
