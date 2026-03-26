@@ -123,9 +123,7 @@ async function loadFromStorage() {
         }
     } catch (e) {
         console.error('Error loading data:', e);
-        // If there's an error loading the file, start with empty array instead of sample data
         pairings = [];
-        // Try to load from localStorage as backup
         const saved = localStorage.getItem('fandomShips');
         if (saved && saved !== '[]') {
             try {
@@ -148,130 +146,72 @@ function saveToStorage() {
     localStorage.setItem('fandomShips', JSON.stringify(pairings));
 }
 
-// NO sample data function - removed to prevent unwanted ships
-
-// Lightbox functions
-function openLightbox(imageUrl, shipName) {
-    // Create lightbox overlay if it doesn't exist
-    let lightbox = document.getElementById('lightbox-overlay');
-    if (!lightbox) {
-        lightbox = document.createElement('div');
-        lightbox.id = 'lightbox-overlay';
-        lightbox.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 2000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        `;
-        
-        const lightboxContent = document.createElement('div');
-        lightboxContent.style.cssText = `
-            max-width: 90vw;
-            max-height: 90vh;
-            position: relative;
-        `;
-        
-        const img = document.createElement('img');
-        img.id = 'lightbox-img';
-        img.style.cssText = `
-            max-width: 100%;
-            max-height: 90vh;
-            object-fit: contain;
-            border-radius: 10px;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-        `;
-        
-        const closeBtn = document.createElement('button');
-        closeBtn.innerHTML = '<i class="fas fa-times"></i>';
-        closeBtn.style.cssText = `
-            position: absolute;
-            top: -40px;
-            right: -40px;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 30px;
-            cursor: pointer;
-            padding: 10px;
-            transition: transform 0.2s;
-        `;
-        closeBtn.onmouseover = () => closeBtn.style.transform = 'scale(1.1)';
-        closeBtn.onmouseout = () => closeBtn.style.transform = 'scale(1)';
-        
-        const caption = document.createElement('div');
-        caption.id = 'lightbox-caption';
-        caption.style.cssText = `
-            position: absolute;
-            bottom: -40px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            color: white;
-            font-size: 14px;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 8px;
-        `;
-        
-        lightboxContent.appendChild(img);
-        lightboxContent.appendChild(closeBtn);
-        lightboxContent.appendChild(caption);
-        lightbox.appendChild(lightboxContent);
-        document.body.appendChild(lightbox);
-        
-        lightbox.onclick = function(e) {
-            if (e.target === lightbox) {
-                closeLightbox();
-            }
-        };
-        
-        closeBtn.onclick = function(e) {
-            e.stopPropagation();
-            closeLightbox();
-        };
-        
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && document.getElementById('lightbox-overlay') && document.getElementById('lightbox-overlay').style.display !== 'none') {
-                closeLightbox();
-            }
-        });
-    }
+// Lightbox functions - compact version with ship details
+function openLightbox(imageUrl, shipName, characters, fandom, media, dynamic, status, relationship, yearStarted, artist, notes) {
+    const overlay = document.getElementById('lightbox-overlay');
+    const img = document.getElementById('lightbox-img');
+    const shipNameEl = document.getElementById('lightbox-ship-name');
+    const charactersEl = document.getElementById('lightbox-characters');
+    const detailsEl = document.getElementById('lightbox-details');
     
-    const lightboxOverlay = document.getElementById('lightbox-overlay');
-    const lightboxImg = document.getElementById('lightbox-img');
-    const lightboxCaption = document.getElementById('lightbox-caption');
+    if (!overlay) return;
     
-    lightboxImg.src = imageUrl;
-    lightboxCaption.textContent = shipName || 'Ship Image';
+    // Set image
+    img.src = imageUrl;
     
-    // Handle image loading error
-    lightboxImg.onerror = function() {
-        lightboxImg.src = 'https://via.placeholder.com/800x600?text=Image+Not+Available';
-        lightboxCaption.textContent = shipName + ' (Image not available)';
+    // Handle image error
+    img.onerror = function() {
+        img.src = 'https://via.placeholder.com/400x300?text=No+Image+Available';
     };
     
-    lightboxOverlay.style.display = 'flex';
-    setTimeout(() => {
-        lightboxOverlay.style.opacity = '1';
-    }, 10);
+    // Set ship name in header
+    shipNameEl.innerHTML = `<i class="fas fa-heart"></i> ${escapeHtml(shipName)}`;
+    
+    // Set characters
+    charactersEl.innerHTML = `<i class="fas fa-users"></i> ${escapeHtml(characters)}`;
+    
+    // Build details HTML
+    let detailsHtml = '';
+    
+    if (fandom && fandom !== '') {
+        detailsHtml += `<div class="ship-detail"><span class="detail-label">Fandom:</span><span class="detail-value">${escapeHtml(fandom)}</span></div>`;
+    }
+    if (media && media !== '' && media !== 'NA') {
+        detailsHtml += `<div class="ship-detail"><span class="detail-label">Media:</span><span class="detail-value">${escapeHtml(media)}</span></div>`;
+    }
+    if (dynamic && dynamic !== '' && dynamic !== 'NA') {
+        detailsHtml += `<div class="ship-detail"><span class="detail-label">Dynamic:</span><span class="detail-value">${escapeHtml(dynamic)}</span></div>`;
+    }
+    if (status && status !== '') {
+        detailsHtml += `<div class="ship-detail"><span class="detail-label">Status:</span><span class="detail-value">${escapeHtml(status)}</span></div>`;
+    }
+    if (relationship && relationship !== '') {
+        detailsHtml += `<div class="ship-detail"><span class="detail-label">Type:</span><span class="detail-value">${escapeHtml(relationship)}</span></div>`;
+    }
+    if (yearStarted && yearStarted !== '') {
+        detailsHtml += `<div class="ship-detail"><span class="detail-label">Since:</span><span class="detail-value">${escapeHtml(yearStarted)}</span></div>`;
+    }
+    if (artist && artist !== '') {
+        detailsHtml += `<div class="ship-detail"><span class="detail-label">Artist:</span><span class="detail-value">✨ ${escapeHtml(artist)}</span></div>`;
+    }
+    if (notes && notes !== '') {
+        detailsHtml += `<div class="ship-detail"><span class="detail-label">Notes:</span><span class="detail-value">💭 ${escapeHtml(notes)}</span></div>`;
+    }
+    
+    if (detailsHtml === '') {
+        detailsHtml = '<div class="ship-detail"><span class="detail-value">No additional details available</span></div>';
+    }
+    
+    detailsEl.innerHTML = detailsHtml;
+    
+    // Show overlay
+    overlay.style.display = 'flex';
 }
 
 function closeLightbox() {
-    const lightbox = document.getElementById('lightbox-overlay');
-    if (lightbox) {
-        lightbox.style.opacity = '0';
-        setTimeout(() => {
-            lightbox.style.display = 'none';
-        }, 300);
+    const overlay = document.getElementById('lightbox-overlay');
+    if (overlay) {
+        overlay.style.display = 'none';
     }
 }
 
@@ -317,6 +257,7 @@ function createShipCard(ship) {
     }
     
     const imageUrl = imagePath && imagePath !== 'null' ? imagePath : null;
+    const formattedFandoms = formatFandomsForDisplay(ship.fandom);
     
     let cardHTML = '';
     
@@ -340,7 +281,7 @@ function createShipCard(ship) {
     // Image section with click handler for lightbox
     if (imageUrl) {
         cardHTML += `
-        <div class="image-container" style="position: relative; height: 200px; cursor: pointer;" onclick="openLightbox('${escapeString(imageUrl)}', '${escapeString(ship.name)} - ${escapeString(ship.characters)}')">
+        <div class="image-container" style="position: relative; height: 200px; cursor: pointer;" onclick="openLightbox('${escapeString(imageUrl)}', '${escapeString(ship.name)}', '${escapeString(ship.characters)}', '${escapeString(formattedFandoms)}', '${escapeString(ship.media || '')}', '${escapeString(ship.dynamic || '')}', '${escapeString(ship.status || '')}', '${escapeString(ship.relationship || '')}', '${escapeString(ship.yearStarted || '')}', '${escapeString(ship.artist || '')}', '${escapeString(ship.notes || '')}')">
             <div class="card-actions" style="position: absolute; top: 12px; right: 12px; z-index: 10; display: flex; gap: 8px; opacity: 1;">
                 <button class="action-btn favorite-btn" onclick="event.stopPropagation(); toggleFavorite(${ship.id})" style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 35px; height: 35px; color: ${ship.favorite ? '#ffd700' : '#999'}; cursor: pointer;">
                     <i class="${ship.favorite ? 'fas' : 'far'} fa-star"></i>
@@ -392,7 +333,7 @@ function createShipCard(ship) {
         
         <div class="info-row">
             <span class="info-label">Fandom${isCrossover ? 's' : ''}:</span>
-            <span class="info-value">${escapeHtml(formatFandomsForDisplay(ship.fandom))}</span>
+            <span class="info-value">${escapeHtml(formattedFandoms)}</span>
         </div>
         ${ship.media ? `
         <div class="info-row">
@@ -447,7 +388,7 @@ function escapeHtml(text) {
 
 function escapeString(str) {
     if (!str) return '';
-    return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    return str.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, '\\n').replace(/\r/g, '\\r');
 }
 
 function toggleFavorite(id) {
@@ -718,6 +659,7 @@ function importData() {
     reader.readAsText(file);
 }
 
+// Close modals when clicking outside
 window.onclick = (event) => {
     if (event.target.classList && event.target.classList.contains('modal')) {
         closeAddModal();
@@ -727,6 +669,7 @@ window.onclick = (event) => {
     }
 };
 
+// Close lightbox when clicking outside or pressing ESC
 document.addEventListener('DOMContentLoaded', () => {
     loadFromStorage();
     
@@ -737,6 +680,29 @@ document.addEventListener('DOMContentLoaded', () => {
             applyFilters();
         });
     }
+    
+    // Lightbox close handlers
+    const overlay = document.getElementById('lightbox-overlay');
+    const closeBtn = document.getElementById('lightbox-close-btn');
+    
+    if (overlay) {
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) {
+                closeLightbox();
+            }
+        });
+    }
+    
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeLightbox);
+    }
+    
+    // ESC key to close lightbox
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeLightbox();
+        }
+    });
     
     console.log('Fandom Relationship Tracker initialized!');
 });
