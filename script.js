@@ -111,26 +111,16 @@ function applyFilters() {
     renderPairings(getFilteredPairings());
 }
 
-// Load from local storage or json
-async function loadFromStorage() {
-    try {
-        const response = await fetch('pairings.json');
-        if (response.ok) {
-            pairings = await response.json();
-        } else {
-            throw new Error('Failed to fetch pairings.json');
-        }
-    } catch (e) {
-        const saved = localStorage.getItem('fandomShips');
-        if (saved && saved !== '[]') {
-            try {
-                pairings = JSON.parse(saved);
-            } catch (parseErr) {
-                pairings = [];
-            }
+// Load from local storage
+function loadFromStorage() {
+    const saved = localStorage.getItem('fandomShips');
+    if (saved) {
+        try {
+            pairings = JSON.parse(saved);
+        } catch (e) {
+            pairings = [];
         }
     }
-    
     renderFandoms();
     renderPairings(getFilteredPairings());
     updateStats();
@@ -292,6 +282,12 @@ function showToast(message, type = 'info') {
 function openAddModal() { document.getElementById('add-modal').style.display = 'flex'; }
 function closeAddModal() { document.getElementById('add-modal').style.display = 'none'; resetForm(); }
 
+function openExportModal() { document.getElementById('export-modal').style.display = 'flex'; }
+function closeExportModal() { document.getElementById('export-modal').style.display = 'none'; }
+
+function openImportModal() { document.getElementById('import-modal').style.display = 'flex'; }
+function closeImportModal() { document.getElementById('import-modal').style.display = 'none'; }
+
 function openEditModal(id) {
     const pairing = pairings.find(p => p.id === id);
     if (!pairing) return;
@@ -300,11 +296,13 @@ function openEditModal(id) {
     document.getElementById('input-characters').value = pairing.characters || '';
     document.getElementById('input-fandom').value = pairing.fandom || '';
     document.getElementById('input-status').value = pairing.status || 'Fanon';
+    document.getElementById('input-universe').value = pairing.universe || 'From universe';
     document.getElementById('input-relationship').value = pairing.relationship || 'Romantic';
     document.getElementById('input-category').value = pairing.category || 'f/m';
     document.getElementById('input-year').value = pairing.yearStarted || '';
     document.getElementById('input-media').value = pairing.media || 'Literature/Books';
     document.getElementById('input-dynamic').value = pairing.dynamic || 'NA';
+    document.getElementById('input-trope').value = pairing.trope || 'NA';
     document.getElementById('input-notes').value = pairing.notes || '';
     document.getElementById('input-favorite').checked = pairing.favorite || false;
     document.getElementById('input-artist').value = pairing.artist || '';
@@ -361,7 +359,7 @@ function addNewPairing() {
     let imagePath = null;
     if (uploadMethod === 'url') {
         imagePath = document.getElementById('input-image-url').value;
-    } else if (uploadMethod === 'file') {
+    } else if (uploadMethod === 'file' && !editingId) {
         imagePath = `images/${document.getElementById('input-name').value.toLowerCase().replace(/\s+/g, '-')}.jpg`;
     }
     completeSubmission(imagePath);
@@ -374,14 +372,16 @@ function completeSubmission(imagePath) {
         characters: document.getElementById('input-characters').value,
         fandom: document.getElementById('input-fandom').value,
         status: document.getElementById('input-status').value,
+        universe: document.getElementById('input-universe').value,
         relationship: document.getElementById('input-relationship').value,
         category: document.getElementById('input-category').value,
         yearStarted: document.getElementById('input-year').value,
         media: document.getElementById('input-media').value,
         dynamic: document.getElementById('input-dynamic').value,
+        trope: document.getElementById('input-trope').value,
         notes: document.getElementById('input-notes').value,
         favorite: document.getElementById('input-favorite').checked,
-        image: imagePath || null,
+        image: imagePath || (editingId ? pairings.find(p => p.id === editingId).image : null),
         artist: document.getElementById('input-artist').value || '',
         addedDate: new Date().toISOString().split('T')[0]
     };
@@ -424,12 +424,43 @@ function exportData() {
     dlAnchorElem.click();
 }
 
+function importData() {
+    const fileInput = document.getElementById('import-file');
+    const file = fileInput.files[0];
+    if (!file) {
+        showToast('Please select a file first', 'info');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const importedData = JSON.parse(e.target.result);
+            if (Array.isArray(importedData)) {
+                pairings = importedData;
+                saveToStorage();
+                renderFandoms();
+                applyFilters();
+                updateStats();
+                closeImportModal();
+                showToast('Import successful!', 'success');
+            }
+        } catch (err) {
+            showToast('Invalid JSON file', 'error');
+        }
+    };
+    reader.readAsText(file);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     loadFromStorage();
-    document.getElementById('search-input').addEventListener('input', (e) => {
-        currentSearch = e.target.value.toLowerCase();
-        applyFilters();
-    });
+    const searchInputElem = document.getElementById('search-input');
+    if (searchInputElem) {
+        searchInputElem.addEventListener('input', (e) => {
+            currentSearch = e.target.value.toLowerCase();
+            applyFilters();
+        });
+    }
     
     const overlay = document.getElementById('lightbox-overlay');
     if (overlay) {
