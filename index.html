@@ -129,7 +129,7 @@
     <div class="container">
         <div class="header">
             <h1><i class="fas fa-heart"></i> Fandom Relationships Tracker</h1>
-            <p>Tracking and organizing relationships across all fandoms.</p>
+            <p>I'm tracking and organizing the relationships that I like throughout any fandoms I am in.</p>
         </div>
 
         <div class="stats-grid">
@@ -165,13 +165,16 @@
         <div class="controls">
             <div class="search-box">
                 <i class="fas fa-search"></i>
-                <input type="text" id="search-input" placeholder="Search ships, characters, or fandoms...">
+                <input type="text" id="search-input" placeholder="Search ships by name, characters, or fandom...">
             </div>
             <button class="btn btn-primary" onclick="openAddModal()">
                 <i class="fas fa-plus"></i> Add New Ship
             </button>
-            <button class="btn btn-secondary" onclick="exportData()">
-                <i class="fas fa-file-export"></i> Export JSON
+            <button class="btn btn-secondary" onclick="openExportModal()">
+                <i class="fas fa-file-export"></i> Export
+            </button>
+            <button class="btn btn-secondary" onclick="openImportModal()">
+                <i class="fas fa-file-import"></i> Import
             </button>
         </div>
         
@@ -199,11 +202,11 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="input-name">Ship Name *</label>
-                            <input type="text" id="input-name" required>
+                            <input type="text" id="input-name" placeholder="e.g., Stucky, Dramione" required>
                         </div>
                         <div class="form-group">
                             <label for="input-characters">Characters *</label>
-                            <input type="text" id="input-characters" required>
+                            <input type="text" id="input-characters" placeholder="e.g., Steve Rogers x Bucky Barnes" required>
                         </div>
                     </div>
                     
@@ -211,18 +214,19 @@
                         <label>Ship Image</label>
                         <div class="upload-options">
                             <div class="upload-option-btn active" id="upload-option-file" onclick="setUploadMethod('file')">
-                                <i class="fas fa-upload"></i><br>Upload
+                                <i class="fas fa-upload"></i><br>Upload File
                             </div>
                             <div class="upload-option-btn" id="upload-option-url" onclick="setUploadMethod('url')">
-                                <i class="fas fa-link"></i><br>URL
+                                <i class="fas fa-link"></i><br>Use URL
                             </div>
                         </div>
                         <div id="file-upload-container" class="file-input-wrapper">
-                            <input type="file" id="input-file" accept="image/*" onchange="handleFileSelect(event)">
+                            <i class="fas fa-cloud-upload-alt"></i>
                             <div>Click to upload image</div>
+                            <input type="file" id="input-file" accept="image/*" onchange="handleFileSelect(event)">
                         </div>
                         <div id="url-upload-container" style="display: none;">
-                            <input type="url" id="input-image-url" placeholder="https://example.com/image.jpg" oninput="previewImageUrl(this.value)">
+                            <input type="url" id="input-image-url" placeholder="https://example.com/image.jpg">
                         </div>
                         <div class="image-preview-container">
                             <img id="preview-img" class="preview-img" style="display: none;">
@@ -232,7 +236,21 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="input-fandom">Fandom *</label>
-                            <input type="text" id="input-fandom" required>
+                            <input type="text" id="input-fandom" placeholder="e.g. Marvel" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-universe">Universe Type</label>
+                            <select id="input-universe">
+                                <option value="From universe">From universe</option>
+                                <option value="Crossover">Crossover</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="input-year">Year Started Shipping</label>
+                            <input type="number" id="input-year" min="1900" max="2099" placeholder="2024">
                         </div>
                         <div class="form-group">
                             <label for="input-status">Relationship Status</label>
@@ -268,30 +286,47 @@
 
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="input-year">Year Started Shipping</label>
-                            <input type="number" id="input-year" min="1900" max="2099">
-                        </div>
-                        <div class="form-group">
                             <label for="input-media">Media Type</label>
                             <select id="input-media">
                                 <option value="Literature/Books">Literature/Books</option>
                                 <option value="Comics/Manga">Comics/Manga</option>
                                 <option value="Film Series">Film Series</option>
+                                <option value="Film Movies">Film Movies</option>
                                 <option value="Animation Series">Animation Series</option>
+                                <option value="Animation Movies">Animation Movies</option>
                                 <option value="Game">Game</option>
+                                <option value="Real Person Fiction">Real Person Fiction</option>
                                 <option value="Mixed">Mixed</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-dynamic">Dynamic Type</label>
+                            <select id="input-dynamic">
+                                <option value="NA">Not Applicable</option>
+                                <option value="Opposing Energies">Opposing Energies</option>
+                                <option value="Similar Energies">Similar Energies</option>
+                                <option value="Regulates and Regulated">Regulates and Regulated</option>
+                                <option value="Prideful with Personality Contrast">Prideful with Personality Contrast</option>
+                                <option value="Protective and Protected">Protective and Protected</option>
+                                <option value="Loyalty and Devoted">Loyalty and Devoted</option>
+                                <option value="Brain and Himbo">Brain and Himbo</option>
+                                <option value="Height with Personality Contrast">Height with Personality Contrast</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="input-dynamic">Dynamic Type</label>
-                        <select id="input-dynamic">
+                        <label for="input-trope">Trope Type</label>
+                        <select id="input-trope">
                             <option value="NA">Not Applicable</option>
-                            <option value="Opposing Energies">Opposing Energies</option>
-                            <option value="Similar Energies">Similar Energies</option>
-                            <option value="Brain and Himbo">Brain and Himbo</option>
-                            <option value="Protective and Protected">Protective and Protected</option>
+                            <option value="Friends to Lovers">Friends to Lovers</option>
+                            <option value="Enemies to Lovers">Enemies to Lovers</option>
+                            <option value="Rivals to Lovers">Rivals to Lovers</option>
+                            <option value="Mutual Pining">Mutual Pining</option>
+                            <option value="Mutual Pining (Oblivious)">Mutual Pining (Oblivious)</option>
+                            <option value="Unrequited to Requited Love">Unrequited to Requited Love</option>
+                            <option value="Unrequited Love">Unrequited Love</option>
+                            <option value="Found Family">Found Family</option>
                         </select>
                     </div>
 
@@ -304,13 +339,13 @@
                     </div>
 
                     <div class="form-group full-width">
-                        <label for="input-notes">Notes</label>
-                        <textarea id="input-notes" rows="3"></textarea>
+                        <label for="input-notes">Notes / Why You Ship It</label>
+                        <textarea id="input-notes" rows="3" placeholder="What do you love about this pairing?"></textarea>
                     </div>
 
                     <div class="form-group full-width">
-                        <label for="input-artist"><i class="fas fa-palette"></i> Artist Credit</label>
-                        <input type="text" id="input-artist">
+                        <label for="input-artist"><i class="fas fa-palette"></i> Artist Credit (Optional)</label>
+                        <input type="text" id="input-artist" placeholder="e.g., fanartist123">
                     </div>
                     
                     <button type="submit" class="btn btn-primary" style="width: 100%;">
@@ -327,6 +362,29 @@
                     <button class="btn btn-secondary" onclick="closeConfirmModal()">Cancel</button>
                     <button class="btn btn-primary" style="background: #B71C1C;" onclick="confirmDelete()">Delete</button>
                 </div>
+            </div>
+        </div>
+
+        <div id="export-modal" class="modal">
+            <div class="modal-content" style="max-width: 500px; padding: 30px;">
+                <h3>Export Data</h3>
+                <p>Download your collection as a JSON file to back it up.</p>
+                <button class="btn btn-primary" onclick="exportData()" style="width: 100%; margin-top: 20px;">
+                    <i class="fas fa-download"></i> Download JSON
+                </button>
+                <button class="btn btn-secondary" onclick="closeExportModal()" style="width: 100%; margin-top: 10px;">Close</button>
+            </div>
+        </div>
+
+        <div id="import-modal" class="modal">
+            <div class="modal-content" style="max-width: 500px; padding: 30px;">
+                <h3>Import Data</h3>
+                <p>Upload a JSON file to restore your collection.</p>
+                <input type="file" id="import-file" accept=".json" style="margin-top: 20px;">
+                <button class="btn btn-primary" onclick="importData()" style="width: 100%; margin-top: 20px;">
+                    <i class="fas fa-upload"></i> Upload JSON
+                </button>
+                <button class="btn btn-secondary" onclick="closeImportModal()" style="width: 100%; margin-top: 10px;">Close</button>
             </div>
         </div>
 
