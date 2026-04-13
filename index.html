@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Compact Lightbox Styles - FIXED THE TYPO HERE */
+        /* Compact Lightbox Styles - FIXED CSS SYNTAX */
         .lightbox-overlay {
             display: none;
             position: fixed;
@@ -101,16 +101,7 @@
             color: #666;
         }
 
-        /* Added specific style for your footer tagline */
-        .site-tagline {
-            text-align: center;
-            padding: 20px;
-            font-style: italic;
-            color: #5D4037; /* Brown to match your theme */
-            opacity: 0.8;
-            font-size: 0.95rem;
-        }
-
+        /* Responsive Design for Lightbox */
         @media (max-width: 768px) {
             .lightbox-main { grid-template-columns: 1fr; }
             .lightbox-image-container { border-right: none; border-bottom: 1px solid #eee; }
@@ -199,7 +190,7 @@
                         </div>
                         <div class="form-group">
                             <label>Fandom(s) (comma separated)</label>
-                            <input type="text" id="fandom" placeholder="e.g. MDZS, The Untamed" required>
+                            <input type="text" id="fandom" placeholder="e.g. MDZS" required>
                         </div>
                         <div class="form-group" style="grid-column: span 2;">
                             <label>Characters (comma separated)</label>
@@ -230,14 +221,14 @@
                         
                         <div class="form-group" style="grid-column: span 2;">
                             <label>Dynamic Tags (comma separated)</label>
-                            <input type="text" id="tags" placeholder="e.g. Slow Burn, Enemies to Lovers, Fluff">
+                            <input type="text" id="tags" placeholder="Slow Burn, Enemies to Lovers">
                         </div>
                         
                         <div class="form-group" style="grid-column: span 2;">
                             <label class="favorite-toggle">
                                 <input type="checkbox" id="is-favorite">
                                 <span class="star"><i class="fas fa-star"></i></span>
-                                <span>Mark as Active Favorite</span>
+                                <span>Mark as Active</span>
                             </label>
                         </div>
                     </div>
@@ -269,7 +260,6 @@
                     <h2>Export Data</h2>
                     <button class="close-btn" onclick="closeExportModal()">&times;</button>
                 </div>
-                <p style="margin-bottom: 20px;">Download your ship database as a JSON file to keep a backup or move it to another device.</p>
                 <div id="export-stats" style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 20px;"></div>
                 <button class="btn btn-primary" onclick="exportData()" style="width: 100%;">
                     <i class="fas fa-download"></i> Download JSON
@@ -283,7 +273,6 @@
                     <h2>Import Data</h2>
                     <button class="close-btn" onclick="closeImportModal()">&times;</button>
                 </div>
-                <p style="margin-bottom: 20px;">Select a previously exported JSON file to restore your database.</p>
                 <div style="border: 2px dashed #ddd; padding: 30px; border-radius: 15px; text-align: center;">
                     <input type="file" id="import-file" accept=".json" style="display: none;">
                     <button class="btn btn-secondary" onclick="document.getElementById('import-file').click()">
@@ -294,7 +283,6 @@
                 <button class="btn btn-primary" onclick="importData()" style="width: 100%; margin-top: 20px;">
                     <i class="fas fa-upload"></i> Upload JSON
                 </button>
-                <button class="btn btn-secondary" onclick="closeImportModal()" style="width: 100%; margin-top: 10px;">Close</button>
             </div>
         </div>
 
