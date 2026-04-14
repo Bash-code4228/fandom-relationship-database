@@ -23,7 +23,7 @@ body {
     padding: 30px;
 }
 
-/* Header - FIXED static version (No Animation) */
+/* Header - Static Version */
 .header {
     background: #0992C2;
     color: #FFD700;
@@ -513,7 +513,7 @@ body {
     to { transform: translateX(0); opacity: 1; }
 }
 
-/* SITE FOOTER STYLE */
+/* FOOTER STYLE */
 .site-footer {
     margin-top: 40px;
     padding: 20px 0;
