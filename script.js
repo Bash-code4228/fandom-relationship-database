@@ -186,7 +186,7 @@ function formatFandomsForDisplay(fandomString) {
     return parseFandoms(fandomString).join(', ');
 }
 
-// FIXED createShipCard function - now uses correct 'ship-card' class
+// FIXED createShipCard function - removed white overlay buttons from top right
 function createShipCard(ship) {
     const card = document.createElement('div');
     card.className = 'ship-card';
@@ -210,11 +210,6 @@ function createShipCard(ship) {
     cardHTML += `
     <div class="ship-image-container" style="position: relative; height: 200px; cursor: pointer;" 
          onclick="openLightbox('${escapeString(imagePath)}', '${escapeString(ship.name)}', '${escapeString(ship.characters)}', '${escapeString(formattedFandoms)}', '${escapeString(ship.media || '')}', '${escapeString(ship.dynamic || '')}', '${escapeString(ship.status || '')}', '${escapeString(ship.relationship || '')}', '${escapeString(ship.yearStarted || '')}', '${escapeString(ship.artist || '')}', '${escapeString(ship.notes || '')}', '${escapeString(ship.category || '')}')">
-        <div class="card-actions" style="position: absolute; top: 12px; right: 12px; z-index: 10; display: flex; gap: 8px;">
-            <button class="action-btn" onclick="event.stopPropagation(); toggleFavorite(${ship.id})" style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 35px; height: 35px; color: ${ship.favorite ? '#ffd700' : '#999'};"><i class="${ship.favorite ? 'fas' : 'far'} fa-star"></i></button>
-            <button class="action-btn" onclick="event.stopPropagation(); openEditModal(${ship.id})" style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 35px; height: 35px; color: #1A237E;"><i class="fas fa-edit"></i></button>
-            <button class="action-btn" onclick="event.stopPropagation(); openDeleteModal(${ship.id}, '${escapeString(ship.name)}')" style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 35px; height: 35px; color: #7f8c8d;"><i class="fas fa-trash"></i></button>
-        </div>
         <img src="${imagePath}" alt="${ship.name}" class="ship-image" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentElement.querySelector('.image-fallback').style.display='flex';">
         <div class="image-fallback" style="display: none; width: 100%; height: 100%; background: linear-gradient(135deg, #ffe6e6, #ffcccc); align-items: center; justify-content: center; flex-direction: column; color: #B71C1C;">
             <i class="fas fa-heart" style="font-size: 40px;"></i>
