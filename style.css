@@ -7,7 +7,6 @@
 }
 
 body {
-    /* Changed to Solid Grounding Brown */
     background-color: #F3E2D4; 
     color: #333;
     min-height: 100vh;
@@ -17,48 +16,26 @@ body {
 .container {
     max-width: 1400px;
     margin: 0 auto;
-    background: #F5F5F5; /* Pearl White */
+    background: #F5F5F5;
     border-radius: 20px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     overflow: hidden;
     padding: 30px;
 }
 
-/* Header - FIXED merged version */
+/* Header - FIXED static version (No Animation) */
 .header {
     background: #0992C2;
     color: #FFD700;
     padding: 40px;
     border-radius: 15px;
     margin-bottom: 30px;
-    position: relative;
-    overflow: hidden;
     border-bottom: 4px solid #D4AF37;
-}
-
-/* Kept your floating animation but made it subtle for a solid background */
-.header::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 80%);
-    animation: rotate 20s linear infinite;
-    pointer-events: none;
-}
-
-@keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
 }
 
 .header h1 {
     font-size: 2.5rem;
     margin-bottom: 10px;
-    position: relative;
-    z-index: 1;
     display: flex;
     align-items: center;
     gap: 15px;
@@ -68,8 +45,6 @@ body {
     font-size: 1.1rem;
     opacity: 0.9;
     max-width: 800px;
-    position: relative;
-    z-index: 1;
     line-height: 1.6;
 }
 
@@ -538,7 +513,7 @@ body {
     to { transform: translateX(0); opacity: 1; }
 }
 
-/* Site Footer */
+/* SITE FOOTER STYLE */
 .site-footer {
     margin-top: 40px;
     padding: 20px 0;
