@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Compact Lightbox Styles */
+        /* Compact Lightbox Styles - UPDATED colors */
         .lightbox-overlay {
             display: none;
             position: fixed;
@@ -41,7 +41,7 @@
         
         .lightbox-header {
             background: #B71C1C;
-            color: #FFD700;
+            color: #FFFFFF;
             padding: 15px 20px;
             display: flex;
             justify-content: space-between;
@@ -53,7 +53,7 @@
         .lightbox-close {
             background: none;
             border: none;
-            color: #FFD700;
+            color: #FFFFFF;
             font-size: 20px;
             cursor: pointer;
             padding: 5px;
@@ -88,7 +88,7 @@
         .lightbox-info p { margin: 8px 0; font-size: 0.9rem; color: #333; line-height: 1.4; }
         
         .lightbox-info .ship-characters {
-            color: #0992C2;
+            color: #B71C1C;
             font-weight: 500;
             margin-bottom: 12px;
             padding-bottom: 8px;
@@ -123,6 +123,199 @@
             .lightbox-image-container { padding: 15px; }
             .lightbox-image { max-height: 200px; }
         }
+
+        /* Sidebar and Card Styles - UPDATED with red colors */
+        .fandom-sidebar {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            height: fit-content;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .fandom-sidebar h3 {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .fandom-list {
+            list-style: none;
+        }
+
+        .fandom-item {
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+            color: #B71C1C;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .fandom-item:hover {
+            background: #fef2f2;
+            color: #8B0000;
+        }
+
+        .fandom-item.active {
+            background: #B71C1C;
+            color: white;
+        }
+
+        .fandom-count {
+            background: rgba(0,0,0,0.05);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            color: #B71C1C;
+        }
+
+        .fandom-item.active .fandom-count {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        /* Ship Cards - RED accents */
+        .pairings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .ship-card {
+            background: white;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            border: 1px solid #f0f0f0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ship-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .ship-image-container {
+            height: 220px;
+            position: relative;
+            overflow: hidden;
+            background: #f8f9fa;
+        }
+
+        .ship-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .ship-card:hover .ship-image {
+            transform: scale(1.1);
+        }
+
+        .fandom-tag {
+            font-size: 0.75rem;
+            color: #B71C1C;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .ship-name {
+            font-size: 1.4rem;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .characters {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .ship-meta {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            background: #B71C1C;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .notes {
+            font-size: 0.85rem;
+            color: #777;
+            line-height: 1.5;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-actions {
+            padding: 15px 20px;
+            background: #fafafa;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .action-btn {
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            border: 1px solid #eee;
+        }
+
+        .btn-edit { color: #B71C1C; }
+        .btn-edit:hover { background: #B71C1C; color: white; }
+        .btn-delete { color: #D32F2F; }
+        .btn-delete:hover { background: #D32F2F; color: white; }
+
+        .site-footer {
+            margin-top: 40px;
+            padding: 20px 0;
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        .site-footer p {
+            color: #B71C1C;
+            font-style: italic;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -131,6 +324,13 @@
             <h1><i class="fas fa-heart"></i> Fandom Relationships Tracker</h1>
             <p>I'm tracking and organizing the relationships that I like throughout any fandoms I am in. It started with a Google sheet between me and my friend and now uh...a personal website? Ehe.
 Just to be transparent, I did not build this on my own, I definitely asked AI for help.</p>
+            
+            <!-- ADDED NOTE BOX -->
+            <div style="background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px; margin-top: 20px; border-left: 4px solid #FFD700;">
+                <p style="margin-top: 0; font-style: italic;">
+                    <strong>Note:</strong> This is a personal project to track my favorite ships. Most of the art used belongs to their respective creators (credited where possible). This site is purely for fun and organization!
+                </p>
+            </div>
         </div>
 
         <div class="stats-grid">
