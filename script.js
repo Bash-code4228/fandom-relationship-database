@@ -186,9 +186,10 @@ function formatFandomsForDisplay(fandomString) {
     return parseFandoms(fandomString).join(', ');
 }
 
+// FIXED createShipCard function - now uses correct 'ship-card' class
 function createShipCard(ship) {
     const card = document.createElement('div');
-    card.className = 'pairing-card';
+    card.className = 'ship-card';
     
     let imagePath = ship.image || `images/${ship.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}.jpg`;
     const formattedFandoms = formatFandomsForDisplay(ship.fandom);
@@ -207,7 +208,7 @@ function createShipCard(ship) {
     }
 
     cardHTML += `
-    <div class="image-container" style="position: relative; height: 200px; cursor: pointer;" 
+    <div class="ship-image-container" style="position: relative; height: 200px; cursor: pointer;" 
          onclick="openLightbox('${escapeString(imagePath)}', '${escapeString(ship.name)}', '${escapeString(ship.characters)}', '${escapeString(formattedFandoms)}', '${escapeString(ship.media || '')}', '${escapeString(ship.dynamic || '')}', '${escapeString(ship.status || '')}', '${escapeString(ship.relationship || '')}', '${escapeString(ship.yearStarted || '')}', '${escapeString(ship.artist || '')}', '${escapeString(ship.notes || '')}', '${escapeString(ship.category || '')}')">
         <div class="card-actions" style="position: absolute; top: 12px; right: 12px; z-index: 10; display: flex; gap: 8px;">
             <button class="action-btn" onclick="event.stopPropagation(); toggleFavorite(${ship.id})" style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 35px; height: 35px; color: ${ship.favorite ? '#ffd700' : '#999'};"><i class="${ship.favorite ? 'fas' : 'far'} fa-star"></i></button>
@@ -223,15 +224,23 @@ function createShipCard(ship) {
             <p class="pairing-characters">${escapeHtml(ship.characters)}</p>
         </div>
     </div>
-    <div class="card-body">
+    <div class="ship-info">
         ${ship.artist ? `<div style="text-align: center; margin-bottom: 10px; font-size: 0.8rem; color: #0992C2;">☆ art by ${escapeHtml(ship.artist)}</div>` : ''}
-        <div class="info-row"><span class="info-label">Fandom:</span><span class="info-value">${escapeHtml(formattedFandoms)}</span></div>
-        <div style="display: flex; gap: 8px; margin-top: 15px; flex-wrap: wrap;">
-            <span class="tag"><i class="fas fa-info-circle"></i> ${escapeHtml(ship.status || 'Fanon')}</span>
-            <span class="tag"><i class="fas fa-heart"></i> ${escapeHtml(ship.relationship || 'Romantic')}</span>
-            <span class="tag"><i class="fas fa-venus-mars"></i> ${escapeHtml(ship.category || 'f/m')}</span>
-            ${ship.yearStarted ? `<span class="tag"><i class="fas fa-calendar"></i> ${escapeHtml(ship.yearStarted)}</span>` : ''}
+        <span class="fandom-tag">${escapeHtml(formattedFandoms)}</span>
+        <h3 class="ship-name">${escapeHtml(ship.name)}</h3>
+        <div class="characters">${escapeHtml(ship.characters)}</div>
+        <div class="ship-meta">
+            <span class="meta-item"><i class="fas fa-info-circle"></i> ${escapeHtml(ship.status || 'Fanon')}</span>
+            <span class="meta-item"><i class="fas fa-heart"></i> ${escapeHtml(ship.relationship || 'Romantic')}</span>
+            <span class="meta-item"><i class="fas fa-venus-mars"></i> ${escapeHtml(ship.category || 'f/m')}</span>
+            ${ship.yearStarted ? `<span class="meta-item"><i class="fas fa-calendar"></i> ${escapeHtml(ship.yearStarted)}</span>` : ''}
         </div>
+        ${ship.notes ? `<div class="notes">${escapeHtml(ship.notes)}</div>` : ''}
+    </div>
+    <div class="card-actions">
+        <button class="action-btn btn-edit" onclick="event.stopPropagation(); toggleFavorite(${ship.id})"><i class="${ship.favorite ? 'fas' : 'far'} fa-star"></i></button>
+        <button class="action-btn btn-edit" onclick="event.stopPropagation(); openEditModal(${ship.id})"><i class="fas fa-edit"></i></button>
+        <button class="action-btn btn-delete" onclick="event.stopPropagation(); openDeleteModal(${ship.id}, '${escapeString(ship.name)}')"><i class="fas fa-trash"></i></button>
     </div>`;
     
     card.innerHTML = cardHTML;
