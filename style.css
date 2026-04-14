@@ -429,7 +429,6 @@ body {
 /* Responsive */
 @media (max-width: 1024px) {
     .main-layout { grid-template-columns: 1fr; }
-    .fandom-sidebar { display: none; } /* Could be a dropdown on mobile later */
 }
 
 @media (max-width: 768px) {
