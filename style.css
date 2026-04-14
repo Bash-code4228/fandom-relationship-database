@@ -380,6 +380,60 @@ body {
     flex: 1;
 }
 
+/* Site Footer */
+.site-footer {
+    margin-top: 40px;
+    padding-top: 25px;
+    border-top: 2px solid #e0e0e0;
+    color: #555;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.footer-info p {
+    font-weight: 600;
+    color: #0992C2; /* Your Icy Blue */
+    margin-bottom: 5px;
+}
+
+.footer-info span {
+    font-size: 0.85rem;
+}
+
+.footer-links {
+    display: flex;
+    gap: 20px;
+}
+
+.footer-links a {
+    text-decoration: none;
+    color: #333;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.3s;
+}
+
+.footer-links a:hover {
+    color: #B71C1C; /* Matches your Red accent */
+}
+
+/* Make it look good on mobile */
+@media (max-width: 600px) {
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
 /* Tags */
 .tag {
     padding: 8px 16px;
