@@ -633,20 +633,36 @@ window.onclick = (event) => {
 function openShipLightbox(ship) {
     document.getElementById('pop-name').innerText = ship.name;
     document.getElementById('pop-chars').innerText = ship.characters;
-    document.getElementById('pop-image').src = ship.image || 'placeholder.jpg';
+    
+    // Fix: Get the actual image URL from the array
+    let imageUrl = null;
+    if (ship.image && Array.isArray(ship.image)) {
+        for (let img of ship.image) {
+            if (img && img !== 'null' && img !== '') {
+                imageUrl = img;
+                break;
+            }
+        }
+    } else if (ship.image && typeof ship.image === 'string' && ship.image !== 'null') {
+        imageUrl = ship.image;
+    }
+    
+    // Set the image or use placeholder
+    const popImage = document.getElementById('pop-image');
+    if (imageUrl) {
+        popImage.src = imageUrl;
+    } else {
+        popImage.src = 'https://via.placeholder.com/400x400?text=No+Image+Available';
+    }
+    
     document.getElementById('pop-notes').innerText = ship.notes || "No notes added yet.";
     
-    // Fill the tags inside the pop-up (Category and Year)
+    // Fill the tags inside the pop-up
     document.getElementById('pop-tags').innerHTML = `
-        <span class="tag"><i class="fas fa-info-circle"></i>${ship.status}</span>
-        <span class="tag"><i class="fas fa-heart"></i>${ship.relationship}</span>
-        <span class="tag"><i class="fas fa-users"></i>${ship.relationshipCategory || 'N/A'}</span>
+        <span class="tag"><i class="fas fa-info-circle"></i>${ship.status || 'Fanon'}</span>
+        <span class="tag"><i class="fas fa-heart"></i>${ship.relationship || 'Romantic'}</span>
         <span class="tag"><i class="fas fa-calendar-alt"></i>${ship.yearStarted || '????'}</span>
     `;
     
     document.getElementById('ship-lightbox').style.display = 'flex';
-}
-
-function closeShipLightbox() {
-    document.getElementById('ship-lightbox').style.display = 'none';
 }
