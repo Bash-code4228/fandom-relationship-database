@@ -185,6 +185,7 @@ function addSampleData() {
             trope: "Enemies to Lovers",
             notes: "The loyalty and history between them gets me every time",
             favorite: true,
+            artist: "",
             image: null,
             addedDate: "2024-01-15"
         },
@@ -201,6 +202,7 @@ function addSampleData() {
             trope: "Friends to Lovers",
             notes: "☆ power couple yas.",
             favorite: false,
+            artist: "",
             image: null,
             addedDate: "2026-02-25"
         }
@@ -298,6 +300,8 @@ function createShipCard(ship) {
             <p class="pairing-characters">${escapeHtml(ship.characters)}</p>
         </div>`;
     }
+
+    ${ship.artist ? `<div class="artist-credit">Art by ${escapeHtml(ship.artist)}</div>` : ''}
     
     cardHTML += `
     <div class="card-body">
@@ -374,6 +378,7 @@ function openEditModal(id) {
     document.getElementById('input-status').value = pairing.status || 'Fanon';
     document.getElementById('input-relationship').value = pairing.relationship || 'Romantic';
     document.getElementById('input-year').value = pairing.yearStarted || '';
+    document.getElementById('input-artist').value = pairing.artist || '';
     document.getElementById('input-media').value = pairing.media || 'Literature/Books';
     document.getElementById('input-dynamic').value = pairing.dynamic || 'NA';
     document.getElementById('input-trope').value = pairing.trope || 'NA';
@@ -528,6 +533,7 @@ function completeSubmission(imageData) {
         status: document.getElementById('input-status').value,
         relationship: document.getElementById('input-relationship').value,
         yearStarted: document.getElementById('input-year').value,
+        artist: document.getElementById('input-artist').value,
         media: document.getElementById('input-media').value,
         dynamic: document.getElementById('input-dynamic').value,
         trope: document.getElementById('input-trope').value,
