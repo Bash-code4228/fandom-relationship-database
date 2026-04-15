@@ -116,27 +116,32 @@ function applyFilters() {
     renderPairings(getFilteredPairings());
 }
 
-// Load from GitHub/WordPress JSON file
 async function loadFromStorage() {
     try {
         const response = await fetch('pairings.json');
         if (response.ok) {
-            pairings = await response.json();
-            console.log('Loaded from pairings.json:', pairings.length, 'ships');
+            const data = await response.json();
+            pairings = Array.isArray(data) ? data : [];
+            console.log("Loaded from JSON file");
         } else {
-            throw new Error('Failed to fetch pairings.json');
+            throw new Error('JSON file not found');
         }
     } catch (e) {
-        console.error('Error loading data:', e);
+        console.warn("CORS or Fetch error - switching to localStorage:", e.message);
         const saved = localStorage.getItem('fandomShips');
         if (saved) {
             pairings = JSON.parse(saved);
-            console.log('Loaded from localStorage:', pairings.length, 'ships');
         } else {
+            // If both fail, load your hardcoded samples
             addSampleData();
         }
     }
-    
+
+    renderFandoms();
+    renderPairings(pairings);
+    updateStats();
+}
+
     // Process images - check for images in the images folder
     pairings.forEach(p => {
         // Check if there's an image file in the images folder with the ship name
