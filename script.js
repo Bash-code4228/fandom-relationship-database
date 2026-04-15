@@ -232,7 +232,7 @@ function renderPairings(pairingsToRender = getFilteredPairings()) {
     pairingsToRender.forEach(ship => {
         const card = createShipCard(ship);
         card.style.cursor = 'pointer';
-        card.onclick = () => openShipLightbox(ship);
+        card.onclick = (e) => { e.stopPropagation(); openShipLightbox(ship); };
         pairingsGrid.appendChild(card);
     });
 }
@@ -631,10 +631,7 @@ window.onclick = (event) => {
 };
 
 function openShipLightbox(ship) {
-    document.getElementById('pop-name').innerText = ship.name;
-    document.getElementById('pop-chars').innerText = ship.characters;
-    
-    // Fix: Get the actual image URL from the array
+    // Get the image URL properly
     let imageUrl = null;
     if (ship.image && Array.isArray(ship.image)) {
         for (let img of ship.image) {
@@ -647,7 +644,10 @@ function openShipLightbox(ship) {
         imageUrl = ship.image;
     }
     
-    // Set the image or use placeholder
+    // Set all the content first
+    document.getElementById('pop-name').innerText = ship.name;
+    document.getElementById('pop-chars').innerText = ship.characters;
+    
     const popImage = document.getElementById('pop-image');
     if (imageUrl) {
         popImage.src = imageUrl;
@@ -657,12 +657,16 @@ function openShipLightbox(ship) {
     
     document.getElementById('pop-notes').innerText = ship.notes || "No notes added yet.";
     
-    // Fill the tags inside the pop-up
     document.getElementById('pop-tags').innerHTML = `
         <span class="tag"><i class="fas fa-info-circle"></i>${ship.status || 'Fanon'}</span>
         <span class="tag"><i class="fas fa-heart"></i>${ship.relationship || 'Romantic'}</span>
         <span class="tag"><i class="fas fa-calendar-alt"></i>${ship.yearStarted || '????'}</span>
     `;
     
-    document.getElementById('ship-lightbox').style.display = 'flex';
+    // Show the lightbox
+    const lightbox = document.getElementById('ship-lightbox');
+    lightbox.style.display = 'flex';
+    
+    // Prevent the click from bubbling up to the window onclick handler
+    event.stopPropagation();
 }
