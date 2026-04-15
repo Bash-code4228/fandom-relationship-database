@@ -143,20 +143,42 @@ async function loadFromStorage() {
         if (!p.image || p.image === null) {
             // Try to find image in images folder by ship name (lowercase, no spaces)
             const possibleImageName = p.name.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '');
-            // Also try with the ID
-            const possibleImages = [
-                `images/${possibleImageName}.jpg`,
-                `images/${possibleImageName}.png`,
-                `images/${possibleImageName}.gif`,
-                `images/${p.id}.jpg`,
-                `images/${p.id}.png`
-            ];
-            p.image = possibleImages;
-        } else if (typeof p.image === 'string') {
-            p.image = [p.image];
-        } else if (!Array.isArray(p.image)) {
-            p.image = [];
+async function loadFromStorage() {
+    try {
+        const response = await fetch('https://Bash-code4228.github.io/fandom-relationship-database/pairings.json');
+        if (response.ok) {
+            pairings = await response.json();
+        } else {
+            const saved = localStorage.getItem('fandomShips');
+            if (saved) {
+                try {
+                    pairings = JSON.parse(saved);
+                } catch (parseError) {
+                    console.error('Corrupted localStorage data:', parseError);
+                    pairings = [];
+                }
+            }
         }
+    } catch (e) {
+        console.error('Error loading data from server:', e);
+        const saved = localStorage.getItem('fandomShips');
+        if (saved) {
+            try {
+                pairings = JSON.parse(saved);
+            } catch (parseError) {
+                console.error('Corrupted localStorage data:', parseError);
+                pairings = [];
+            }
+        }
+    }
+    
+    if (pairings.length === 0) {
+        addSampleData();
+    } else {
+        renderPairings();
+        updateStats();
+    }
+}
     });
     
     renderFandoms();
@@ -391,6 +413,7 @@ function openEditModal(id) {
             setUploadMethod('url');
             document.getElementById('input-image-url').value = pairing.image;
             previewImageUrl(pairing.image);
+            document.getElementById('modal-title').textContent = 'Edit Pairing';
         }
     }
     openAddModal();
