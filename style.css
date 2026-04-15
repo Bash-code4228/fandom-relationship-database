@@ -26,17 +26,20 @@ body {
 
 /* Header */
 .header {
+    /* Changed to Solid Imperial Red with a Gold border */
     background: #0992C2;
-    color: #FFD700;
+    color: #FFD700; /* Gold text */
     padding: 40px;
     border-radius: 15px;
-    border-bottom: 4px solid #D4AF37;
     margin-bottom: 30px;
     position: relative;
     overflow: hidden;
 }
+.header {
+    border-bottom: 4px solid #D4AF37; 
+}
 
-/* Floating animation - fixed to not cause flicker */
+/* Kept your floating animation but made it subtle for a solid background */
 .header::before {
     content: '';
     position: absolute;
@@ -50,8 +53,8 @@ body {
 }
 
 @keyframes float {
-    0% { transform: translate(0, 0); }
-    100% { transform: translate(0, 0); }
+    0% { transform: translate(0, 0) rotate(0deg); }
+    100% { transform: translate(-30px, -30px) rotate(360deg); }
 }
 
 .header h1 {
@@ -342,8 +345,6 @@ body {
     margin-bottom: 5px;
     color: #FFFDF0; 
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-    word-break: break-word;
-    overflow-wrap: break-word;
 }
 
 .pairing-characters {
@@ -663,7 +664,6 @@ input[type="number"]::-webkit-inner-spin-button {
     .btn {
         justify-content: center;
     }
-}
 
 /* --- Lightbox / Pop-up Styling --- */
 .lightbox-overlay {
@@ -760,18 +760,5 @@ input[type="number"]::-webkit-inner-spin-button {
     
     .lightbox-info-side {
         padding: 20px;
-    }
-}
-
-    .artist-credit {
-        text-align: center;
-        font-style: italic;
-        color: #0992C2;
-        padding: 12px 20px;
-        border-bottom: 2px solid #D4AF37; 
-        background: linear-gradient(to bottom, #fafafa, #f5f5f5); 
-        font-size: 0.95rem;
-        margin: 0;
-        font-weight: 500; 
     }
 }

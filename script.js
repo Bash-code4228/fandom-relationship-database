@@ -116,32 +116,27 @@ function applyFilters() {
     renderPairings(getFilteredPairings());
 }
 
+// Load from GitHub/WordPress JSON file
 async function loadFromStorage() {
     try {
         const response = await fetch('pairings.json');
         if (response.ok) {
-            const data = await response.json();
-            pairings = Array.isArray(data) ? data : [];
-            console.log("Loaded from JSON file");
+            pairings = await response.json();
+            console.log('Loaded from pairings.json:', pairings.length, 'ships');
         } else {
-            throw new Error('JSON file not found');
+            throw new Error('Failed to fetch pairings.json');
         }
     } catch (e) {
-        console.warn("CORS or Fetch error - switching to localStorage:", e.message);
+        console.error('Error loading data:', e);
         const saved = localStorage.getItem('fandomShips');
         if (saved) {
             pairings = JSON.parse(saved);
+            console.log('Loaded from localStorage:', pairings.length, 'ships');
         } else {
-            // If both fail, load your hardcoded samples
             addSampleData();
         }
     }
-
-    renderFandoms();
-    renderPairings(pairings);
-    updateStats();
-}
-
+    
     // Process images - check for images in the images folder
     pairings.forEach(p => {
         // Check if there's an image file in the images folder with the ship name
@@ -190,7 +185,6 @@ function addSampleData() {
             trope: "Enemies to Lovers",
             notes: "The loyalty and history between them gets me every time",
             favorite: true,
-            artist: "",
             image: null,
             addedDate: "2024-01-15"
         },
@@ -207,7 +201,6 @@ function addSampleData() {
             trope: "Friends to Lovers",
             notes: "☆ power couple yas.",
             favorite: false,
-            artist: "",
             image: null,
             addedDate: "2026-02-25"
         }
@@ -238,6 +231,8 @@ function renderPairings(pairingsToRender = getFilteredPairings()) {
     
     pairingsToRender.forEach(ship => {
         const card = createShipCard(ship);
+        card.style.cursor = 'pointer';
+        card.onclick = (e) => { e.stopPropagation(); openShipLightbox(ship); };
         pairingsGrid.appendChild(card);
     });
 }
@@ -305,8 +300,6 @@ function createShipCard(ship) {
             <p class="pairing-characters">${escapeHtml(ship.characters)}</p>
         </div>`;
     }
-
-    ${ship.artist ? `<div class="artist-credit">Art by ${escapeHtml(ship.artist)}</div>` : ''}
     
     cardHTML += `
     <div class="card-body">
@@ -318,7 +311,7 @@ function createShipCard(ship) {
         <div class="tags-container" style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
             <span class="tag"><i class="fas fa-info-circle"></i>${escapeHtml(ship.status || 'Fanon')}</span>
             <span class="tag"><i class="fas fa-heart"></i>${escapeHtml(ship.relationship || 'Romantic')}</span>
-            <span class="tag"><i class="fas fa-calendar"></i>${escapeHtml(ship.yearStarted)}</span>
+            <span class="tag tag-red"><i class="fas fa-calendar-alt"></i>${escapeHtml(ship.yearStarted || '????')}</span>
         </div>
     </div>`;
     
@@ -383,7 +376,6 @@ function openEditModal(id) {
     document.getElementById('input-status').value = pairing.status || 'Fanon';
     document.getElementById('input-relationship').value = pairing.relationship || 'Romantic';
     document.getElementById('input-year').value = pairing.yearStarted || '';
-    document.getElementById('input-artist').value = pairing.artist || '';
     document.getElementById('input-media').value = pairing.media || 'Literature/Books';
     document.getElementById('input-dynamic').value = pairing.dynamic || 'NA';
     document.getElementById('input-trope').value = pairing.trope || 'NA';
@@ -538,7 +530,6 @@ function completeSubmission(imageData) {
         status: document.getElementById('input-status').value,
         relationship: document.getElementById('input-relationship').value,
         yearStarted: document.getElementById('input-year').value,
-        artist: document.getElementById('input-artist').value,
         media: document.getElementById('input-media').value,
         dynamic: document.getElementById('input-dynamic').value,
         trope: document.getElementById('input-trope').value,
@@ -624,10 +615,58 @@ function importData() {
 
 // Close modals when clicking outside
 window.onclick = (event) => {
+    // Check for existing modals
     if (event.target.classList && event.target.classList.contains('modal')) {
         closeAddModal();
         closeExportModal();
         closeImportModal();
         closeConfirmModal();
     }
+    
+    // Check for the Lightbox specifically
+    const lightbox = document.getElementById('ship-lightbox');
+    if (event.target === lightbox) {
+        closeShipLightbox();
+    }
 };
+
+function openShipLightbox(ship) {
+    // Get the image URL properly
+    let imageUrl = null;
+    if (ship.image && Array.isArray(ship.image)) {
+        for (let img of ship.image) {
+            if (img && img !== 'null' && img !== '') {
+                imageUrl = img;
+                break;
+            }
+        }
+    } else if (ship.image && typeof ship.image === 'string' && ship.image !== 'null') {
+        imageUrl = ship.image;
+    }
+    
+    // Set all the content first
+    document.getElementById('pop-name').innerText = ship.name;
+    document.getElementById('pop-chars').innerText = ship.characters;
+    
+    const popImage = document.getElementById('pop-image');
+    if (imageUrl) {
+        popImage.src = imageUrl;
+    } else {
+        popImage.src = 'https://via.placeholder.com/400x400?text=No+Image+Available';
+    }
+    
+    document.getElementById('pop-notes').innerText = ship.notes || "No notes added yet.";
+    
+    document.getElementById('pop-tags').innerHTML = `
+        <span class="tag"><i class="fas fa-info-circle"></i>${ship.status || 'Fanon'}</span>
+        <span class="tag"><i class="fas fa-heart"></i>${ship.relationship || 'Romantic'}</span>
+        <span class="tag"><i class="fas fa-calendar-alt"></i>${ship.yearStarted || '????'}</span>
+    `;
+    
+    // Show the lightbox
+    const lightbox = document.getElementById('ship-lightbox');
+    lightbox.style.display = 'flex';
+    
+    // Prevent the click from bubbling up to the window onclick handler
+    event.stopPropagation();
+}
