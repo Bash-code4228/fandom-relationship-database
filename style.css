@@ -39,6 +39,14 @@ body {
     display: flex;
     align-items: center;
     gap: 15px;
+    
+    /* Icy-Glowy light blue settings */
+    color: #E0F7FA; /* Very pale icy blue */
+    text-shadow: 
+        0 0 5px #FFFFFF,    /* Inner white glow */
+        0 0 10px #81D4FA,   /* Soft light blue glow */
+        0 0 20px #0992C2,   /* Brighter blue glow */
+        0 0 40px #0992C2;   /* Deep outer blue glow */
 }
 
 .header p {
