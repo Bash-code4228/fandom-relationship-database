@@ -26,11 +26,11 @@ body {
 
 /* Header */
 .header {
-    /* Changed to Solid Imperial Red with a Gold border */
     background: #0992C2;
-    color: #FFD700; /* Gold text */
+    color: #FFD700;
     padding: 40px;
     border-radius: 15px;
+    border-bottom: 4px solid #D4AF37; 
     margin-bottom: 30px;
     position: relative;
     overflow: hidden;
@@ -53,8 +53,8 @@ body {
 }
 
 @keyframes float {
-    0% { transform: translate(0, 0) rotate(0deg); }
-    100% { transform: translate(-30px, -30px) rotate(360deg); }
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(0, 0); }
 }
 
 .header h1 {
