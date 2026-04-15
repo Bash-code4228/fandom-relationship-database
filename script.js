@@ -300,6 +300,13 @@ function createShipCard(ship) {
             <p class="pairing-characters">${escapeHtml(ship.characters)}</p>
         </div>`;
     }
+
+    if (ship.artist) {
+    cardHTML += `
+    <div class="artist-credit">
+        Art by <i>${escapeHtml(ship.artist)}</i>
+    </div>`;
+}
     
     cardHTML += `
     <div class="card-body">
@@ -376,6 +383,7 @@ function openEditModal(id) {
     document.getElementById('input-status').value = pairing.status || 'Fanon';
     document.getElementById('input-relationship').value = pairing.relationship || 'Romantic';
     document.getElementById('input-year').value = pairing.yearStarted || '';
+    document.getElementById('input-artist').value = pairing.artist || '';
     document.getElementById('input-media').value = pairing.media || 'Literature/Books';
     document.getElementById('input-dynamic').value = pairing.dynamic || 'NA';
     document.getElementById('input-trope').value = pairing.trope || 'NA';
@@ -536,6 +544,7 @@ function completeSubmission(imageData) {
         notes: document.getElementById('input-notes').value,
         favorite: document.getElementById('input-favorite').checked,
         image: imageData ? (Array.isArray(imageData) ? imageData : [imageData]) : null,
+        artist: document.getElementById('input-artist').value,
         addedDate: new Date().toISOString().split('T')[0]
     };
     
