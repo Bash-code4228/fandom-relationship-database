@@ -282,6 +282,27 @@
         <div class="toast-container" id="toast-container"></div>
     </div>
 
+    <div id="ship-lightbox" class="modal">
+            <div class="modal-content" style="max-width: 500px;">
+                <div class="card-header">
+                    <h2 id="pop-name">Ship Name</h2>
+                    <button class="action-btn" onclick="closeShipLightbox()" style="position: absolute; right: 20px; top: 20px;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div style="padding: 20px; text-align: center;">
+                    <img id="pop-image" src="" style="width: 100%; border-radius: 15px; margin-bottom: 15px;">
+                    <p id="pop-chars" style="font-weight: bold; font-size: 1.2rem; color: #0992C2;"></p>
+                    <div id="pop-tags" style="display: flex; gap: 10px; justify-content: center; margin: 15px 0;"></div>
+                    <p id="pop-notes" style="color: #555; font-style: italic;"></p>
+                </div>
+            </div>
+        </div>
+
+        <script src="script.js"></script>
+    </body>
+</html>
+
     <div style="text-align: center; padding: 20px; color: #666; font-size: 14px; border-top: 1px solid #ddd; margin-top: 30px;">
         <p style="font-size: 12px; margin-top: 5px; opacity: 0.8;">When fandom relationships gets too much, you make a database out of it - Bash, 2026</p>
     </div>
