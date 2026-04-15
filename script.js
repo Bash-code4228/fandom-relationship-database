@@ -670,3 +670,7 @@ function openShipLightbox(ship) {
     // Prevent the click from bubbling up to the window onclick handler
     event.stopPropagation();
 }
+
+function closeShipLightbox() {
+    document.getElementById('ship-lightbox').style.display = 'none';
+}
