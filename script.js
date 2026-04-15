@@ -231,6 +231,8 @@ function renderPairings(pairingsToRender = getFilteredPairings()) {
     
     pairingsToRender.forEach(ship => {
         const card = createShipCard(ship);
+        card.style.cursor = 'pointer';
+        card.onclick = () => openShipLightbox(ship);
         pairingsGrid.appendChild(card);
     });
 }
@@ -613,10 +615,38 @@ function importData() {
 
 // Close modals when clicking outside
 window.onclick = (event) => {
+    // Check for existing modals
     if (event.target.classList && event.target.classList.contains('modal')) {
         closeAddModal();
         closeExportModal();
         closeImportModal();
         closeConfirmModal();
     }
+    
+    // Check for the Lightbox specifically
+    const lightbox = document.getElementById('ship-lightbox');
+    if (event.target === lightbox) {
+        closeShipLightbox();
+    }
 };
+
+function openShipLightbox(ship) {
+    document.getElementById('pop-name').innerText = ship.name;
+    document.getElementById('pop-characters').innerText = ship.characters;
+    document.getElementById('pop-image').src = ship.image || 'placeholder.jpg';
+    document.getElementById('pop-notes').innerText = ship.notes || "No notes added yet.";
+    
+    // Fill the tags inside the pop-up (Category and Year)
+    document.getElementById('pop-tags-container').innerHTML = `
+        <span class="tag"><i class="fas fa-info-circle"></i>${ship.status}</span>
+        <span class="tag"><i class="fas fa-heart"></i>${ship.relationship}</span>
+        <span class="tag"><i class="fas fa-users"></i>${ship.relationshipCategory || 'N/A'}</span>
+        <span class="tag"><i class="fas fa-calendar-alt"></i>${ship.yearStarted || '????'}</span>
+    `;
+    
+    document.getElementById('ship-lightbox').style.display = 'flex';
+}
+
+function closeShipLightbox() {
+    document.getElementById('ship-lightbox').style.display = 'none';
+}
