@@ -283,18 +283,17 @@
     </div>
 
         <div id="ship-lightbox" class="lightbox-overlay" style="display:none;">
-        <div class="lightbox-content">
-            <button class="close-btn" onclick="closeShipLightbox()">&times;</button>
-            <div class="lightbox-body">
-                <div class="lightbox-img-container">
+            <div class="lightbox-content">
+                <button class="close-lightbox" onclick="closeShipLightbox()">&times;</button>
+                <div class="lightbox-image-side">
                     <img id="pop-image" src="" alt="">
                 </div>
-                <div class="lightbox-details">
+                <div class="lightbox-info-side">
                     <h2 id="pop-name"></h2>
-                    <p id="pop-chars"></p>
-                    <div id="pop-tags" class="tags-container"></div>
-                    <div class="notes-box">
-                        <strong>Notes:</strong>
+                    <p class="pop-chars" id="pop-chars"></p>
+                    <div id="pop-tags" class="tags-container" style="display: flex; gap: 10px; flex-wrap: wrap; margin: 15px 0;"></div>
+                    <div class="pop-notes-section">
+                        <h3><i class="fas fa-pen"></i> Notes</h3>
                         <p id="pop-notes"></p>
                     </div>
                 </div>
