@@ -254,7 +254,7 @@ function renderPairings(pairingsToRender = getFilteredPairings()) {
     pairingsToRender.forEach(ship => {
         const card = createShipCard(ship);
         card.style.cursor = 'pointer';
-        card.onclick = (e) => { e.stopPropagation(); openShipLightbox(ship); };
+        card.onclick = (e) => { e.stopPropagation(); openShipLightbox(ship, e); };
         pairingsGrid.appendChild(card);
     });
 }
@@ -691,5 +691,9 @@ function openShipLightbox(ship, event) {
     lightbox.style.display = 'flex';
     
     // Prevent the click from bubbling up to the window onclick handler
-    event.stopPropagation();
+    if (event) event.stopPropagation();
+function closeShipLightbox() {
+    const lightbox = document.getElementById('ship-lightbox');
+    if (lightbox) lightbox.style.display = 'none';
+}
 }
