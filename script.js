@@ -309,7 +309,7 @@ function createShipCard(ship) {
         <div class="tags-container" style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
             <span class="tag"><i class="fas fa-info-circle"></i>${escapeHtml(ship.status || 'Fanon')}</span>
             <span class="tag"><i class="fas fa-heart"></i>${escapeHtml(ship.relationship || 'Romantic')}</span>
-            <span class="tag tag-red"><i class="fas fa-calendar-alt"></i>Est. ${escapeHtml(ship.yearStarted || '????')}</span>
+            <span class="tag tag-red"><i class="fas fa-calendar-alt"></i>${escapeHtml(ship.yearStarted || '????')}</span>
         </div>
     </div>`;
     
