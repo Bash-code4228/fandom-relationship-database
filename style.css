@@ -26,11 +26,11 @@ body {
 /* Header - Static Version */
 .header {
     background: #0992C2;
-    color: #FFD700;
+    color: #0992C2;
     padding: 40px;
     border-radius: 15px;
     margin-bottom: 30px;
-    border-bottom: 4px solid #D4AF37;
+    border-bottom: 4px solid #FFD700;
 }
 
 .header h1 {
@@ -39,11 +39,17 @@ body {
     display: flex;
     align-items: center;
     gap: 15px;
+    color: #0992C2;
 }
 
 .header p {
-    opacity: 0.9;
+    opacity: 1;
     font-size: 1.1rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 5px;
+    border-left: 5px solid #FFD700;
+    color: #FFFFFF;
 }
 
 /* Main Layout */
@@ -53,9 +59,9 @@ body {
     gap: 30px;
 }
 
-/* Sidebar - Updated Format and Color */
+/* Sidebar */
 .fandom-sidebar {
-    background: white;
+    background: #0992C2;
     padding: 25px;
     border-radius: 15px;
     height: fit-content;
@@ -65,7 +71,7 @@ body {
 .fandom-sidebar h3 {
     margin-bottom: 20px;
     font-size: 1.1rem;
-    color: #333;
+    color: #FFD700;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -82,33 +88,34 @@ body {
     transition: all 0.2s ease;
     margin-bottom: 5px;
     font-size: 0.95rem;
-    color: #B71C1C; 
+    color: #FFFFFF;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .fandom-item:hover {
-    background: #fef2f2;
-    color: #8B0000;
+    background: rgba(255, 215, 0, 0.2);
+    color: #FFD700;
 }
 
 .fandom-item.active {
-    background: #B71C1C;
-    color: white;
+    background: #FFD700;
+    color: #0992C2;
+    font-weight: bold;
 }
 
 .fandom-count {
-    background: rgba(183, 28, 28, 0.1);
+    background: rgba(255, 255, 255, 0.2);
     padding: 2px 8px;
     border-radius: 10px;
     font-size: 0.8rem;
-    color: #B71C1C;
+    color: #FFFFFF;
 }
 
 .fandom-item.active .fandom-count {
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
+    background: #0992C2;
+    color: #FFFFFF;
 }
 
 /* Controls */
