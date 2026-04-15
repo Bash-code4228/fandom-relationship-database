@@ -672,5 +672,8 @@ function openShipLightbox(ship) {
 }
 
 function closeShipLightbox() {
-    document.getElementById('ship-lightbox').style.display = 'none';
+    const lightbox = document.getElementById('ship-lightbox');
+    if (lightbox) {
+        lightbox.style.display = 'none';
+    }
 }
