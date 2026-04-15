@@ -30,16 +30,13 @@ body {
     color: #FFD700;
     padding: 40px;
     border-radius: 15px;
-    border-bottom: 4px solid #D4AF37; 
+    border-bottom: 4px solid #D4AF37;
     margin-bottom: 30px;
     position: relative;
     overflow: hidden;
 }
-.header {
-    border-bottom: 4px solid #D4AF37; 
-}
 
-/* Kept your floating animation but made it subtle for a solid background */
+/* Floating animation - fixed to not cause flicker */
 .header::before {
     content: '';
     position: absolute;
