@@ -664,17 +664,35 @@ input[type="number"]::-webkit-inner-spin-button {
         flex-direction: column;
     }
 
-    .artist-credit {
-    text-align: center;
-    color: #0992C2;      
+.artist-credit {
+    width: 100%;           
+    text-align: center;    
+    color: #0992C2;        
     font-style: italic;  
-    padding-top: 15px;   
-    padding-bottom: 10px; 
+    padding-top: 10px;   
+    padding-bottom: 5px; 
     font-size: 0.9rem;  
 }
 
 .artist-credit i {
     font-weight: 600;    
+}
+
+@media (max-width: 768px) {
+    .main-layout {
+        flex-direction: column;
+    }
+    .fandom-sidebar {
+        position: static;
+        width: 100%;
+        max-height: none;
+    }
+    .header h1 {
+        font-size: 2rem;
+    }
+    .controls {
+        flex-direction: column;
+    }
     .btn {
         justify-content: center;
     }
