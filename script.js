@@ -630,7 +630,7 @@ window.onclick = (event) => {
     }
 };
 
-function openShipLightbox(ship) {
+function openShipLightbox(ship, event) {
     // Get the image URL properly
     let imageUrl = null;
     if (ship.image && Array.isArray(ship.image)) {
