@@ -632,12 +632,12 @@ window.onclick = (event) => {
 
 function openShipLightbox(ship) {
     document.getElementById('pop-name').innerText = ship.name;
-    document.getElementById('pop-characters').innerText = ship.characters;
+    document.getElementById('pop-chars').innerText = ship.characters;
     document.getElementById('pop-image').src = ship.image || 'placeholder.jpg';
     document.getElementById('pop-notes').innerText = ship.notes || "No notes added yet.";
     
     // Fill the tags inside the pop-up (Category and Year)
-    document.getElementById('pop-tags-container').innerHTML = `
+    document.getElementById('pop-tags').innerHTML = `
         <span class="tag"><i class="fas fa-info-circle"></i>${ship.status}</span>
         <span class="tag"><i class="fas fa-heart"></i>${ship.relationship}</span>
         <span class="tag"><i class="fas fa-users"></i>${ship.relationshipCategory || 'N/A'}</span>
