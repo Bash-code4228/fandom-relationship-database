@@ -1,9 +1,10 @@
-`/* Basic Styles */
+/* Basic Styles */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* Changed to Poppins */
+    font-family: 'Poppins', sans-serif; 
 }
 
 body {
@@ -60,6 +61,7 @@ body {
 
 .header h1 {
     font-size: 3.5rem;
+    font-weight: 700; /* Added weight for Poppins */
     margin-bottom: 10px;
     display: flex;
     align-items: center;
@@ -227,6 +229,7 @@ body {
     margin-bottom: 20px;
     color: #0992C2;
     font-size: 1.3rem;
+    font-weight: 600;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -343,7 +346,7 @@ body {
 
 .pairing-name {
     font-size: 1.8rem;
-    font-weight: bold;
+    font-weight: 700; /* Added weight for Poppins */
     margin-bottom: 5px;
     color: #FFFDF0; 
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
@@ -375,7 +378,7 @@ body {
 .info-label {
     font-weight: 600;
     color: #666;
-    width: 110px; /* Widened to fit Dynamic/Media labels */
+    width: 110px; 
     flex-shrink: 0;
     font-size: 0.9rem;
 }
@@ -574,15 +577,6 @@ body {
     cursor: pointer;
 }
 
-.file-input-wrapper input[type="number"] {
-    -moz-appearance: textfield;
-}
-.file-input-wrapper input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
 /* Upload Options */
 .upload-options {
     display: flex;
@@ -644,31 +638,12 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .toast-info { border-left: 5px solid #17a2b8; }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .main-layout {
-        flex-direction: column;
-    }
-    
-    .fandom-sidebar {
-        position: static;
-        width: 100%;
-        max-height: none;
-    }
-    
-    .header h1 {
-        font-size: 2rem;
-    }
-    
-    .controls {
-        flex-direction: column;
-    }
-
+/* Artist Credit */
 .artist-credit {
     display: block;
     width: 100%;
-    text-align: center; /* This handles the centering */
-    color: #0992C2 !important; /* Your Icy Blue */
+    text-align: center; 
+    color: #0992C2 !important; 
     font-style: italic;
     margin-top: 15px;
     padding: 5px 0;
@@ -681,7 +656,7 @@ input[type="number"]::-webkit-inner-spin-button {
     font-weight: 600;
 }
 
-/* Corrected Responsive Design section */
+/* Responsive Design */
 @media (max-width: 768px) {
     .main-layout {
         flex-direction: column;
