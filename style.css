@@ -676,4 +676,17 @@ body {
     .controls {
         flex-direction: column;
     }
+
+    /* Completely hide broken image icons */
+    .ship-image {
+        display: block;
+    }
+    
+    .ship-image[src=""] {
+        display: none;
+    }
+    
+    .ship-image:error {
+        display: none;
+    }
 }
