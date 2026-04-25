@@ -290,7 +290,7 @@ if (imageUrl && imageUrl !== 'null' && imageUrl.trim() !== '') {
                 </button>
             </div>
             <div class="image-overlay">
-                 <i class="fas fa-file"></i>
+                 <i class="fas fa-image" style="font-size: 3rem; margin-bottom: 10px;"></i>
                 <h3 class="pairing-name">${escapeHtml(ship.name)}</h3>
                 <p class="pairing-characters">${escapeHtml(ship.characters)}</p>
             </div>
