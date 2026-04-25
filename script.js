@@ -140,24 +140,39 @@ async function loadFromStorage() {
         }
     }
     
-    // Process images - check for images in the images folder
+    // Process images - set image path from ship name if no image exists
     pairings.forEach(p => {
-        // Only process if image already exists in the data
-        if (p.image && p.image !== null) {
-            if (typeof p.image === 'string') {
-                p.image = [p.image];
-            } else if (!Array.isArray(p.image)) {
-                p.image = [];
-            }
-        } else {
-            // Leave as null if no image in pairings.json
-            p.image = null;
+        // Only set auto image if there's NO existing image
+        const hasNoImage = !p.image || 
+                          p.image === null || 
+                          (Array.isArray(p.image) && p.image.length === 0) ||
+                          (typeof p.image === 'string' && p.image === '');
+        
+        if (hasNoImage) {
+            // Generate image path from ship name (lowercase)
+            const imagePath = `images/${sanitizeFileName(p.name)}.jpg`;
+            p.image = [imagePath];
+            console.log(`Auto-assigned image for "${p.name}": ${imagePath}`);
+        } else if (typeof p.image === 'string' && p.image !== 'null' && p.image !== '') {
+            p.image = [p.image];
+        } else if (!Array.isArray(p.image)) {
+            p.image = [];
         }
     });
     
     renderFandoms();
     renderPairings(getFilteredPairings());
     updateStats();
+}
+
+// Helper function to sanitize filename (add this function if not present)
+function sanitizeFileName(name) {
+    if (!name) return 'default';
+    return name
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, '_')
+        .replace(/_+/g, '_')
+        .replace(/^_|_$/g, '');
 }
 
 // Save to localStorage (Temporary save)
@@ -248,9 +263,15 @@ function createShipCard(ship) {
                 break;
             }
         }
-    } else if (ship.image && typeof ship.image === 'string' && ship.image !== 'null') {
+    } else if (ship.image && typeof ship.image === 'string' && ship.image !== 'null' && ship.image !== '') {
         imageUrl = ship.image;
     }
+
+// If still no image URL, generate from ship name
+if (!imageUrl) {
+    imageUrl = `images/${sanitizeFileName(ship.name)}.jpg`;
+    console.log(`Using auto-generated image path for ${ship.name}: ${imageUrl}`);
+}
     
     let cardHTML = '';
     
