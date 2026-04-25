@@ -276,7 +276,6 @@ if (imageUrl && imageUrl !== 'null' && imageUrl.trim() !== '') {
             </div>
         </div>`;
     } else {
-        cardHTML += `
        cardHTML += `
         <div class="image-container">
             <div class="card-actions">
