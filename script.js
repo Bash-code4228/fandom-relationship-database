@@ -139,23 +139,16 @@ async function loadFromStorage() {
     
     // Process images - check for images in the images folder
     pairings.forEach(p => {
-        // Check if there's an image file in the images folder with the ship name
-        if (!p.image || p.image === null) {
-            // Try to find image in images folder by ship name (lowercase, no spaces)
-            const possibleImageName = p.name.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '');
-            // Also try with the ID
-            const possibleImages = [
-                `images/${possibleImageName}.jpg`,
-                `images/${possibleImageName}.png`,
-                `images/${possibleImageName}.gif`,
-                `images/${p.id}.jpg`,
-                `images/${p.id}.png`
-            ];
-            p.image = possibleImages;
-        } else if (typeof p.image === 'string') {
-            p.image = [p.image];
-        } else if (!Array.isArray(p.image)) {
-            p.image = [];
+        // Only process if image already exists in the data
+        if (p.image && p.image !== null) {
+            if (typeof p.image === 'string') {
+                p.image = [p.image];
+            } else if (!Array.isArray(p.image)) {
+                p.image = [];
+            }
+        } else {
+            // Leave as null if no image in pairings.json
+            p.image = null;
         }
     });
     
