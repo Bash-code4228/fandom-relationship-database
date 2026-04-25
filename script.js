@@ -277,7 +277,8 @@ if (imageUrl && imageUrl !== 'null' && imageUrl.trim() !== '') {
         </div>`;
     } else {
         cardHTML += `
-        <div class="card-header">
+       cardHTML += `
+        <div class="image-container">
             <div class="card-actions">
                 <button class="action-btn favorite-btn" onclick="event.stopPropagation(); toggleFavorite(${ship.id})">
                     <i class="${ship.favorite ? 'fas' : 'far'} fa-star"></i>
@@ -289,9 +290,11 @@ if (imageUrl && imageUrl !== 'null' && imageUrl.trim() !== '') {
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
-            <i class="fa fa-picture-o" aria-hidden="true"></i>
-            <h3 class="pairing-name">${escapeHtml(ship.name)}</h3>
-            <p class="pairing-characters">${escapeHtml(ship.characters)}</p>
+            <img src="${imageUrl}" alt="${ship.name}" class="ship-image">
+            <div class="image-overlay">
+                <h3 class="pairing-name">${escapeHtml(ship.name)}</h3>
+                <p class="pairing-characters">${escapeHtml(ship.characters)}</p>
+            </div>
         </div>`;
     }
 
