@@ -676,4 +676,26 @@ body {
     .controls {
         flex-direction: column;
     }
+
+    /* Center the default no-image state */
+.image-container.no-image-state {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 200px;
+}
+
+.image-container.no-image-state .image-overlay {
+    position: relative !important;
+    background: transparent !important;
+    text-align: center !important;
+    width: 100% !important;
+    padding: 20px !important;
+}
+
+.image-container.no-image-state .fa-image {
+    display: block !important;
+    margin: 0 auto 15px auto !important;
+    font-size: 3rem !important;
 }
