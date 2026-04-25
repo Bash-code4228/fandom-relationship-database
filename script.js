@@ -9,6 +9,9 @@ let selectedFile = null;
 let selectedImageUrl = '';
 let currentFandomFilter = ''; // New variable for fandom filtering
 
+// Add this after your existing variable declarations
+const PLACEHOLDER_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%23f5f5f5'/%3E%3Ctext x='200' y='200' text-anchor='middle' dy='.3em' fill='%23999' font-family='Arial' font-size='20'%3E📷 No Image%3C/text%3E%3C/svg%3E";
+
 // DOM Elements
 const pairingsGrid = document.getElementById('pairings-grid');
 const searchInput = document.getElementById('search-input');
@@ -269,7 +272,7 @@ if (imageUrl && imageUrl !== 'null' && imageUrl.trim() !== '') {
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
-            <img src="${imageUrl}" alt="${ship.name}" class="ship-image">
+            <img src="${imageUrl}" alt="${ship.name}" class="ship-image" onerror="this.onerror=null; this.src='${PLACEHOLDER_IMAGE}'">
             <div class="image-overlay">
                 <h3 class="pairing-name">${escapeHtml(ship.name)}</h3>
                 <p class="pairing-characters">${escapeHtml(ship.characters)}</p>
@@ -656,8 +659,12 @@ function openShipLightbox(ship) {
     const popImage = document.getElementById('pop-image');
     if (imageUrl) {
         popImage.src = imageUrl;
+        popImage.onerror = function() {
+            this.onerror = null;
+            this.src = PLACEHOLDER_IMAGE;
+        };
     } else {
-        popImage.src = 'https://via.placeholder.com/400x400?text=No+Image+Available';
+        popImage.src = PLACEHOLDER_IMAGE;
     }
     
     document.getElementById('pop-notes').innerText = ship.notes || "No notes added yet.";
