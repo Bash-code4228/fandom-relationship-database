@@ -256,13 +256,16 @@ function createShipCard(ship) {
         imageUrl = ship.image;
     }
     
+    // Check if we have a valid image URL
+    const hasValidImage = imageUrl && imageUrl.trim() !== '';
+    
     let cardHTML = '';
     
     if (ship.favorite) {
         cardHTML += `<div class="favorite-star" style="position:absolute; top:10px; left:10px; color:gold; z-index:5; background: rgba(0,0,0,0.5); padding: 5px 8px; border-radius: 20px;"><i class="fas fa-star"></i> Active</div>`;
     }
 
-    if (imageUrl) {
+    if (hasValidImage) {
         cardHTML += `
         <div class="image-container">
             <div class="card-actions">
@@ -276,13 +279,14 @@ function createShipCard(ship) {
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
-            <img src="${imageUrl}" alt="${ship.name}" class="ship-image" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+            <img src="${imageUrl}" alt="${ship.name}" class="ship-image" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200?text=No+Image'; this.style.objectFit='cover';">
             <div class="image-overlay">
                 <h3 class="pairing-name">${escapeHtml(ship.name)}</h3>
                 <p class="pairing-characters">${escapeHtml(ship.characters)}</p>
             </div>
         </div>`;
     } else {
+        // No image URL - show card header instead
         cardHTML += `
         <div class="card-header">
             <div class="card-actions">
@@ -302,11 +306,11 @@ function createShipCard(ship) {
     }
 
     if (ship.artist) {
-    cardHTML += `
-    <div class="artist-credit">
-        Art by <i>${escapeHtml(ship.artist)}</i>
-    </div>`;
-}
+        cardHTML += `
+        <div class="artist-credit">
+            Art by <i>${escapeHtml(ship.artist)}</i>
+        </div>`;
+    }
     
     cardHTML += `
     <div class="card-body">
