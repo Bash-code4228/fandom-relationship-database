@@ -690,7 +690,7 @@ body {
         display: none;
     }
 
-        /* Hide broken image icons globally */
+    /* Hide broken image icons globally */
     .ship-image {
         display: block;
     }
