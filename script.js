@@ -262,7 +262,7 @@ function createShipCard(ship) {
         cardHTML += `<div class="favorite-star" style="position:absolute; top:10px; left:10px; color:gold; z-index:5; background: rgba(0,0,0,0.5); padding: 5px 8px; border-radius: 20px;"><i class="fas fa-star"></i> Active</div>`;
     }
 
-    if (imageUrl) {
+if (imageUrl && imageUrl !== 'null' && imageUrl.trim() !== '') {
         cardHTML += `
         <div class="image-container">
             <div class="card-actions">
