@@ -288,21 +288,25 @@
     </div>
 
     <div id="ship-lightbox" class="modal">
-            <div class="modal-content" style="max-width: 500px;">
-                <div class="card-header">
-                    <h2 id="pop-name">Ship Name</h2>
-                    <button class="action-btn" onclick="closeShipLightbox()" style="position: absolute; right: 20px; top: 20px;">
-                        <i class="fas fa-times"></i>
-                    </button>
+        <div class="modal-content"> <div class="card-header">
+                <h2 id="pop-name">Ship Name</h2>
+                <button class="action-btn" onclick="closeShipLightbox()" style="position: absolute; right: 20px; top: 20px;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="pop-body-container">
+                <div id="pop-image-column">
+                    <img id="pop-image" src="" alt="Ship Image">
                 </div>
-                <div style="padding: 20px; text-align: center;">
-                    <img id="pop-image" src="" style="width: 100%; border-radius: 15px; margin-bottom: 15px;">
-                    <p id="pop-chars" style="font-weight: bold; font-size: 1.2rem; color: #0992C2;"></p>
-                    <div id="pop-tags" style="display: flex; gap: 10px; justify-content: center; margin: 15px 0;"></div>
-                    <p id="pop-notes" style="color: #555; font-style: italic;"></p>
-                </div>
+    
+                <div id="pop-info-column">
+                    <p id="pop-chars"></p>
+                    <p id="pop-notes"></p>
+                    <div id="pop-tags"></div>
+                }
             </div>
         </div>
+    </div>
 
         <script src="script.js"></script>
     </body>
