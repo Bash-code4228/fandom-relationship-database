@@ -489,6 +489,89 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
+/* --- Horizontal Lightbox Layout --- */
+
+/* 1. Target the Lightbox Modal Content specifically */
+#ship-lightbox .modal-content {
+    max-width: 900px; /* Make it wider to accommodate both columns */
+    overflow-y: hidden; /* Prevent scrolling the whole modal */
+}
+
+/* 2. Style the Body Container to be a Flexbox row */
+#pop-body-container {
+    display: flex;
+    flex-direction: row; /* Key: Horizontal alignment */
+    width: 100%;
+    padding: 0; /* Remove default padding for clean columns */
+    border-radius: 0 0 20px 20px;
+}
+
+/* 3. Style the Left Image Column */
+#pop-image-column {
+    flex: 0 0 50%; /* Image takes 50% width and doesn't shrink/grow */
+    max-width: 500px; /* Optional cap, should align with max-width */
+    overflow: hidden; /* Keep image inside column */
+    border-right: 1px solid #ddd; /* Subtle separation */
+    background-color: #f8f8f8; /* Light bg if image is small/loading */
+}
+
+/* 4. Style the Image inside the left column */
+#pop-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Changed from 'cover' to 'contain' to avoid awkward cropping in this layout. Set to 'cover' if you prefer full-bleed but cropped. */
+    border-radius: 0; /* Reset radius since column has it */
+}
+
+/* 5. Style the Right Information Column */
+#pop-info-column {
+    flex: 1; /* Info column takes remaining space */
+    padding: 30px; /* Proper padding for text */
+    text-align: left; /* Align text left for better readability */
+    overflow-y: auto; /* Allow scrolling this column if notes are long */
+    max-height: 70vh; /* Cap height for the right column, matching modal context */
+}
+
+/* 6. Adjust internal elements for better alignment */
+#pop-chars {
+    margin-bottom: 20px;
+    font-size: 1.4rem; /* Slightly larger */
+    color: #1A237E; /* Match the header color */
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+}
+
+#pop-notes {
+    font-style: italic;
+    color: #444; /* Darker for better contrast */
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+#pop-tags {
+    justify-content: flex-start; /* Tags align left */
+    gap: 15px; /* Better gap */
+    margin-top: 15px;
+}
+
+/* Mobile Responsiveness: Stack it vertically on small screens */
+@media (max-width: 768px) {
+    #pop-body-container {
+        flex-direction: column;
+    }
+    #pop-image-column {
+        flex: 0 0 100%;
+        max-width: 100%;
+        max-height: 300px;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+    }
+    #pop-info-column {
+        padding: 20px;
+        max-height: none;
+    }
+}
+
 /* Form Styles */
 .form-grid {
     display: grid;
